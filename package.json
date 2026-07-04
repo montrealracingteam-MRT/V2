@@ -1,11 +1,8 @@
 {
-  "name": "kronos-racing-bot",
+  8"name": "kronos-racing-bot",
   "version": "2.0.0",
   "description": "Bot Discord officiel de Kronos Racing — Gestion des inscriptions SimRacing",
   "main": "bot.js",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "scripts": {
     "start": "node bot.js",
     "dev": "nodemon bot.js"
