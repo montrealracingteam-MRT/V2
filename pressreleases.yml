@@ -1,0 +1,42 @@
+name: Communiqués de presse (Discord -> site)
+
+# Vérifie toutes les 10 minutes s'il y a un nouveau message dans le salon
+# Discord #communiqué-de-presse, le reformule en article (IA) et le publie
+# sur le site (articles-live.json). Gratuit : tourne sur GitHub Actions,
+# pas besoin d'hébergement payant type Railway.
+#
+# Secrets requis (Settings -> Secrets and variables -> Actions) :
+#   DISCORD_TOKEN, PRESS_CHANNEL_ID, ANTHROPIC_API_KEY
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch: {} # permet de le lancer manuellement pour tester
+
+permissions:
+  contents: write
+
+jobs:
+  check-press-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Vérifie les nouveaux communiqués
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          PRESS_CHANNEL_ID: ${{ secrets.PRESS_CHANNEL_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node press-release-check.js
+
+      - name: Publie les changements sur le site
+        run: |
+          git config user.name "MRT Press Bot"
+          git config user.email "actions@github.com"
+          git add articles-live.json .press-bot-state.json
+          git diff --staged --quiet || git commit -m "Communiqué de presse automatique"
+          git push
