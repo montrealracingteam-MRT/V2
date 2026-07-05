@@ -11,6 +11,9 @@ name: Communiqués de presse (Discord -> site)
 # Secrets requis (Settings -> Secrets and variables -> Actions) :
 #   DISCORD_TOKEN, PRESS_CHANNEL_ID, GEMINI_API_KEY
 # (GEMINI_API_KEY : clé gratuite sur https://aistudio.google.com/apikey)
+#
+# Modèle : gemini-2.5-flash (le niveau gratuit donne 5 requêtes/minute ;
+# gemini-2.0-flash a un quota gratuit à 0 et ne fonctionne pas).
 
 on:
   schedule:
@@ -42,11 +45,16 @@ jobs:
           const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
           const PRESS_CHANNEL_ID = process.env.PRESS_CHANNEL_ID;
           const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-          const ARTICLE_MODEL = process.env.ARTICLE_MODEL || 'gemini-2.0-flash';
+          const ARTICLE_MODEL = process.env.ARTICLE_MODEL || 'gemini-2.5-flash';
 
           const ARTICLES_FILE = 'articles-live.json';
           const STATE_FILE = '.press-bot-state.json';
           const MAX_LIVE_ARTICLES = 30;
+
+          // Le niveau gratuit de gemini-2.5-flash autorise 5 requetes/minute.
+          // On patiente entre deux appels pour ne jamais depasser cette limite.
+          const DELAY_BETWEEN_CALLS_MS = 13000;
+          const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
           function readJson(path, fallback) {
             if (!fs.existsSync(path)) return fallback;
@@ -122,16 +130,20 @@ jobs:
             const existingIds = new Set(articles.map(a => a.id));
             let changed = false;
 
+            let generatedCount = 0;
             for (const msg of messages) {
-              state.lastMessageId = msg.id;
-
-              if (msg.author && msg.author.bot) continue;
+              // Messages a ignorer definitivement (bot, deja publie, trop court) :
+              // on fait avancer l'etat pour ne plus jamais les revoir.
+              if (msg.author && msg.author.bot) { state.lastMessageId = msg.id; continue; }
               const articleId = `live-${msg.id}`;
-              if (existingIds.has(articleId)) continue;
+              if (existingIds.has(articleId)) { state.lastMessageId = msg.id; continue; }
 
               const rawText = (msg.content || '').trim();
               const imgUrl = ((msg.attachments || []).find(a => (a.content_type || '').startsWith('image/')) || {}).url || null;
-              if (rawText.length < 8 && !imgUrl) continue;
+              if (rawText.length < 8 && !imgUrl) { state.lastMessageId = msg.id; continue; }
+
+              // Respecte la limite de 5 req/min du niveau gratuit.
+              if (generatedCount > 0) await sleep(DELAY_BETWEEN_CALLS_MS);
 
               try {
                 const generated = await generateArticleFromMessage(rawText || 'Communique de presse (voir image jointe).');
@@ -145,9 +157,17 @@ jobs:
                   createdAt: new Date(msg.timestamp || Date.now()).toISOString(),
                 });
                 changed = true;
+                generatedCount++;
+                // On ne fait avancer l'etat qu'APRES un succes : si l'IA echoue
+                // (quota, reseau...), le message sera reessaye au prochain passage
+                // au lieu d'etre perdu.
+                state.lastMessageId = msg.id;
                 console.log('Article genere pour le message', msg.id, '->', generated.title);
               } catch (err) {
                 console.error('Erreur pour le message', msg.id, ':', err.message);
+                // On s'arrete ici sans avancer l'etat : ce message (et les suivants)
+                // seront retentes au prochain run, dans l'ordre.
+                break;
               }
             }
 
