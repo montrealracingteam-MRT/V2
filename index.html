@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Montreal Racing Team — MRT</title>
+
+<!-- ===========================================================================
+     GOOGLE ANALYTICS (GA4) — ID de mesure : G-92FYKYPPDY
+     =========================================================================== -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-92FYKYPPDY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-92FYKYPPDY');
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -482,6 +494,15 @@
     transition:transform .4s ease;
   }
   .merch-card:hover .merch-img img{transform:scale(1.05);}
+  .merch-img.placeholder{
+    background:
+      repeating-linear-gradient(115deg, transparent 0 44px, rgba(0,87,255,0.12) 44px 46px, transparent 46px 118px, rgba(143,166,255,0.08) 118px 120px, transparent 120px 200px),
+      var(--mrt-panel);
+  }
+  .merch-img.placeholder span{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--mrt-ice);border:1px dashed var(--line-strong);padding:8px 16px;border-radius:3px;
+  }
   .merch-tag{
     position:absolute;top:12px;left:12px;
     font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;
@@ -1088,49 +1109,49 @@
     <div class="merch-grid reveal">
 
       <div class="merch-card">
-        <div class="merch-img"><span class="merch-tag">Nouveau</span><img data-merch="maillot" alt="Maillot course MRT 2026"></div>
+        <div class="merch-img placeholder"><span class="merch-tag">Nouveau</span><span>More to come</span></div>
         <div class="merch-body">
           <div class="merch-name">Maillot course MRT 2026</div>
           <div class="merch-desc">Réplique de la combinaison d'équipe, bleu signature.</div>
           <div class="merch-foot">
-            <span class="merch-price">65 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Maillot course MRT 2026','65 $ CAD')">Commander</button>
+            <span class="merch-price">0 $ CAD</span>
+            <button class="merch-buy" onclick="openOrder('Maillot course MRT 2026','0 $ CAD')">Commander</button>
           </div>
         </div>
       </div>
 
       <div class="merch-card">
-        <div class="merch-img"><img data-merch="casquette" alt="Casquette MRT"></div>
+        <div class="merch-img placeholder"><span>More to come</span></div>
         <div class="merch-body">
           <div class="merch-name">Casquette MRT</div>
           <div class="merch-desc">Broderie 3D, ajustable, bleu/blanc.</div>
           <div class="merch-foot">
-            <span class="merch-price">28 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Casquette MRT','28 $ CAD')">Commander</button>
+            <span class="merch-price">0 $ CAD</span>
+            <button class="merch-buy" onclick="openOrder('Casquette MRT','0 $ CAD')">Commander</button>
           </div>
         </div>
       </div>
 
       <div class="merch-card">
-        <div class="merch-img"><img data-merch="hoodie" alt="Hoodie Endurance MRT"></div>
+        <div class="merch-img placeholder"><span>More to come</span></div>
         <div class="merch-body">
           <div class="merch-name">Hoodie Endurance</div>
           <div class="merch-desc">Coton lourd, logo brodé, doublure polaire.</div>
           <div class="merch-foot">
-            <span class="merch-price">72 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Hoodie Endurance','72 $ CAD')">Commander</button>
+            <span class="merch-price">0 $ CAD</span>
+            <button class="merch-buy" onclick="openOrder('Hoodie Endurance','0 $ CAD')">Commander</button>
           </div>
         </div>
       </div>
 
       <div class="merch-card">
-        <div class="merch-img"><img data-merch="stickers" alt="Pack autocollants liveries MRT"></div>
+        <div class="merch-img placeholder"><span>More to come</span></div>
         <div class="merch-body">
           <div class="merch-name">Pack autocollants liveries</div>
           <div class="merch-desc">6 designs SDL, vinyle résistant aux intempéries.</div>
           <div class="merch-foot">
-            <span class="merch-price">12 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Pack autocollants liveries','12 $ CAD')">Commander</button>
+            <span class="merch-price">0 $ CAD</span>
+            <button class="merch-buy" onclick="openOrder('Pack autocollants liveries','0 $ CAD')">Commander</button>
           </div>
         </div>
       </div>
@@ -1370,14 +1391,14 @@
       </button>
 
       <button class="partner-card" type="button" onclick="openArticle('bonbec')" aria-label="En savoir plus sur Maison Bonbec / Daddy Roll">
-        <div class="partner-logo logo-frame">
-          <!-- Vrai logo bonbec-logo.png ; repli : recréation en texte rosé -->
+        <div class="partner-logo">
+          <!-- Vrai logo bonbec-logo.png ; repli : recréation en texte blanc (même fond sombre que les autres) -->
           <img class="full-logo" src="bonbec-logo.png" alt="Maison Bonbec / Daddy Roll"
                onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
           <svg style="display:none" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <text x="200" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="44" letter-spacing="7" fill="#B76E79">MAISON</text>
-            <text x="200" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="44" letter-spacing="7" fill="#B76E79">BONBEC</text>
-            <text x="200" y="168" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" letter-spacing="6" fill="#C98B94">DADDY ROLL</text>
+            <text x="200" y="72" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="44" letter-spacing="7" fill="#F4F6FB">MAISON</text>
+            <text x="200" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="44" letter-spacing="7" fill="#F4F6FB">BONBEC</text>
+            <text x="200" y="168" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" letter-spacing="6" fill="#8FA6FF">DADDY ROLL</text>
           </svg>
         </div>
         <div class="partner-card-body">
