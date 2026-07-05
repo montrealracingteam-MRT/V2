@@ -9,7 +9,8 @@ name: Communiqués de presse (Discord -> site)
 # volée dans l'étape ci-dessous) : il n'y a rien d'autre à créer ou modifier.
 #
 # Secrets requis (Settings -> Secrets and variables -> Actions) :
-#   DISCORD_TOKEN, PRESS_CHANNEL_ID, ANTHROPIC_API_KEY
+#   DISCORD_TOKEN, PRESS_CHANNEL_ID, GEMINI_API_KEY
+# (GEMINI_API_KEY : clé gratuite sur https://aistudio.google.com/apikey)
 
 on:
   schedule:
@@ -33,15 +34,15 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           PRESS_CHANNEL_ID: ${{ secrets.PRESS_CHANNEL_ID }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           cat > /tmp/press-release-check.js << 'EOF_SCRIPT'
           const fs = require('fs');
 
           const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
           const PRESS_CHANNEL_ID = process.env.PRESS_CHANNEL_ID;
-          const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-          const ARTICLE_MODEL = process.env.ARTICLE_MODEL || 'claude-sonnet-5';
+          const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+          const ARTICLE_MODEL = process.env.ARTICLE_MODEL || 'gemini-2.0-flash';
 
           const ARTICLES_FILE = 'articles-live.json';
           const STATE_FILE = '.press-bot-state.json';
@@ -83,22 +84,19 @@ jobs:
             "content": "Deux à quatre paragraphes HTML, chacun entouré de balises <p>...</p>, qui développent le message brut en article complet."
           }`;
 
-            const res = await fetch('https://api.anthropic.com/v1/messages', {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${ARTICLE_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+            const res = await fetch(url, {
               method: 'POST',
-              headers: {
-                'content-type': 'application/json',
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-              },
+              headers: { 'content-type': 'application/json' },
               body: JSON.stringify({
-                model: ARTICLE_MODEL,
-                max_tokens: 1024,
-                messages: [{ role: 'user', content: prompt }],
+                contents: [{ parts: [{ text: prompt }] }],
               }),
             });
-            if (!res.ok) throw new Error(`Anthropic API ${res.status}: ${await res.text()}`);
+            if (!res.ok) throw new Error(`Gemini API ${res.status}: ${await res.text()}`);
             const data = await res.json();
-            let text = (data.content && data.content[0] && data.content[0].text) || '';
+            let text = (data.candidates && data.candidates[0] && data.candidates[0].content
+                        && data.candidates[0].content.parts && data.candidates[0].content.parts[0]
+                        && data.candidates[0].content.parts[0].text) || '';
             text = text.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
             const parsed = JSON.parse(text);
             if (!parsed.title || !parsed.content) throw new Error('Réponse IA incomplète (title/content manquant)');
@@ -106,7 +104,7 @@ jobs:
           }
 
           async function main() {
-            if (!DISCORD_TOKEN || !PRESS_CHANNEL_ID || !ANTHROPIC_API_KEY) {
+            if (!DISCORD_TOKEN || !PRESS_CHANNEL_ID || !GEMINI_API_KEY) {
               console.log('Variables manquantes - on ignore ce passage.');
               return;
             }
