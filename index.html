@@ -3,7 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Montreal Racing Team — MRT</title>
+<title>Montreal Racing Team — MRT | Sim racing d'endurance sur Le Mans Ultimate</title>
+
+<!-- ===========================================================================
+     SEO + APERÇUS DE PARTAGE (Open Graph / Twitter)
+     La vignette og-image.png (1200x630), favicon.ico et apple-touch-icon.png
+     doivent être à la racine du site. og:image doit rester une URL ABSOLUE.
+     =========================================================================== -->
+<meta name="description" content="Montreal Racing Team (MRT) — écurie esport de sim racing d'endurance sur Le Mans Ultimate : Hypercar, LMP2, LMP3 et LMGT3. Actualités, calendrier, résultats, boutique et partenaires.">
+<link rel="canonical" href="https://montrealracingteam.ca/">
+<meta name="theme-color" content="#0057FF">
+
+<!-- Favicon (onglet du navigateur) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230057FF'/%3E%3Cstop offset='1' stop-color='%230A1128'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='256' height='256' rx='52' fill='url(%23g)'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' dominant-baseline='central' font-family='Arial,sans-serif' font-weight='900' font-size='170' fill='%23F4F6FB'%3EM%3C/text%3E%3Ccircle cx='196' cy='196' r='18' fill='%23CE1126'/%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Open Graph (Facebook, Instagram, Discord, LinkedIn…) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Montreal Racing Team">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:title" content="Montreal Racing Team — MRT">
+<meta property="og:description" content="Écurie esport de sim racing d'endurance sur Le Mans Ultimate — Hypercar, LMP2, LMP3, LMGT3.">
+<meta property="og:url" content="https://montrealracingteam.ca/">
+<meta property="og:image" content="https://montrealracingteam.ca/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Montreal Racing Team — MRT">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Montreal Racing Team — MRT">
+<meta name="twitter:description" content="Écurie esport de sim racing d'endurance sur Le Mans Ultimate — Hypercar, LMP2, LMP3, LMGT3.">
+<meta name="twitter:image" content="https://montrealracingteam.ca/og-image.png">
 
 <!-- ===========================================================================
      GOOGLE ANALYTICS (GA4) — ID de mesure : G-92FYKYPPDY
@@ -283,7 +315,9 @@
     letter-spacing:0.08em;
     display:none;
   }
-  .hero-timing .big{font-size:40px;color:var(--mrt-white);letter-spacing:0;line-height:1;}
+  .hero-timing .big{font-size:40px;color:var(--mrt-white);letter-spacing:0;line-height:1;margin:4px 0;}
+  .hero-timing #countdownLabel{max-width:280px;margin-left:auto;color:var(--mrt-ice);line-height:1.4;}
+  .hero-timing .ct-when{margin-top:6px;font-size:10.5px;color:var(--mrt-fog);letter-spacing:0.04em;}
   @media (min-width:900px){.hero-timing{display:block;}}
 
   /* ===== STAT STRIP (categories) ===== */
@@ -519,6 +553,17 @@
     padding:8px 14px;border-radius:2px;cursor:pointer;transition:all .2s;
   }
   .merch-buy:hover{background:var(--mrt-blue);border-color:var(--mrt-blue);}
+  .merch-soon{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--mrt-ice);border:1px solid var(--line-strong);
+    padding:7px 13px;border-radius:999px;background:rgba(0,87,255,0.08);
+  }
+  .merch-intro{max-width:640px;margin:-6px 0 30px;color:var(--mrt-fog);font-size:15px;line-height:1.6;}
+  .view-all--soon{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--mrt-ice);border:1px solid var(--line-strong);
+    padding:8px 16px;border-radius:999px;background:rgba(0,87,255,0.08);white-space:nowrap;
+  }
   @media (max-width:1000px){.merch-grid{grid-template-columns:repeat(2,1fr);}}
   @media (max-width:560px){.merch-grid{grid-template-columns:1fr;}}
 
@@ -863,10 +908,6 @@
   .world-card h3{font-size:22px;color:var(--mrt-white);margin:10px 0 8px;}
   .world-card p{font-size:14px;color:var(--mrt-fog);line-height:1.6;}
   .world-card .wc-link{margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--mrt-ice);}
-  .world-feed{margin-top:32px;border:1px dashed var(--line-strong);border-radius:8px;padding:34px;text-align:center;background:rgba(14,21,48,0.5);}
-  .world-feed iframe{width:100%;border:0;min-height:420px;border-radius:6px;}
-  .world-feed h4{font-family:var(--display);font-size:26px;color:var(--mrt-white);margin-bottom:8px;}
-  .world-feed p{font-size:14px;color:var(--mrt-fog);max-width:600px;margin:0 auto;line-height:1.6;}
 
   /* ===== FOOTER ===== */
   footer{
@@ -969,10 +1010,11 @@
     </div>
   </div>
 
-  <div class="hero-timing" id="heroTiming" data-target="2026-07-03T18:00:00">
-    <div>PROCHAIN ÉVÉNEMENT</div>
+  <div class="hero-timing" id="heroTiming">
+    <div>PROCHAINE SESSION</div>
     <div class="big" id="countdown">--:--:--</div>
-    <div id="countdownLabel">PORTIMÃO — ELMS 100 MIN</div>
+    <div id="countdownLabel">—</div>
+    <div id="countdownWhen" class="ct-when"></div>
   </div>
 </section>
 
@@ -1103,8 +1145,10 @@
   <div class="wrap">
     <div class="section-head reveal">
       <h2>Boutique<br>MRT</h2>
-      <a href="#" class="view-all">Catalogue complet →</a>
+      <span class="view-all view-all--soon">Bientôt disponible</span>
     </div>
+
+    <p class="merch-intro reveal">La boutique officielle MRT arrive bientôt. Voici un aperçu de ce qui vous attendra — maillots, casquettes et accessoires aux couleurs de l'écurie.</p>
 
     <div class="merch-grid reveal">
 
@@ -1114,8 +1158,7 @@
           <div class="merch-name">Maillot course MRT 2026</div>
           <div class="merch-desc">Réplique de la combinaison d'équipe, bleu signature.</div>
           <div class="merch-foot">
-            <span class="merch-price">0 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Maillot course MRT 2026','0 $ CAD')">Commander</button>
+            <span class="merch-soon">Bientôt disponible</span>
           </div>
         </div>
       </div>
@@ -1126,8 +1169,7 @@
           <div class="merch-name">Casquette MRT</div>
           <div class="merch-desc">Broderie 3D, ajustable, bleu/blanc.</div>
           <div class="merch-foot">
-            <span class="merch-price">0 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Casquette MRT','0 $ CAD')">Commander</button>
+            <span class="merch-soon">Bientôt disponible</span>
           </div>
         </div>
       </div>
@@ -1138,8 +1180,7 @@
           <div class="merch-name">Hoodie Endurance</div>
           <div class="merch-desc">Coton lourd, logo brodé, doublure polaire.</div>
           <div class="merch-foot">
-            <span class="merch-price">0 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Hoodie Endurance','0 $ CAD')">Commander</button>
+            <span class="merch-soon">Bientôt disponible</span>
           </div>
         </div>
       </div>
@@ -1150,8 +1191,7 @@
           <div class="merch-name">Pack autocollants liveries</div>
           <div class="merch-desc">6 designs SDL, vinyle résistant aux intempéries.</div>
           <div class="merch-foot">
-            <span class="merch-price">0 $ CAD</span>
-            <button class="merch-buy" onclick="openOrder('Pack autocollants liveries','0 $ CAD')">Commander</button>
+            <span class="merch-soon">Bientôt disponible</span>
           </div>
         </div>
       </div>
@@ -1159,41 +1199,6 @@
     </div>
   </div>
 </section>
-
-<!-- ===== ORDER MODAL ===== -->
-<div class="modal-overlay" id="orderModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeOrder()" aria-label="Fermer">×</button>
-    <div id="orderForm">
-      <h3>Commander</h3>
-      <div class="modal-product" id="modalProductLine">—</div>
-      <form id="orderFormEl" action="https://formspree.io/f/REMPLACER_PAR_TON_ID_FORMSPREE" method="POST" onsubmit="submitOrder(event)">
-        <input type="hidden" name="_subject" value="Nouvelle commande boutique MRT">
-        <input type="hidden" id="ofProduct" name="Produit">
-        <div class="field">
-          <label for="ofName">Nom complet</label>
-          <input type="text" id="ofName" name="Nom" required>
-        </div>
-        <div class="field">
-          <label for="ofEmail">Courriel</label>
-          <input type="email" id="ofEmail" name="Courriel" required>
-        </div>
-        <div class="field">
-          <label for="ofSize">Taille / option</label>
-          <select id="ofSize" name="Taille">
-            <option>S</option><option>M</option><option selected>L</option><option>XL</option><option>XXL</option><option>Taille unique</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary modal-submit">Envoyer la commande</button>
-      </form>
-    </div>
-    <div class="modal-success" id="orderSuccess">
-      <div class="check">✓</div>
-      <h3 style="margin-bottom:10px;">Commande reçue</h3>
-      <p>Merci ! Un membre de l'équipe MRT te contactera par courriel pour confirmer les détails et le paiement.</p>
-    </div>
-  </div>
-</div>
 
 <!-- ===== ARTICLE MODAL ===== -->
 <div class="modal-overlay" id="articleModal">
@@ -1500,19 +1505,14 @@
           <p>L'actualité de la plateforme officielle sur laquelle l'écurie MRT dispute ses courses.</p>
           <div class="wc-link">Site officiel →</div>
         </a>
+        <a class="world-card" href="https://www.motorsport.com/" target="_blank" rel="noopener">
+          <div class="wc-tag">Toute l'actu</div>
+          <h3>Motorsport.com</h3>
+          <p>L'actualité au jour le jour de tous les sports mécaniques : F1, endurance, esport et plus.</p>
+          <div class="wc-link">Lire les news →</div>
+        </a>
       </div>
 
-      <!-- ===================================================================
-           FLUX D'ACTUALITÉS AUTOMATIQUE (F1 / WEC / sim racing)
-           Pour l'activer : crée un widget RSS sur https://rss.app (gratuit),
-           ajoute-y les flux F1/WEC/Motorsport souhaités, copie le code
-           <iframe>…</iframe> fourni et colle-le juste sous cette ligne, puis
-           supprime le bloc de texte ci-dessous. Le flux se mettra à jour seul.
-           =================================================================== -->
-      <div class="world-feed" id="worldFeed">
-        <h4>Flux d'actualités en direct</h4>
-        <p>Pour afficher ici automatiquement les dernières news F1 / WEC / sim racing, on branche un widget RSS (même principe que le flux Instagram). Voir le message de l'équipe pour la mise en place en 3 minutes.</p>
-      </div>
     </div>
   </section>
 </div>
@@ -1570,25 +1570,88 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
   revealEls.forEach(el => io.observe(el));
 
   // ===========================================================================
-  // COMPTE À REBOURS — prochain événement
-  // Pour changer la date/heure, modifie l'attribut data-target du bloc
-  // <div class="hero-timing" data-target="AAAA-MM-JJTHH:MM:SS"> et le libellé
-  // #countdownLabel dans le HTML plus haut.
+  // COMPTE À REBOURS — prochaine session de course (saison 2026)
+  // Calendrier officiel Le Mans Ultimate. Chaque événement se court du mercredi
+  // au lundi qui suivent son "mardi d'ouverture", aux horaires UTC indiqués
+  // (pas de course le mardi). Le compte à rebours pointe automatiquement vers la
+  // prochaine session et passe seul à l'événement suivant — jamais figé.
+  //
+  // POUR METTRE À JOUR :
+  //   • Nouvelle saison / dates : modifie le tableau EVENTS (mardi + nom + cat).
+  //   • Horaires différents : modifie RACE_TIMES_UTC (heures UTC) ou
+  //     RACE_DAY_OFFSETS (jours ; +1 = mercredi … +6 = lundi).
   // ===========================================================================
   (function(){
     const el = document.getElementById('countdown');
-    const wrap = document.getElementById('heroTiming');
-    if(!el || !wrap) return;
-    const target = new Date(wrap.dataset.target).getTime();
-    const pad = n => String(n).padStart(2,'0');
+    const labelEl = document.getElementById('countdownLabel');
+    const whenEl = document.getElementById('countdownWhen');
+    if(!el) return;
+
+    const RACE_TIMES_UTC = [2, 6, 9, 12, 15, 18, 20, 23];
+    const RACE_DAY_OFFSETS = [1, 2, 3, 4, 5, 6]; // mer→lun après le mardi
+
+    const EVENTS = [
+      { tue:'2026-07-07', name:"4 Heures d'Imola",              cat:'ELMS' },
+      { tue:'2026-07-14', name:"6 Heures d'Interlagos",         cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-07-28', name:'4 Heures (circuit à confirmer)', cat:'HYPERCAR · LMP2 · LMGT3' },
+      { tue:'2026-08-11', name:'8 Heures (circuit à confirmer)', cat:'HYPERCAR · LMP2 · LMGT3' },
+      { tue:'2026-08-25', name:'4 Heures de Spa',               cat:'ELMS' },
+      { tue:'2026-09-08', name:'6 Heures de COTA',              cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-09-15', name:'4 Heures de Silverstone',       cat:'ELMS' },
+      { tue:'2026-09-22', name:'4 Heures (circuit à confirmer)', cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-09-29', name:'6 Heures de Fuji',              cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-10-06', name:'10 Heures (circuit à confirmer)', cat:'HYPERCAR · LMP2 · LMGT3' },
+      { tue:'2026-10-13', name:'4 Heures de Portimão',          cat:'ELMS' },
+      { tue:'2026-11-10', name:'8 Heures de Bahreïn',           cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-12-01', name:'6 Heures de Silverstone',       cat:'HYPERCAR · LMGT3' },
+      { tue:'2026-12-15', name:'6 Heures (circuit à confirmer)', cat:'HYPERCAR · LMP2 · LMGT3' }
+    ];
+
+    // Génère toutes les sessions de la saison (triées chronologiquement).
+    const SESSIONS = [];
+    for(const ev of EVENTS){
+      const base = new Date(ev.tue + 'T00:00:00Z').getTime();
+      for(const off of RACE_DAY_OFFSETS){
+        for(const h of RACE_TIMES_UTC){
+          const d = new Date(base);
+          d.setUTCDate(d.getUTCDate() + off);
+          d.setUTCHours(h, 0, 0, 0);
+          SESSIONS.push({ t: d.getTime(), ev });
+        }
+      }
+    }
+    SESSIONS.sort((a, b) => a.t - b.t);
+
+    const pad = n => String(n).padStart(2, '0');
+    let fmt;
+    try {
+      fmt = new Intl.DateTimeFormat('fr-CA', {
+        weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'
+      });
+    } catch(e) { fmt = null; }
+
+    function nextSession(now){
+      for(const s of SESSIONS){ if(s.t > now) return s; }
+      return null;
+    }
+
     function tick(){
-      const diff = target - Date.now();
-      if(diff <= 0){ el.textContent = 'EN COURSE'; return; }
+      const now = Date.now();
+      const s = nextSession(now);
+      if(!s){
+        el.textContent = '—';
+        if(labelEl) labelEl.textContent = "Saison 2026 terminée — à l'an prochain";
+        if(whenEl) whenEl.textContent = '';
+        return;
+      }
+      const diff = s.t - now;
       const d = Math.floor(diff / 86400000);
       const h = Math.floor(diff % 86400000 / 3600000);
       const m = Math.floor(diff % 3600000 / 60000);
-      const s = Math.floor(diff % 60000 / 1000);
-      el.textContent = (d > 0 ? d + 'j ' : '') + pad(h) + ':' + pad(m) + ':' + pad(s);
+      const sec = Math.floor(diff % 60000 / 1000);
+      el.textContent = (d > 0 ? d + 'j ' : '') + pad(h) + ':' + pad(m) + ':' + pad(sec);
+      if(labelEl) labelEl.textContent = s.ev.name.toUpperCase() + ' — ' + s.ev.cat;
+      if(whenEl && fmt) whenEl.textContent = 'Session : ' + fmt.format(new Date(s.t)) + ' (heure locale)';
     }
     tick();
     setInterval(tick, 1000);
@@ -1625,53 +1688,6 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
     showMoreBtn.style.display = 'none';
   });
 
-  // Order modal
-  function openOrder(name, price){
-    document.getElementById('modalProductLine').textContent = name + ' — ' + price;
-    document.getElementById('ofProduct').value = name + ' — ' + price;
-    document.getElementById('orderModal').classList.add('open');
-    document.getElementById('orderForm').style.display = 'block';
-    document.getElementById('orderSuccess').classList.remove('show');
-    document.getElementById('orderFormEl').reset();
-  }
-  function closeOrder(){
-    document.getElementById('orderModal').classList.remove('open');
-  }
-  document.getElementById('orderModal').addEventListener('click', (e) => {
-    if(e.target.id === 'orderModal') closeOrder();
-  });
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') closeOrder();
-  });
-
-  function submitOrder(e){
-    e.preventDefault();
-    const form = document.getElementById('orderFormEl');
-    const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.textContent = 'Envoi en cours…';
-    submitBtn.disabled = true;
-
-    fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
-    })
-    .then(response => {
-      if(response.ok){
-        document.getElementById('orderForm').style.display = 'none';
-        document.getElementById('orderSuccess').classList.add('show');
-      } else {
-        alert("La commande n'a pas pu être envoyée. Réessaie, ou écris-nous directement à montrealracingteam@gmail.com");
-      }
-    })
-    .catch(() => {
-      alert("Erreur de connexion. Réessaie, ou écris-nous directement à montrealracingteam@gmail.com");
-    })
-    .finally(() => {
-      submitBtn.textContent = 'Envoyer la commande';
-      submitBtn.disabled = false;
-    });
-  }
 
   // Petits visuels SVG réutilisables (pour les articles sans photo)
   const SVG_LIVERY = `<svg viewBox="0 0 400 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
