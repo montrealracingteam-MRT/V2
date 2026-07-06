@@ -7,17 +7,18 @@
 
 <!-- ===========================================================================
      SEO + APERÇUS DE PARTAGE (Open Graph / Twitter)
-     La vignette og-image.png (1200x630), favicon.ico et apple-touch-icon.png
-     doivent être à la racine du site. og:image doit rester une URL ABSOLUE.
+     Seul le fichier og-image.png (1200x630) doit être à la racine du site
+     (le favicon et le logo du menu sont déjà intégrés / pointent vers
+     mrt-logo.png). og:image doit rester une URL ABSOLUE.
      =========================================================================== -->
 <meta name="description" content="Montreal Racing Team (MRT) — écurie esport de sim racing d'endurance sur Le Mans Ultimate : Hypercar, LMP2, LMP3 et LMGT3. Actualités, calendrier, résultats, boutique et partenaires.">
 <link rel="canonical" href="https://montrealracingteam.ca/">
 <meta name="theme-color" content="#0057FF">
 
-<!-- Favicon (onglet du navigateur) -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230057FF'/%3E%3Cstop offset='1' stop-color='%230A1128'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='256' height='256' rx='52' fill='url(%23g)'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' dominant-baseline='central' font-family='Arial,sans-serif' font-weight='900' font-size='170' fill='%23F4F6FB'%3EM%3C/text%3E%3Ccircle cx='196' cy='196' r='18' fill='%23CE1126'/%3E%3C/svg%3E">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- Favicon (onglet du navigateur) — logo officiel MRT, intégré directement
+     dans la page (aucun fichier séparé à uploader). -->
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="/mrt-logo.png">
 
 <!-- Open Graph (Facebook, Instagram, Discord, LinkedIn…) -->
 <meta property="og:type" content="website">
@@ -135,6 +136,8 @@
     letter-spacing:0.04em;
     display:flex;align-items:center;gap:10px;
   }
+  .nav-logo-img{height:26px;width:auto;display:block;}
+  .footer-brand .nav-logo-img{height:34px;}
   .nav-logo .num{
     font-family:var(--mono);
     font-size:12px;
@@ -937,7 +940,7 @@
 <body>
 
 <nav class="nav" id="nav">
-  <div class="nav-logo">MONTREAL <span class="num">MRT</span></div>
+  <div class="nav-logo"><img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT"></div>
   <div class="nav-links">
     <a href="#news">Actualités</a>
     <a href="#merch">Boutique</a>
@@ -1521,7 +1524,7 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="nav-logo">MONTREAL <span class="num">MRT</span></div>
+        <div class="nav-logo"><img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT"></div>
         <p>Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.</p>
       </div>
       <div class="footer-cols">
