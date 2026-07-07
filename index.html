@@ -15,8 +15,11 @@
 <link rel="canonical" href="https://montrealracingteam.ca/">
 <meta name="theme-color" content="#0057FF">
 
-<!-- Favicon (onglet du navigateur) — logo officiel MRT, intégré directement
-     dans la page (aucun fichier séparé à uploader). -->
+<!-- Favicon — logo officiel MRT.
+     favicon.ico est un VRAI fichier à la racine : indispensable pour que Google
+     affiche le logo dans les résultats de recherche (Google ne lit pas les
+     favicons intégrés en base64). Le PNG inline est un secours navigateur. -->
+<link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <link rel="apple-touch-icon" href="/mrt-logo.png">
 
@@ -150,6 +153,8 @@
   .nav-links{display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;}
   .nav-links a{position:relative;color:var(--mrt-fog);transition:color .25s;padding:4px 0;}
   .nav-links a:hover{color:var(--mrt-white);}
+  .lang-toggle{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0.08em;color:var(--mrt-white);background:rgba(0,87,255,0.14);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all .2s;margin-left:18px;}
+  .lang-toggle:hover{background:var(--mrt-blue);border-color:var(--mrt-blue);}
   .nav-links a::after{
     content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--mrt-blue);
     transition:width .25s ease;
@@ -949,6 +954,7 @@
     <a href="#social">Communauté</a>
   </div>
   <a href="#merch" class="nav-cta">Boutique →</a>
+  <button id="langToggle" class="lang-toggle" type="button" aria-label="Language / Langue">EN</button>
   <button class="nav-toggle" aria-label="Menu">☰</button>
 </nav>
 
@@ -1626,12 +1632,16 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
     SESSIONS.sort((a, b) => a.t - b.t);
 
     const pad = n => String(n).padStart(2, '0');
-    let fmt;
+    let fmtFr, fmtEn;
     try {
-      fmt = new Intl.DateTimeFormat('fr-CA', {
-        weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'
-      });
-    } catch(e) { fmt = null; }
+      const opt = { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' };
+      fmtFr = new Intl.DateTimeFormat('fr-CA', opt);
+      fmtEn = new Intl.DateTimeFormat('en-CA', opt);
+    } catch(e) { fmtFr = fmtEn = null; }
+    const curLang = () => (document.documentElement.lang === 'en' ? 'en' : 'fr');
+    const evName = (ev, lang) => lang !== 'en' ? ev.name : ev.name
+        .replace('Heures','Hours').replace(" d'"," of ").replace(' de ',' of ')
+        .replace('(circuit à confirmer)','(track TBA)').replace('Bahreïn','Bahrain');
 
     function nextSession(now){
       for(const s of SESSIONS){ if(s.t > now) return s; }
@@ -1643,7 +1653,7 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
       const s = nextSession(now);
       if(!s){
         el.textContent = '—';
-        if(labelEl) labelEl.textContent = "Saison 2026 terminée — à l'an prochain";
+        if(labelEl) labelEl.textContent = curLang()==='en' ? 'Season 2026 finished — see you next year' : "Saison 2026 terminée — à l'an prochain";
         if(whenEl) whenEl.textContent = '';
         return;
       }
@@ -1653,8 +1663,10 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
       const m = Math.floor(diff % 3600000 / 60000);
       const sec = Math.floor(diff % 60000 / 1000);
       el.textContent = (d > 0 ? d + 'j ' : '') + pad(h) + ':' + pad(m) + ':' + pad(sec);
-      if(labelEl) labelEl.textContent = s.ev.name.toUpperCase() + ' — ' + s.ev.cat;
-      if(whenEl && fmt) whenEl.textContent = 'Session : ' + fmt.format(new Date(s.t)) + ' (heure locale)';
+      const lang = curLang();
+      if(labelEl) labelEl.textContent = evName(s.ev, lang).toUpperCase() + ' — ' + s.ev.cat;
+      const f = lang==='en' ? fmtEn : fmtFr;
+      if(whenEl && f) whenEl.textContent = (lang==='en' ? 'Session: ' : 'Session : ') + f.format(new Date(s.t)) + (lang==='en' ? ' (local time)' : ' (heure locale)');
     }
     tick();
     setInterval(tick, 1000);
@@ -2095,6 +2107,60 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
 <!-- Script officiel Instagram : transforme automatiquement les <blockquote class="instagram-media">
      plus haut en vraies publications affichées (image, légende, likes). Se charge une seule fois. -->
 <script async src="https://www.instagram.com/embed.js"></script>
+
+
+<!-- ===========================================================================
+     BILINGUE FR / EN — bouton dans le menu (#langToggle).
+     Traduit les textes du site via un dictionnaire (nœuds de texte), mémorise
+     le choix (localStorage) et détecte la langue du navigateur au 1er passage.
+     Pour ajouter/modifier une traduction : édite l'objet T ci-dessous.
+     =========================================================================== -->
+<script>
+(function(){
+  var T = {"Découvrir la boutique →": "Discover the shop →", "Voir les gants →": "See the gloves →", "Ils soutiennent l'écurie →": "They support the team →", "SUIVEZ L'ÉQUIPE": "FOLLOW THE TEAM", "Vous préférez ?": "Prefer that?", "Suivez-nous directement sur Instagram →": "Follow us directly on Instagram →","Actualités": "News", "Boutique": "Shop", "Partenaires": "Partners", "Communauté": "Community", "Boutique →": "Shop →", "ÉCURIE DE MONTRÉAL — LE MANS ULTIMATE": "MONTREAL TEAM — LE MANS ULTIMATE", "Endurance, précision, vitesse pure. L'équipe MRT affronte les meilleurs sur Le Mans Ultimate, en Hypercar, LMP2, LMP3 et LMGT3.": "Endurance, precision, pure speed. Team MRT takes on the best on Le Mans Ultimate, in Hypercar, LMP2, LMP3 and LMGT3.", "Voir les actualités": "View the news", "Boutique MRT": "MRT Shop", "PROCHAINE SESSION": "NEXT SESSION", "01 — CLASSE REINE": "01 — TOP CLASS", "Le sommet de l'endurance virtuelle.": "The pinnacle of virtual endurance.", "Vitesse brute, gestion de stratégie.": "Raw speed, strategy management.", "03 — ENTRÉE PRO": "03 — PRO ENTRY", "Le tremplin vers l'élite MRT.": "The springboard to the MRT elite.", "Pilotage technique, courses serrées.": "Technical driving, close racing.", "Dernières": "Latest", "actualités": "news", "Toutes les actualités →": "All news →", "● CE WEEK-END": "● THIS WEEKEND", "ÉVÉNEMENT": "EVENT", "Portimão — Course solo Hypercar & LMGT3": "Portimão — Solo Hypercar & LMGT3 race", "Nos pilotes prennent le départ ce week-end sur le circuit de Portimão, en Hypercar et LMGT3 : format solo, courses de 100 minutes, splits de 44 voitures, setup libre et sans couvertures chauffantes.": "Our drivers line up this weekend at Portimão, in Hypercar and LMGT3: solo format, 100-minute races, 44-car splits, open setup and no tyre blankets.", "Lire l'article →": "Read the article →", "À la une": "Featured", "● Bientôt": "● Soon", "Événement": "Event", "24H du Mans Virtuelles": "Virtual 24H of Le Mans", "Trois châssis engagés pour la deuxième manche d'endurance.": "Three cars entered for the second endurance round.", "Résultat": "Result", "Podium en LMP3 à Spa": "LMP3 podium at Spa", "2ᵉ place après une remontée maîtrisée dans les Ardennes.": "2nd place after a controlled charge in the Ardennes.", "Annonce": "Announcement", "Nouvelle livery SDL dévoilée": "New SDL livery revealed", "La robe 2026 de notre Hypercar signée Seex Design Liveries.": "Our Hypercar's 2026 design by Seex Design Liveries.", "Toute l'actualité de l'écurie": "All the team's news", "— et l'actu du monde racing (F1, WEC, sim racing).": "— plus racing world news (F1, WEC, sim racing).", "Voir toutes les actualités →": "See all news →", "Partenaire matériel officiel": "Official hardware partner", "Pilote comme l'équipe MRT": "Race like Team MRT", "avec Advanced Sim Racing": "with Advanced Sim Racing", "Volants · pédaliers · bases direct drive — l'équipement de nos pilotes.": "Wheels · pedals · direct-drive bases — our drivers' gear.", "Bientôt disponible": "Coming soon", "La boutique officielle MRT arrive bientôt. Voici un aperçu de ce qui vous attendra — maillots, casquettes et accessoires aux couleurs de l'écurie.": "The official MRT shop is coming soon. Here's a preview of what awaits — jerseys, caps and accessories in the team's colours.", "Nouveau": "New", "Maillot course MRT 2026": "MRT 2026 race jersey", "Réplique de la combinaison d'équipe, bleu signature.": "Replica of the team suit, signature blue.", "Casquette MRT": "MRT cap", "Broderie 3D, ajustable, bleu/blanc.": "3D embroidery, adjustable, blue/white.", "Hoodie Endurance": "Endurance hoodie", "Coton lourd, logo brodé, doublure polaire.": "Heavy cotton, embroidered logo, fleece lining.", "Pack autocollants liveries": "Livery sticker pack", "6 designs SDL, vinyle résistant aux intempéries.": "6 SDL designs, weatherproof vinyl.", "Voir SDL sur Instagram →": "See SDL on Instagram →", "Toutes": "All", "+ Voir les 7 autres châssis": "+ See the 7 other cars", "Partenaire officiel — Gants": "Official partner — Gloves", "Le grip de nos pilotes": "Our drivers' grip", "avec Moradness": "with Moradness", "Gants de sim racing haute performance — précision et confort à chaque tour.": "High-performance sim racing gloves — precision and comfort every lap.", "Nos": "Our", "partenaires": "partners", "Matériel de course officiel": "Official race hardware", "Gants de sim racing officiels": "Official sim racing gloves", "Designer officiel de l'écurie": "Official team designer", "Pâtisserie-boulangerie · Montréal": "Bakery-pastry · Montreal", "En savoir plus →": "Learn more →", "La communauté": "The community", "Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.": "Sim racing team based in Montreal, competing in endurance on Le Mans Ultimate.", "Équipe": "Team", "Catalogue": "Catalog", "Suivi de commande": "Order tracking", "← Retour au site": "← Back to site", "Actualités MRT": "MRT News", "L'écurie MRT": "Team MRT", "Résultats, événements, annonces et recrutement — toute la vie de l'équipe #514.": "Results, events, announcements and recruitment — all of team #514's life.", "Le paddock mondial": "The global paddock", "Actualité du monde racing": "Racing world news", "Les grands rendez-vous du sport auto et du sim racing — Formule 1, endurance WEC et championnats esport.": "The big events in motorsport and sim racing — Formula 1, WEC endurance and esport championships.", "Formule 1": "Formula 1", "Résultats, calendrier et actualités officielles du championnat du monde de Formule 1.": "Official results, calendar and news of the Formula 1 World Championship.", "Ouvrir F1.com →": "Open F1.com →", "Le championnat du monde d'endurance FIA : Hypercar, LMGT3, 24 Heures du Mans et plus.": "The FIA World Endurance Championship: Hypercar, LMGT3, 24 Hours of Le Mans and more.", "Ouvrir le WEC →": "Open the WEC →", "L'actualité de la plateforme officielle sur laquelle l'écurie MRT dispute ses courses.": "News from the official platform on which team MRT races.", "Site officiel →": "Official site →", "Toute l'actu": "All the news", "L'actualité au jour le jour de tous les sports mécaniques : F1, endurance, esport et plus.": "Day-to-day news from all of motorsport: F1, endurance, esport and more.", "Lire les news →": "Read the news →"};
+  var TITLE = {"fr": "Montreal Racing Team — MRT | Sim racing d'endurance sur Le Mans Ultimate", "en": "Montreal Racing Team — MRT | Endurance sim racing on Le Mans Ultimate"};
+  var SKIP = {SCRIPT:1, STYLE:1, NOSCRIPT:1};
+  var nodes = [];
+  function collect(){
+    nodes = [];
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        if(SKIP[n.parentNode && n.parentNode.nodeName]) return NodeFilter.FILTER_REJECT;
+        var k = n.nodeValue.trim();
+        return (k && Object.prototype.hasOwnProperty.call(T,k)) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var n;
+    while((n = w.nextNode())){
+      var raw = n.nodeValue, k = raw.trim(), i = raw.indexOf(k);
+      nodes.push({node:n, fr:raw, en: raw.slice(0,i) + T[k] + raw.slice(i+k.length)});
+    }
+  }
+  function apply(lang){
+    for(var i=0;i<nodes.length;i++){ nodes[i].node.nodeValue = (lang==='en') ? nodes[i].en : nodes[i].fr; }
+    document.documentElement.lang = lang;
+    if(TITLE[lang]) document.title = TITLE[lang];
+    var b = document.getElementById('langToggle');
+    if(b) b.textContent = (lang==='en') ? 'FR' : 'EN';
+    try{ localStorage.setItem('mrt_lang', lang); }catch(e){}
+    window.MRT_LANG = lang;
+  }
+  function initLang(){
+    var l = null;
+    try{ l = localStorage.getItem('mrt_lang'); }catch(e){}
+    if(!l){ l = (navigator.language||'fr').toLowerCase().indexOf('en')===0 ? 'en' : 'fr'; }
+    return (l==='en') ? 'en' : 'fr';
+  }
+  function boot(){
+    collect();
+    apply(initLang());
+    var b = document.getElementById('langToggle');
+    if(b) b.addEventListener('click', function(){ apply(document.documentElement.lang==='en' ? 'fr' : 'en'); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
 
 </body>
 </html>
