@@ -1,0 +1,27 @@
+{
+  "results": [
+    { "cat": "Hypercar", "cls": "silver", "pos": "2ᵉ place", "event": "4h d'Interlagos", "split": "split 2/6", "num": "#418", "drivers": "🇨🇦 Olivier Richard", "car": "Aston Martin Valkyrie AMR LMH" },
+    { "cat": "Hypercar", "cls": "silver", "pos": "2ᵉ place", "event": "12h du Mans", "split": "split 7/15", "num": "#418", "drivers": "🇨🇦 Olivier Richard · 🇫🇷 Cyril Fortin", "car": "Aston Martin Valkyrie AMR LMH" },
+    { "cat": "LMP2", "cls": "gold", "pos": "Victoire", "event": "4h de Spa", "split": "split 1/1", "num": "#450", "drivers": "🇨🇦 Olivier Richard · 🇨🇦 Philippe Brazeau", "car": "Oreca 07-Gibson" },
+    { "cat": "LMP2", "cls": "silver", "pos": "2ᵉ place", "event": "6h du Mans", "split": "split 1/2", "num": "#450", "drivers": "🇫🇷 Tom Bigotte · 🇨🇦 Philippe Brazeau", "car": "Oreca 07-Gibson" },
+    { "cat": "LMGT3", "cls": "bronze", "pos": "3ᵉ place", "event": "4h de COTA", "split": "split 3/4", "num": "#263", "drivers": "🇨🇦 Louis Gendron", "car": "Lexus RC F LMGT3" },
+    { "cat": "LMGT3", "cls": "bronze", "pos": "3ᵉ place", "event": "4h de COTA", "split": "split 2/2", "num": "#438", "drivers": "🇨🇦 Mathieu Murray", "car": "Lexus RC F LMGT3" },
+    { "cat": "LMGT3", "cls": "bronze", "pos": "3ᵉ place", "event": "4h de Sebring", "split": "split 2/4", "num": "#263B", "drivers": "🇨🇦 Louis Gendron", "car": "Lexus RC F LMGT3" },
+    { "cat": "LMGT3", "cls": "silver", "pos": "2ᵉ place", "event": "4h de Sebring", "split": "split 2/5", "num": "#263", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "LMGT3", "cls": "gold", "pos": "Victoire", "event": "4h de Barcelone", "split": "split 1/1", "num": "#514", "drivers": "🇫🇷 Cyril Fortin · 🇨🇦 Mathieu Murray", "car": "Lexus RC F LMGT3" },
+    { "cat": "LMGT3", "cls": "bronze", "pos": "3ᵉ place", "event": "6h d'Imola", "split": "split 1/1", "num": "#263", "drivers": "🇨🇦 Dan Poulin · 🇨🇦 Philippe Brazeau", "car": "Ford Mustang LMGT3" },
+    { "cat": "LMGT3", "cls": "silver", "pos": "2ᵉ place", "event": "6h du Mans", "split": "split 1/3", "num": "#514", "drivers": "🇲🇶 Karl Contout · 🇨🇦 Joel Livernois", "car": "Porsche 911 LMGT3 R" },
+    { "cat": "Championnats", "cls": "gold", "pos": "Victoire", "event": "1h de Portimão", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "silver", "pos": "2ᵉ place", "event": "1h de Sebring", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "bronze", "pos": "3ᵉ au général", "event": "OOFS Racing — Season 3 Sprint", "split": "Championnat", "num": "", "drivers": "🇫🇷 Cyril Fortin", "car": "Porsche 911 LMGT3 R" },
+    { "cat": "Championnats", "cls": "silver", "pos": "2ᵉ place", "event": "1h de Spa", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "silver", "pos": "2ᵉ place", "event": "Race 6 — COTA", "split": "Simu Nation LMGT3 Masters (Nox Gaming)", "num": "", "drivers": "🇫🇷 Cyril Fortin", "car": "Lexus RC F LMGT3" },
+    { "cat": "Championnats", "cls": "silver", "pos": "2ᵉ place", "event": "1h de Fuji", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "gold", "pos": "Victoire", "event": "1h de Monza", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "gold", "pos": "Victoire", "event": "1h30 du Mans", "split": "The PRO/AM Le Mans Series by MRT", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "champ", "pos": "Champion", "event": "The PRO/AM Le Mans Series by MRT", "split": "Titre de la série", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "bronze", "pos": "3ᵉ place", "event": "OOFS Racing — Season 4 Sprint · R5", "split": "Championnat", "num": "", "drivers": "🇨🇦 Mathieu Murray", "car": "BMW M4 LMGT3 Evo" },
+    { "cat": "Championnats", "cls": "gold", "pos": "Victoire", "event": "2.4 Hours of Le Mans", "split": "OOFS Racing", "num": "", "drivers": "🇲🇶 Karl Contout", "car": "Porsche 911 LMGT3 R" },
+    { "cat": "Championnats", "cls": "silver", "pos": "2ᵉ place", "event": "2.4 Hours of Le Mans", "split": "OOFS Racing", "num": "", "drivers": "🇨🇦 Louis Gendron", "car": "Porsche 911 LMGT3 R" }
+  ]
+}
