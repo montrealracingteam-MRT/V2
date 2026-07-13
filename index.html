@@ -308,7 +308,7 @@
   }
   .btn-primary{background:var(--mrt-blue);color:#fff;}
   .btn-primary:hover{background:var(--mrt-blue-deep);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,87,255,0.35);}
-  .btn-ghost{border-color:var(--line-strong);color:var(--mrt-white);}
+  .btn-ghost{border-color:var(--line-strong);color:var(--mrt-white);background:transparent;}
   .btn-ghost:hover{border-color:var(--mrt-white);background:rgba(255,255,255,0.05);}
 
   .hero-timing{
@@ -436,7 +436,7 @@
 
   /* ===== NEWS — grand encadré + liste "À la une" + CTA ===== */
   .news-layout{
-    display:grid;grid-template-columns:1.55fr 1fr;gap:2px;
+    display:grid;grid-template-columns:1fr;gap:2px;
     background:var(--line);border:1px solid var(--line);
   }
   .news-feature{
@@ -977,6 +977,18 @@
   .result-car{font-size:12.5px;color:var(--mrt-fog);}
   @media (max-width:820px){.palmares-stats{grid-template-columns:repeat(2,1fr);}.pstat-num{font-size:48px;}.palmares-list{grid-template-columns:1fr;}}
 
+  /* ===== À PROPOS ===== */
+  .about-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:54px;align-items:start;}
+  .about-text .eyebrow{margin-bottom:14px;}
+  .about-text h2{margin-bottom:22px;}
+  .about-lead{font-size:20px;line-height:1.55;color:var(--mrt-white);font-weight:600;margin-bottom:20px;}
+  .about-body{font-size:15px;line-height:1.75;color:var(--mrt-fog);margin-bottom:16px;}
+  .about-facts{display:flex;flex-direction:column;gap:2px;background:var(--line);border:1px solid var(--line);}
+  .fact{background:var(--mrt-panel);padding:22px 24px;background-image:repeating-linear-gradient(115deg,transparent 0 46px,rgba(0,87,255,0.05) 46px 48px,transparent 48px 96px);}
+  .fact-label{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:6px;}
+  .fact-value{font-family:var(--body);font-weight:700;font-size:17px;color:var(--mrt-white);line-height:1.35;}
+  @media (max-width:820px){.about-grid{grid-template-columns:1fr;gap:30px;}}
+
 </style>
 </head>
 <body>
@@ -984,6 +996,7 @@
 <nav class="nav" id="nav">
   <div class="nav-logo"><img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT"></div>
   <div class="nav-links">
+    <a href="#about">À propos</a>
     <a href="#news">Actualités</a>
     <a href="#merch">Boutique</a>
     <a href="#gallery">Liveries</a>
@@ -1091,6 +1104,27 @@
   </div>
 </section>
 
+<!-- ===== À PROPOS ===== -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="eyebrow">L'écurie</div>
+        <h2>À propos<br>de MRT</h2>
+        <p class="about-lead">La MRT est une écurie québécoise de sim racing spécialisée sur Le Mans Ultimate, avec l'ambition de représenter le Québec et la communauté francophone sur la scène de l'endurance virtuelle.</p>
+        <p class="about-body">Fondée en décembre 2025 par deux amis, l'écurie réunit des pilotes passionnés dans un cadre structuré et convivial, centré sur la progression et le plaisir de la course. Nous évoluons au fil des compétitions d'endurance en développant notre niveau et notre cohésion.</p>
+        <p class="about-body">Notre objectif : faire rayonner le sim racing francophone, tout en offrant à nos pilotes une expérience sérieuse, motivante et enrichissante.</p>
+      </div>
+      <div class="about-facts reveal">
+        <div class="fact"><div class="fact-label">Fondée</div><div class="fact-value">Décembre 2025</div></div>
+        <div class="fact"><div class="fact-label">Basée</div><div class="fact-value">Québec, Canada</div></div>
+        <div class="fact"><div class="fact-label">Discipline</div><div class="fact-value">Endurance · Le Mans Ultimate</div></div>
+        <div class="fact"><div class="fact-label">Mission</div><div class="fact-value">Faire rayonner le sim racing francophone</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== NEWS ===== -->
 <section class="section" id="news">
   <div class="wrap">
@@ -1114,35 +1148,6 @@
           <span class="news-cta-inline">Lire l'article →</span>
         </div>
       </article>
-
-      <!-- Liste "À la une" (image + micro-description, cliquable) -->
-      <div class="news-side">
-        <div class="news-side-head">À la une</div>
-        <div class="news-side-item" onclick="openArticle('mans24')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openArticle('mans24')">
-          <div class="news-side-thumb"><img data-news="mans24_hero" alt="24H du Mans Virtuelles"></div>
-          <div class="news-side-txt">
-            <div class="n-meta"><span class="live">● Bientôt</span> Événement</div>
-            <h4>24H du Mans Virtuelles</h4>
-            <p class="n-desc">Trois châssis engagés pour la deuxième manche d'endurance.</p>
-          </div>
-        </div>
-        <div class="news-side-item" onclick="openArticle('podiumSpa')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openArticle('podiumSpa')">
-          <div class="news-side-thumb"><img data-news="spa_lmp3" alt="Podium LMP3 à Spa"></div>
-          <div class="news-side-txt">
-            <div class="n-meta">Résultat</div>
-            <h4>Podium en LMP3 à Spa</h4>
-            <p class="n-desc">2ᵉ place après une remontée maîtrisée dans les Ardennes.</p>
-          </div>
-        </div>
-        <div class="news-side-item" onclick="openArticle('liverySdl')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openArticle('liverySdl')">
-          <div class="news-side-thumb"><img data-car="genesis_hypercar" alt="Nouvelle livery Hypercar"></div>
-          <div class="news-side-txt">
-            <div class="n-meta">Annonce</div>
-            <h4>Nouvelle livery SDL dévoilée</h4>
-            <p class="n-desc">La robe 2026 de notre Hypercar signée Seex Design Liveries.</p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- CTA vers la page « Toutes les actualités » -->
@@ -1195,7 +1200,7 @@
       <span class="view-all view-all--soon">Bientôt disponible</span>
     </div>
 
-    <p class="merch-intro reveal">La boutique officielle MRT arrive bientôt. Voici un aperçu de ce qui vous attendra — maillots, casquettes et accessoires aux couleurs de l'écurie.</p>
+    <p class="merch-intro reveal">La boutique officielle MRT arrive bientôt. Restez à l'affût !</p>
 
     <div class="merch-grid reveal">
 
@@ -1690,7 +1695,7 @@
     <h2>La communauté<br>MRT</h2>
     <div class="social-handles">
       <a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener">Instagram — @montrealracingteam</a>
-      <a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook — MRT Esports</a>
+      <a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook — Montreal Racing Team</a>
     </div>
   </div>
 
@@ -2036,51 +2041,6 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
         <p>Sans couvertures chauffantes, les premiers tours sur pneus froids seront décisifs : nos équipages viseront la régularité et une gestion propre pour tirer le maximum des 10 trains disponibles. Suivez leurs résultats en direct sur notre Instagram tout le week-end.</p>
       `
     },
-    mans24: {
-      meta: '<span class="live">● EN DIRECT BIENTÔT</span> ÉVÉNEMENT',
-      title: '24H du Mans Virtuelles — Stage 2',
-      date: 'Prochaine course · Circuit de la Sarthe',
-      imgKey: 'mans24_hero',
-      content: `
-        <p>L'équipe MRT prend la piste avec ses trois châssis Hypercar, LMP2 et LMGT3 pour la deuxième manche de la saison d'endurance sur Le Mans Ultimate. Douze heures de course virtuelle, trois équipages, un seul objectif : ramener les trois voitures à l'arrivée.</p>
-        <p>La stratégie de relais a été ajustée après le premier stage : stints plus courts en LMGT3 pour préserver les pneus dans les longues lignes droites de la Sarthe, et une stratégie de carburant plus agressive en Hypercar pour profiter de la fenêtre météo prévue en début de nuit.</p>
-        <p><strong>Programme du week-end :</strong> essais libres le vendredi, qualifications samedi matin, départ de la course samedi 14h. Les trois équipages se relaieront par doubles relais pour tenir la distance.</p>
-        <p>Suivez les mises à jour en direct sur notre Instagram pendant la course, et le compte-rendu complet sera publié ici dès le drapeau à damier.</p>
-      `
-    },
-    podiumSpa: {
-      meta: 'RÉSULTAT',
-      title: 'Podium en LMP3 à Spa',
-      date: 'Résultat de course · Spa-Francorchamps',
-      imgKey: 'spa_lmp3',
-      content: `
-        <p>Une course propre et constante place l'équipage MRT sur la deuxième marche du podium à Spa-Francorchamps. Partis P5 sur la grille, nos pilotes ont grignoté les positions une à une grâce à une gestion de pneus exemplaire dans le secteur des Ardennes.</p>
-        <p>Le moment clé de la course est survenu au tour 22, lorsqu'un relais sous drapeau jaune virtuel a permis de prendre l'avantage stratégique sur la voiture P3. À partir de là, l'écart s'est maintenu jusqu'au drapeau à damier.</p>
-        <p>Une belle confirmation de la progression du programme LMP3 cette saison — direction la prochaine manche avec confiance.</p>
-      `
-    },
-    liverySdl: {
-      meta: 'ANNONCE',
-      title: 'Nouvelle livery SDL dévoilée',
-      date: 'Annonce design · Seex Design Liveries',
-      svg: SVG_LIVERY,
-      content: `
-        <p>Seex Design Liveries présente la robe 2026 de notre Hypercar. La nouvelle livrée conserve l'identité bleu signature de MRT tout en introduisant des bandes diagonales blanches inspirées des lignes de course, pour un look plus dynamique en piste comme en photo.</p>
-        <p>Le travail de SDL met l'accent sur la lisibilité des numéros et sponsors à haute vitesse, tout en gardant la silhouette du châssis bien mise en valeur sous tous les angles de caméra du jeu.</p>
-        <p>Cette livrée fera ses débuts officiels lors de la prochaine manche ELMS. Le design complet sera disponible en téléchargement pour les membres de l'équipe.</p>
-      `
-    },
-    recrutement: {
-      meta: 'RECRUTEMENT',
-      title: 'Essais ouverts — pilotes LMGT3',
-      date: 'Recrutement · Saison 2026',
-      imgKey: 'lexus_rcf',
-      content: `
-        <p>MRT cherche deux pilotes pour compléter l'équipage GT3 cette saison. On recherche des pilotes sérieux, disponibles pour l'entraînement en semaine et les courses d'endurance les week-ends, avec une bonne compréhension de la gestion de course longue distance.</p>
-        <p>Les essais se dérouleront sur Le Mans Ultimate, format qualification chronométrée suivie d'un relais d'équipe simulé. Aucune expérience compétitive préalable n'est exigée, mais la régularité et la communication radio seront évaluées au même titre que le chrono.</p>
-        <p>Intéressé? Écris-nous à montrealracingteam@gmail.com avec ton meilleur temps au tour sur Spa-Francorchamps en LMGT3.</p>
-      `
-    },
     // ----- FICHES PARTENAIRES -----
     asr: {
       meta: 'PARTENAIRE OFFICIEL',
@@ -2199,7 +2159,7 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
   // Les communiqués de presse Discord (voir plus bas) s'ajoutent devant,
   // automatiquement, sans toucher à cette liste.
   // ===========================================================================
-  const STATIC_NEWS_ORDER = ['portimao','mans24','podiumSpa','liverySdl','recrutement'];
+  const STATIC_NEWS_ORDER = ['portimao'];
   let NEWS_ORDER = STATIC_NEWS_ORDER.slice();
 
   function renderAllNews(){
@@ -2374,7 +2334,15 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
      =========================================================================== -->
 <script>
 (function(){
-  var T = {"Voir le détail →":"View details →","Palmarès": "Track record", "Saison en cours": "Ongoing season", "Les résultats de l'écurie MRT cette saison — en endurance et en championnat.": "Team MRT's results this season — in endurance and championship racing.", "Victoires": "Wins", "Titre de champion": "Champion title", "Pilotes": "Drivers", "Tout": "All", "Championnats": "Championships", "Championnat": "Championship", "Victoire": "Win", "2ᵉ place": "2nd place", "3ᵉ place": "3rd place", "3ᵉ au général": "3rd overall", "Titre de la série": "Series title","Découvrir la boutique →": "Discover the shop →", "Voir les gants →": "See the gloves →", "Ils soutiennent l'écurie →": "They support the team →", "SUIVEZ L'ÉQUIPE": "FOLLOW THE TEAM", "Vous préférez ?": "Prefer that?", "Suivez-nous directement sur Instagram →": "Follow us directly on Instagram →","Actualités": "News", "Boutique": "Shop", "Partenaires": "Partners", "Communauté": "Community", "Boutique →": "Shop →", "ÉCURIE DE MONTRÉAL — LE MANS ULTIMATE": "MONTREAL TEAM — LE MANS ULTIMATE", "Endurance, précision, vitesse pure. L'équipe MRT affronte les meilleurs sur Le Mans Ultimate, en Hypercar, LMP2, LMP3 et LMGT3.": "Endurance, precision, pure speed. Team MRT takes on the best on Le Mans Ultimate, in Hypercar, LMP2, LMP3 and LMGT3.", "Voir les actualités": "View the news", "Boutique MRT": "MRT Shop", "PROCHAINE SESSION": "NEXT SESSION", "01 — CLASSE REINE": "01 — TOP CLASS", "Le sommet de l'endurance virtuelle.": "The pinnacle of virtual endurance.", "Vitesse brute, gestion de stratégie.": "Raw speed, strategy management.", "03 — ENTRÉE PRO": "03 — PRO ENTRY", "Le tremplin vers l'élite MRT.": "The springboard to the MRT elite.", "Pilotage technique, courses serrées.": "Technical driving, close racing.", "Dernières": "Latest", "actualités": "news", "Toutes les actualités →": "All news →", "● CE WEEK-END": "● THIS WEEKEND", "ÉVÉNEMENT": "EVENT", "Portimão — Course solo Hypercar & LMGT3": "Portimão — Solo Hypercar & LMGT3 race", "Nos pilotes prennent le départ ce week-end sur le circuit de Portimão, en Hypercar et LMGT3 : format solo, courses de 100 minutes, splits de 44 voitures, setup libre et sans couvertures chauffantes.": "Our drivers line up this weekend at Portimão, in Hypercar and LMGT3: solo format, 100-minute races, 44-car splits, open setup and no tyre blankets.", "Lire l'article →": "Read the article →", "À la une": "Featured", "● Bientôt": "● Soon", "Événement": "Event", "24H du Mans Virtuelles": "Virtual 24H of Le Mans", "Trois châssis engagés pour la deuxième manche d'endurance.": "Three cars entered for the second endurance round.", "Résultat": "Result", "Podium en LMP3 à Spa": "LMP3 podium at Spa", "2ᵉ place après une remontée maîtrisée dans les Ardennes.": "2nd place after a controlled charge in the Ardennes.", "Annonce": "Announcement", "Nouvelle livery SDL dévoilée": "New SDL livery revealed", "La robe 2026 de notre Hypercar signée Seex Design Liveries.": "Our Hypercar's 2026 design by Seex Design Liveries.", "Toute l'actualité de l'écurie": "All the team's news", "— et l'actu du monde racing (F1, WEC, sim racing).": "— plus racing world news (F1, WEC, sim racing).", "Voir toutes les actualités →": "See all news →", "Partenaire matériel officiel": "Official hardware partner", "Pilote comme l'équipe MRT": "Race like Team MRT", "avec Advanced Sim Racing": "with Advanced Sim Racing", "Volants · pédaliers · bases direct drive — l'équipement de nos pilotes.": "Wheels · pedals · direct-drive bases — our drivers' gear.", "Bientôt disponible": "Coming soon", "La boutique officielle MRT arrive bientôt. Voici un aperçu de ce qui vous attendra — maillots, casquettes et accessoires aux couleurs de l'écurie.": "The official MRT shop is coming soon. Here's a preview of what awaits — jerseys, caps and accessories in the team's colours.", "Nouveau": "New", "Maillot course MRT 2026": "MRT 2026 race jersey", "Réplique de la combinaison d'équipe, bleu signature.": "Replica of the team suit, signature blue.", "Casquette MRT": "MRT cap", "Broderie 3D, ajustable, bleu/blanc.": "3D embroidery, adjustable, blue/white.", "Hoodie Endurance": "Endurance hoodie", "Coton lourd, logo brodé, doublure polaire.": "Heavy cotton, embroidered logo, fleece lining.", "Pack autocollants liveries": "Livery sticker pack", "6 designs SDL, vinyle résistant aux intempéries.": "6 SDL designs, weatherproof vinyl.", "Voir SDL sur Instagram →": "See SDL on Instagram →", "Toutes": "All", "+ Voir les 7 autres châssis": "+ See the 7 other cars", "Partenaire officiel — Gants": "Official partner — Gloves", "Le grip de nos pilotes": "Our drivers' grip", "avec Moradness": "with Moradness", "Gants de sim racing haute performance — précision et confort à chaque tour.": "High-performance sim racing gloves — precision and comfort every lap.", "Nos": "Our", "partenaires": "partners", "Matériel de course officiel": "Official race hardware", "Gants de sim racing officiels": "Official sim racing gloves", "Designer officiel de l'écurie": "Official team designer", "Pâtisserie-boulangerie · Montréal": "Bakery-pastry · Montreal", "En savoir plus →": "Learn more →", "La communauté": "The community", "Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.": "Sim racing team based in Montreal, competing in endurance on Le Mans Ultimate.", "Équipe": "Team", "Catalogue": "Catalog", "Suivi de commande": "Order tracking", "← Retour au site": "← Back to site", "Actualités MRT": "MRT News", "L'écurie MRT": "Team MRT", "Résultats, événements, annonces et recrutement — toute la vie de l'équipe #514.": "Results, events, announcements and recruitment — all of team #514's life.", "Le paddock mondial": "The global paddock", "Actualité du monde racing": "Racing world news", "Les grands rendez-vous du sport auto et du sim racing — Formule 1, endurance WEC et championnats esport.": "The big events in motorsport and sim racing — Formula 1, WEC endurance and esport championships.", "Formule 1": "Formula 1", "Résultats, calendrier et actualités officielles du championnat du monde de Formule 1.": "Official results, calendar and news of the Formula 1 World Championship.", "Ouvrir F1.com →": "Open F1.com →", "Le championnat du monde d'endurance FIA : Hypercar, LMGT3, 24 Heures du Mans et plus.": "The FIA World Endurance Championship: Hypercar, LMGT3, 24 Hours of Le Mans and more.", "Ouvrir le WEC →": "Open the WEC →", "L'actualité de la plateforme officielle sur laquelle l'écurie MRT dispute ses courses.": "News from the official platform on which team MRT races.", "Site officiel →": "Official site →", "Toute l'actu": "All the news", "L'actualité au jour le jour de tous les sports mécaniques : F1, endurance, esport et plus.": "Day-to-day news from all of motorsport: F1, endurance, esport and more.", "Lire les news →": "Read the news →"};
+  var T = {"À propos":"About","L'écurie":"The team",
+"La MRT est une écurie québécoise de sim racing spécialisée sur Le Mans Ultimate, avec l'ambition de représenter le Québec et la communauté francophone sur la scène de l'endurance virtuelle.":"MRT is a Quebec-based sim racing team specialising in Le Mans Ultimate, with the ambition of representing Quebec and the French-speaking community on the virtual endurance stage.",
+"Fondée en décembre 2025 par deux amis, l'écurie réunit des pilotes passionnés dans un cadre structuré et convivial, centré sur la progression et le plaisir de la course. Nous évoluons au fil des compétitions d'endurance en développant notre niveau et notre cohésion.":"Founded in December 2025 by two friends, the team brings together passionate drivers in a structured, friendly setting focused on progress and the joy of racing. We grow through endurance competitions, developing our pace and our cohesion event after event.",
+"Notre objectif : faire rayonner le sim racing francophone, tout en offrant à nos pilotes une expérience sérieuse, motivante et enrichissante.":"Our goal: to champion French-speaking sim racing, while giving our drivers a serious, motivating and rewarding experience.",
+"de MRT":"MRT",
+"Fondée":"Founded","Basée":"Based","Discipline":"Discipline","Mission":"Mission",
+"Décembre 2025":"December 2025","Québec, Canada":"Quebec, Canada",
+"Endurance · Le Mans Ultimate":"Endurance · Le Mans Ultimate","Faire rayonner le sim racing francophone":"Championing French-speaking sim racing",
+"Voir le détail →":"View details →","Palmarès": "Track record", "Saison en cours": "Ongoing season", "Les résultats de l'écurie MRT cette saison — en endurance et en championnat.": "Team MRT's results this season — in endurance and championship racing.", "Victoires": "Wins", "Titre de champion": "Champion title", "Pilotes": "Drivers", "Tout": "All", "Championnats": "Championships", "Championnat": "Championship", "Victoire": "Win", "2ᵉ place": "2nd place", "3ᵉ place": "3rd place", "3ᵉ au général": "3rd overall", "Titre de la série": "Series title","Découvrir la boutique →": "Discover the shop →", "Voir les gants →": "See the gloves →", "Ils soutiennent l'écurie →": "They support the team →", "SUIVEZ L'ÉQUIPE": "FOLLOW THE TEAM", "Vous préférez ?": "Prefer that?", "Suivez-nous directement sur Instagram →": "Follow us directly on Instagram →","Actualités": "News", "Boutique": "Shop", "Partenaires": "Partners", "Communauté": "Community", "Boutique →": "Shop →", "ÉCURIE DE MONTRÉAL — LE MANS ULTIMATE": "MONTREAL TEAM — LE MANS ULTIMATE", "Endurance, précision, vitesse pure. L'équipe MRT affronte les meilleurs sur Le Mans Ultimate, en Hypercar, LMP2, LMP3 et LMGT3.": "Endurance, precision, pure speed. Team MRT takes on the best on Le Mans Ultimate, in Hypercar, LMP2, LMP3 and LMGT3.", "Voir les actualités": "View the news", "Boutique MRT": "MRT Shop", "PROCHAINE SESSION": "NEXT SESSION", "01 — CLASSE REINE": "01 — TOP CLASS", "Le sommet de l'endurance virtuelle.": "The pinnacle of virtual endurance.", "Vitesse brute, gestion de stratégie.": "Raw speed, strategy management.", "03 — ENTRÉE PRO": "03 — PRO ENTRY", "Le tremplin vers l'élite MRT.": "The springboard to the MRT elite.", "Pilotage technique, courses serrées.": "Technical driving, close racing.", "Dernières": "Latest", "actualités": "news", "Toutes les actualités →": "All news →", "● CE WEEK-END": "● THIS WEEKEND", "ÉVÉNEMENT": "EVENT", "Portimão — Course solo Hypercar & LMGT3": "Portimão — Solo Hypercar & LMGT3 race", "Nos pilotes prennent le départ ce week-end sur le circuit de Portimão, en Hypercar et LMGT3 : format solo, courses de 100 minutes, splits de 44 voitures, setup libre et sans couvertures chauffantes.": "Our drivers line up this weekend at Portimão, in Hypercar and LMGT3: solo format, 100-minute races, 44-car splits, open setup and no tyre blankets.", "Lire l'article →": "Read the article →", "À la une": "Featured", "● Bientôt": "● Soon", "Événement": "Event", "24H du Mans Virtuelles": "Virtual 24H of Le Mans", "Trois châssis engagés pour la deuxième manche d'endurance.": "Three cars entered for the second endurance round.", "Résultat": "Result", "Podium en LMP3 à Spa": "LMP3 podium at Spa", "2ᵉ place après une remontée maîtrisée dans les Ardennes.": "2nd place after a controlled charge in the Ardennes.", "Annonce": "Announcement", "Nouvelle livery SDL dévoilée": "New SDL livery revealed", "La robe 2026 de notre Hypercar signée Seex Design Liveries.": "Our Hypercar's 2026 design by Seex Design Liveries.", "Toute l'actualité de l'écurie": "All the team's news", "— et l'actu du monde racing (F1, WEC, sim racing).": "— plus racing world news (F1, WEC, sim racing).", "Voir toutes les actualités →": "See all news →", "Partenaire matériel officiel": "Official hardware partner", "Pilote comme l'équipe MRT": "Race like Team MRT", "avec Advanced Sim Racing": "with Advanced Sim Racing", "Volants · pédaliers · bases direct drive — l'équipement de nos pilotes.": "Wheels · pedals · direct-drive bases — our drivers' gear.", "Bientôt disponible": "Coming soon", "La boutique officielle MRT arrive bientôt. Restez à l'affût !":"The official MRT shop is coming soon. Stay tuned!", "Nouveau": "New", "Maillot course MRT 2026": "MRT 2026 race jersey", "Réplique de la combinaison d'équipe, bleu signature.": "Replica of the team suit, signature blue.", "Casquette MRT": "MRT cap", "Broderie 3D, ajustable, bleu/blanc.": "3D embroidery, adjustable, blue/white.", "Hoodie Endurance": "Endurance hoodie", "Coton lourd, logo brodé, doublure polaire.": "Heavy cotton, embroidered logo, fleece lining.", "Pack autocollants liveries": "Livery sticker pack", "6 designs SDL, vinyle résistant aux intempéries.": "6 SDL designs, weatherproof vinyl.", "Voir SDL sur Instagram →": "See SDL on Instagram →", "Toutes": "All", "+ Voir les 7 autres châssis": "+ See the 7 other cars", "Partenaire officiel — Gants": "Official partner — Gloves", "Le grip de nos pilotes": "Our drivers' grip", "avec Moradness": "with Moradness", "Gants de sim racing haute performance — précision et confort à chaque tour.": "High-performance sim racing gloves — precision and comfort every lap.", "Nos": "Our", "partenaires": "partners", "Matériel de course officiel": "Official race hardware", "Gants de sim racing officiels": "Official sim racing gloves", "Designer officiel de l'écurie": "Official team designer", "Pâtisserie-boulangerie · Montréal": "Bakery-pastry · Montreal", "En savoir plus →": "Learn more →", "La communauté": "The community", "Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.": "Sim racing team based in Montreal, competing in endurance on Le Mans Ultimate.", "Équipe": "Team", "Catalogue": "Catalog", "Suivi de commande": "Order tracking", "← Retour au site": "← Back to site", "Actualités MRT": "MRT News", "L'écurie MRT": "Team MRT", "Résultats, événements, annonces et recrutement — toute la vie de l'équipe #514.": "Results, events, announcements and recruitment — all of team #514's life.", "Le paddock mondial": "The global paddock", "Actualité du monde racing": "Racing world news", "Les grands rendez-vous du sport auto et du sim racing — Formule 1, endurance WEC et championnats esport.": "The big events in motorsport and sim racing — Formula 1, WEC endurance and esport championships.", "Formule 1": "Formula 1", "Résultats, calendrier et actualités officielles du championnat du monde de Formule 1.": "Official results, calendar and news of the Formula 1 World Championship.", "Ouvrir F1.com →": "Open F1.com →", "Le championnat du monde d'endurance FIA : Hypercar, LMGT3, 24 Heures du Mans et plus.": "The FIA World Endurance Championship: Hypercar, LMGT3, 24 Hours of Le Mans and more.", "Ouvrir le WEC →": "Open the WEC →", "L'actualité de la plateforme officielle sur laquelle l'écurie MRT dispute ses courses.": "News from the official platform on which team MRT races.", "Site officiel →": "Official site →", "Toute l'actu": "All the news", "L'actualité au jour le jour de tous les sports mécaniques : F1, endurance, esport et plus.": "Day-to-day news from all of motorsport: F1, endurance, esport and more.", "Lire les news →": "Read the news →"};
   var TITLE = {"fr": "Montreal Racing Team — MRT | Sim racing d'endurance sur Le Mans Ultimate", "en": "Montreal Racing Team — MRT | Endurance sim racing on Le Mans Ultimate"};
   var SKIP = {SCRIPT:1, STYLE:1, NOSCRIPT:1};
   var nodes = [];
