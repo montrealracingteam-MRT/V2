@@ -1,24 +1,24 @@
 {
   "races": [
     {
-      "datetime": "2026-07-11T18:00:00.000Z",
-      "name": "4 Heures d'Imola",
-      "cat": "ELMS"
-    },
-    {
-      "datetime": "2026-07-18T18:00:00.000Z",
+      "datetime": "2026-07-17T12:00:00.000Z",
       "name": "6 Heures d'Interlagos",
       "cat": "HYPERCAR · LMGT3"
     },
     {
-      "datetime": "2026-08-01T18:00:00.000Z",
-      "name": "4 Heures (circuit à confirmer)",
-      "cat": "HYPERCAR · LMP2 · LMGT3"
+      "datetime": "2026-07-17T17:00:00.000Z",
+      "name": "6 Heures d'Interlagos",
+      "cat": "HYPERCAR · LMGT3"
     },
     {
-      "datetime": "2026-08-15T18:00:00.000Z",
-      "name": "8 Heures (circuit à confirmer)",
-      "cat": "HYPERCAR · LMP2 · LMGT3"
+      "datetime": "2026-07-17T22:00:00.000Z",
+      "name": "6 Heures d'Interlagos",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-07-18T03:00:00.000Z",
+      "name": "6 Heures d'Interlagos",
+      "cat": "HYPERCAR · LMGT3"
     },
     {
       "datetime": "2026-08-29T18:00:00.000Z",
