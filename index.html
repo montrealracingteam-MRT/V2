@@ -1883,6 +1883,7 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
     let RACE_DAY_OFFSETS = DEFAULT_RACE_DAY_OFFSETS;
     let EVENTS = DEFAULT_EVENTS;
     let SESSIONS = [];
+    let RACES = null;
 
     // Génère toutes les sessions de la saison (triées chronologiquement).
     function buildSessions(){
@@ -1939,13 +1940,21 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
       if(whenEl && f) whenEl.textContent = (lang==='en' ? 'Session: ' : 'Session : ') + f.format(new Date(s.t)) + (lang==='en' ? ' (local time)' : ' (heure locale)');
     }
     function start(){
-      buildSessions();
+      if(RACES){
+        SESSIONS = RACES.map(function(r){ return { t: Date.parse(r.datetime), ev:{ name: r.name || '', cat: r.cat || '' } }; })
+                        .filter(function(s){ return !isNaN(s.t); })
+                        .sort(function(a, b){ return a.t - b.t; });
+      } else {
+        buildSessions();
+      }
       tick();
       setInterval(tick, 1000);
     }
 
     fetch('config.json').then(function(r){ return r.ok ? r.json() : Promise.reject(); }).then(function(cfg){
-      if(cfg && Array.isArray(cfg.events) && cfg.events.length){
+      if(cfg && Array.isArray(cfg.races) && cfg.races.length){
+        RACES = cfg.races;
+      } else if(cfg && Array.isArray(cfg.events) && cfg.events.length){
         EVENTS = cfg.events;
         if(Array.isArray(cfg.raceTimesUtc) && cfg.raceTimesUtc.length) RACE_TIMES_UTC = cfg.raceTimesUtc;
         if(Array.isArray(cfg.raceDayOffsets) && cfg.raceDayOffsets.length) RACE_DAY_OFFSETS = cfg.raceDayOffsets;
