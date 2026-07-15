@@ -146,6 +146,7 @@
     <section class="admin-section" id="eventsSection">
       <div class="eyebrow">Compte à rebours</div>
       <h2>Calendrier des courses</h2>
+      <p class="subtle" style="margin:-10px 0 16px;">Ajoute chaque course avec sa date et son heure (dans TON fuseau horaire). Le site affiche l'heure convertie pour chaque visiteur, et le compte à rebours passe automatiquement à la course suivante dès qu'une est terminée.</p>
       <p class="subtle">Une ligne par événement. La date est celle du <strong>mardi d'ouverture</strong> (les sessions se courent du mercredi au lundi suivant).</p>
       <div id="eventsRows" class="rows-wrap"></div>
       <div class="row-actions">
@@ -337,7 +338,7 @@
     ]).then(function(res){
       var cfg = res[0], pal = res[1];
       var cfgJson = cfg.json || {};
-      state.events.data = Array.isArray(cfgJson.events) ? cfgJson.events : [];
+      state.events.data = Array.isArray(cfgJson.races) ? cfgJson.races : [];
       state.events.raceTimesUtc = Array.isArray(cfgJson.raceTimesUtc) ? cfgJson.raceTimesUtc : state.events.raceTimesUtc;
       state.events.raceDayOffsets = Array.isArray(cfgJson.raceDayOffsets) ? cfgJson.raceDayOffsets : state.events.raceDayOffsets;
       state.events.sha = cfg.sha;
@@ -354,14 +355,24 @@
   // ---------- Calendrier ----------
   var eventsRows = document.getElementById('eventsRows');
 
-  function eventRowNode(ev){
-    ev = ev || { tue:'', name:'', cat:'' };
+  function eventRowNode(r){
+    r = r || { datetime:'', name:'', cat:'' };
+    var dloc = '', tloc = '';
+    if(r.datetime){
+      var dt0 = new Date(r.datetime);
+      if(!isNaN(dt0)){
+        var pz = function(n){ return String(n).padStart(2,'0'); };
+        dloc = dt0.getFullYear() + '-' + pz(dt0.getMonth()+1) + '-' + pz(dt0.getDate());
+        tloc = pz(dt0.getHours()) + ':' + pz(dt0.getMinutes());
+      }
+    }
     var div = document.createElement('div');
     div.className = 'row';
     div.innerHTML =
-      '<div class="f"><label>Date (mardi)</label><input type="date" class="ev-tue" value="' + esc(ev.tue||'') + '"></div>' +
-      '<div class="f"><label>Nom de l\'épreuve</label><input type="text" class="ev-name" value="' + esc(ev.name||'') + '" placeholder="4 Heures d\'Imola"></div>' +
-      '<div class="f"><label>Catégorie</label><input type="text" class="ev-cat" value="' + esc(ev.cat||'') + '" placeholder="HYPERCAR · LMGT3"></div>' +
+      '<div class="f"><label>Date</label><input type="date" class="ev-date" value="' + esc(dloc) + '"></div>' +
+      '<div class="f"><label>Heure</label><input type="time" class="ev-time" value="' + esc(tloc) + '"></div>' +
+      '<div class="f"><label>Nom de l\'épreuve</label><input type="text" class="ev-name" value="' + esc(r.name||'') + '" placeholder="4 Heures de Spa"></div>' +
+      '<div class="f"><label>Catégorie</label><input type="text" class="ev-cat" value="' + esc(r.cat||'') + '" placeholder="HYPERCAR · LMGT3"></div>' +
       '<button type="button" class="row-del" title="Supprimer">✕</button>';
     div.querySelector('.row-del').addEventListener('click', function(){ div.remove(); });
     return div;
@@ -379,10 +390,14 @@
   function readEventsFromDom(){
     var out = [];
     eventsRows.querySelectorAll('.row').forEach(function(row){
-      var tue = row.querySelector('.ev-tue').value.trim();
+      var date = row.querySelector('.ev-date').value.trim();
+      var time = row.querySelector('.ev-time').value.trim();
       var name = row.querySelector('.ev-name').value.trim();
       var cat = row.querySelector('.ev-cat').value.trim();
-      if(tue || name || cat) out.push({ tue: tue, name: name, cat: cat });
+      if(date && time){
+        var dt1 = new Date(date + 'T' + time);
+        if(!isNaN(dt1)) out.push({ datetime: dt1.toISOString(), name: name, cat: cat });
+      }
     });
     return out;
   }
@@ -395,11 +410,11 @@
   document.getElementById('saveEvents').addEventListener('click', function(){
     var btn = this, msgEl = document.getElementById('eventsMsg');
     var events = readEventsFromDom();
-    var bad = events.find(function(e){ return !e.tue || !e.name; });
-    if(bad){ setMsg(msgEl, 'Chaque ligne doit avoir au moins une date et un nom.', 'err'); return; }
+    var bad = events.find(function(e){ return !e.datetime || !e.name; });
+    if(bad){ setMsg(msgEl, 'Chaque course doit avoir une date, une heure et un nom.', 'err'); return; }
     btn.disabled = true;
     setMsg(msgEl, 'Enregistrement…', 'pending');
-    var payload = { events: events, raceTimesUtc: state.events.raceTimesUtc, raceDayOffsets: state.events.raceDayOffsets };
+    var payload = { races: events };
     savePath('config.json', payload, state.events, msgEl, 'Admin: mise à jour du calendrier').then(function(){
       btn.disabled = false;
     }).catch(function(){ btn.disabled = false; });
