@@ -1,0 +1,74 @@
+{
+  "races": [
+    {
+      "datetime": "2026-07-11T18:00:00.000Z",
+      "name": "4 Heures d'Imola",
+      "cat": "ELMS"
+    },
+    {
+      "datetime": "2026-07-18T18:00:00.000Z",
+      "name": "6 Heures d'Interlagos",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-08-01T18:00:00.000Z",
+      "name": "4 Heures (circuit à confirmer)",
+      "cat": "HYPERCAR · LMP2 · LMGT3"
+    },
+    {
+      "datetime": "2026-08-15T18:00:00.000Z",
+      "name": "8 Heures (circuit à confirmer)",
+      "cat": "HYPERCAR · LMP2 · LMGT3"
+    },
+    {
+      "datetime": "2026-08-29T18:00:00.000Z",
+      "name": "4 Heures de Spa",
+      "cat": "ELMS"
+    },
+    {
+      "datetime": "2026-09-12T18:00:00.000Z",
+      "name": "6 Heures de COTA",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-09-19T18:00:00.000Z",
+      "name": "4 Heures de Silverstone",
+      "cat": "ELMS"
+    },
+    {
+      "datetime": "2026-09-26T18:00:00.000Z",
+      "name": "4 Heures (circuit à confirmer)",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-10-03T18:00:00.000Z",
+      "name": "6 Heures de Fuji",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-10-10T18:00:00.000Z",
+      "name": "10 Heures (circuit à confirmer)",
+      "cat": "HYPERCAR · LMP2 · LMGT3"
+    },
+    {
+      "datetime": "2026-10-17T18:00:00.000Z",
+      "name": "4 Heures de Portimão",
+      "cat": "ELMS"
+    },
+    {
+      "datetime": "2026-11-14T18:00:00.000Z",
+      "name": "8 Heures de Bahreïn",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-12-05T18:00:00.000Z",
+      "name": "6 Heures de Silverstone",
+      "cat": "HYPERCAR · LMGT3"
+    },
+    {
+      "datetime": "2026-12-19T18:00:00.000Z",
+      "name": "6 Heures (circuit à confirmer)",
+      "cat": "HYPERCAR · LMP2 · LMGT3"
+    }
+  ]
+}
