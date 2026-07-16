@@ -99,9 +99,18 @@
 
   .loading{color:var(--mrt-fog);font-size:14px;padding:40px 0;text-align:center;}
   footer{padding:20px;text-align:center;color:var(--mrt-fog);font-size:12px;}
+  .news-card-admin{background:var(--mrt-ink);border:1px solid var(--line);padding:16px;}
+  .news-card-admin .n-header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+  .news-card-admin .n-id{font-family:var(--mono);font-size:11px;color:var(--mrt-fog);letter-spacing:0.06em;}
+  .news-card-admin .n-title-orig{font-size:13px;color:var(--mrt-white);font-weight:600;}
+  .news-card-admin .n-badge{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;padding:3px 7px;border-radius:2px;background:rgba(143,166,255,0.12);color:var(--mrt-ice);}
+  .news-card-admin .fields{display:grid;gap:10px;grid-template-columns:1fr 1fr;}
+  .news-card-admin .field-full{grid-column:1/-1;}
+  .news-card-admin textarea{min-height:90px;resize:vertical;}
   @media (max-width:600px){
     .admin-section{padding:16px;}
     header.topbar{padding:14px 16px;}
+    .news-card-admin .fields{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -166,6 +175,17 @@
         <button type="button" id="saveResults" class="btn btn-primary">Enregistrer le palmarès</button>
       </div>
       <div class="save-msg" id="resultsMsg"></div>
+    </section>
+
+    <section class="admin-section" id="newsSection">
+      <div class="eyebrow">Contenu</div>
+      <h2>Actualités</h2>
+      <p class="subtle" style="margin:-10px 0 16px;">Chaque article peut être remplacé champ par champ (laisse un champ vide pour conserver la valeur d'origine). Le bouton « Réinitialiser » supprime tous les overrides de cet article.</p>
+      <div id="newsCards" style="display:flex;flex-direction:column;gap:18px;margin:18px 0;"></div>
+      <div class="row-actions">
+        <button type="button" id="saveNews" class="btn btn-primary">Enregistrer les actualités</button>
+      </div>
+      <div class="save-msg" id="newsMsg"></div>
     </section>
   </div>
 
@@ -334,7 +354,8 @@
   function loadAll(){
     return Promise.all([
       getFile('config.json'),
-      getFile('palmares.json')
+      getFile('palmares.json'),
+      loadNews()
     ]).then(function(res){
       var cfg = res[0], pal = res[1];
       var cfgJson = cfg.json || {};
@@ -528,11 +549,114 @@
     });
   }
 
+  // ---------- Actualités ----------
+  var STATIC_IDS = ['portimao'];
+
+  var newsState = { overrides: {}, sha: null, origTitles: {} };
+
+  function loadNews(){
+    return Promise.all([
+      getFile('news-overrides.json'),
+      fetch('articles-live.json', {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
+    ]).then(function(res){
+      var ovFile = res[0], liveList = res[1];
+      newsState.sha = ovFile.sha;
+      newsState.overrides = (ovFile.json && typeof ovFile.json.overrides === 'object' && ovFile.json.overrides !== null) ? ovFile.json.overrides : {};
+
+      var liveIds = [];
+      if(Array.isArray(liveList)){
+        liveList.forEach(function(a){
+          if(!a || !a.id) return;
+          liveIds.push(a.id);
+          newsState.origTitles[a.id] = a.title || a.id;
+        });
+      }
+      STATIC_IDS.forEach(function(id){ newsState.origTitles[id] = newsState.origTitles[id] || id; });
+
+      renderNewsCards(liveIds);
+    });
+  }
+
+  function renderNewsCards(liveIds){
+    var container = document.getElementById('newsCards');
+    if(!container) return;
+    var allIds = liveIds.concat(STATIC_IDS.filter(function(id){ return liveIds.indexOf(id) === -1; }));
+    container.innerHTML = '';
+    allIds.forEach(function(id){
+      var ov = newsState.overrides[id] || {};
+      var origTitle = newsState.origTitles[id] || id;
+      var isLive = liveIds.indexOf(id) !== -1;
+      var hasOv = Object.keys(ov).length > 0;
+
+      var card = document.createElement('div');
+      card.className = 'news-card-admin';
+      card.dataset.articleId = id;
+      card.innerHTML =
+        '<div class="n-header">' +
+          '<div>' +
+            '<div class="n-id">' + esc(id) + (isLive ? ' · live' : ' · statique') + '</div>' +
+            '<div class="n-title-orig">' + esc(origTitle) + '</div>' +
+          '</div>' +
+          (hasOv ? '<span class="n-badge">override actif</span>' : '') +
+          '<button type="button" class="btn btn-danger btn-small n-reset" data-id="' + esc(id) + '">Réinitialiser</button>' +
+        '</div>' +
+        '<div class="fields">' +
+          '<div class="f"><label>Titre</label><input type="text" class="n-title" value="' + esc(ov.title||'') + '" placeholder="(titre original)"></div>' +
+          '<div class="f"><label>Étiquette (meta)</label><input type="text" class="n-meta" value="' + esc(ov.meta||'') + '" placeholder="(étiquette originale)"></div>' +
+          '<div class="f"><label>Date / sous-titre</label><input type="text" class="n-date" value="' + esc(ov.date||'') + '" placeholder="(date originale)"></div>' +
+          '<div class="f"><label>URL image</label><input type="text" class="n-imgsrc" value="' + esc(ov.imgSrc||'') + '" placeholder="https://…"></div>' +
+          '<div class="f field-full"><label>Contenu HTML</label><textarea class="n-content">' + esc(ov.content||'') + '</textarea></div>' +
+        '</div>';
+
+      card.querySelector('.n-reset').addEventListener('click', function(){
+        delete newsState.overrides[id];
+        card.querySelector('.n-title').value = '';
+        card.querySelector('.n-meta').value = '';
+        card.querySelector('.n-date').value = '';
+        card.querySelector('.n-imgsrc').value = '';
+        card.querySelector('.n-content').value = '';
+        var badge = card.querySelector('.n-badge');
+        if(badge) badge.remove();
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  function readNewsFromDom(){
+    var overrides = {};
+    document.querySelectorAll('.news-card-admin').forEach(function(card){
+      var id = card.dataset.articleId;
+      if(!id) return;
+      var ov = {};
+      var title = card.querySelector('.n-title').value.trim();
+      var meta = card.querySelector('.n-meta').value.trim();
+      var date = card.querySelector('.n-date').value.trim();
+      var imgSrc = card.querySelector('.n-imgsrc').value.trim();
+      var content = card.querySelector('.n-content').value.trim();
+      if(title) ov.title = title;
+      if(meta) ov.meta = meta;
+      if(date) ov.date = date;
+      if(imgSrc) ov.imgSrc = imgSrc;
+      if(content) ov.content = content;
+      if(Object.keys(ov).length > 0) overrides[id] = ov;
+    });
+    return overrides;
+  }
+
+  document.getElementById('saveNews').addEventListener('click', function(){
+    var btn = this, msgEl = document.getElementById('newsMsg');
+    btn.disabled = true;
+    setMsg(msgEl, 'Enregistrement…', 'pending');
+    newsState.overrides = readNewsFromDom();
+    savePath('news-overrides.json', { overrides: newsState.overrides }, newsState, msgEl, 'Admin: mise à jour des overrides actualités').then(function(){
+      btn.disabled = false;
+    }).catch(function(){ btn.disabled = false; });
+  });
+
   boot();
 })();
 </script>
 
 </body>
 </html>
-
-
