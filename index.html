@@ -2251,8 +2251,8 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
 
   let LIVE_NEWS_IDS = [];
 
-  function renderHomeNews(){
-    if(LIVE_NEWS_IDS.length === 0) return; // rien de neuf : le HTML existant reste tel quel
+  function renderHomeNews(force){
+    if(LIVE_NEWS_IDS.length === 0 && !force) return; // rien de neuf : le HTML existant reste tel quel
     const layout = document.getElementById('newsLayout');
     if(!layout) return;
     const order = NEWS_ORDER.filter(id => ARTICLES[id]);
@@ -2291,10 +2291,11 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
     `;
   }
 
-  fetch('articles-live.json', {cache:'no-store'})
-    .then(r => r.ok ? r.json() : [])
-    .then(list => {
-      if(!Array.isArray(list) || list.length === 0) return;
+  Promise.all([
+    fetch('articles-live.json', {cache:'no-store'}).then(r => r.ok ? r.json() : []).catch(() => []),
+    fetch('news-overrides.json', {cache:'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  ]).then(([list, overridesFile]) => {
+    if(Array.isArray(list)){
       list.forEach(a => {
         if(!a || !a.id || ARTICLES[a.id]) return;
         ARTICLES[a.id] = {
@@ -2307,12 +2308,20 @@ const MERCH_IMAGES = {"maillot": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA
         };
         LIVE_NEWS_IDS.push(a.id);
       });
-      if(LIVE_NEWS_IDS.length === 0) return;
-      NEWS_ORDER = [...LIVE_NEWS_IDS, ...STATIC_NEWS_ORDER];
-      renderHomeNews();
-      renderAllNews();
-    })
-    .catch(() => { /* pas encore de communiqué : le site reste inchangé */ });
+    }
+    var hasOverrides = false;
+    try {
+      var overrides = (overridesFile && typeof overridesFile.overrides === 'object' && overridesFile.overrides !== null) ? overridesFile.overrides : {};
+      Object.keys(overrides).forEach(function(id){
+        if(!ARTICLES[id]) return;
+        var ov = overrides[id];
+        ['meta','title','date','content','imgSrc'].forEach(function(f){ if(ov[f] != null) ARTICLES[id][f] = ov[f]; });
+        hasOverrides = true;
+      });
+    } catch(e) {}
+    if(LIVE_NEWS_IDS.length > 0) NEWS_ORDER = [...LIVE_NEWS_IDS, ...STATIC_NEWS_ORDER];
+    if(LIVE_NEWS_IDS.length > 0 || hasOverrides){ renderHomeNews(hasOverrides); renderAllNews(); }
+  }).catch(() => { /* pas encore de communiqué ou overrides absents : le site reste inchangé */ });
 
   // Expose les banques d'images aux gestionnaires onerror inline (repli d'images)
   try { window.CAR_IMAGES = CAR_IMAGES; window.NEWS_IMAGES = NEWS_IMAGES; window.MERCH_IMAGES = MERCH_IMAGES; } catch(e){}
