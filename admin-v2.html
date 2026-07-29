@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin MRT — Gestion des articles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --mrt-blue:#0057FF;
+      --mrt-blue-deep:#0040C2;
+      --mrt-ink:#05070D;
+      --mrt-panel:#0E1530;
+      --mrt-white:#F4F6FB;
+      --mrt-fog:#9AA6C4;
+      --mrt-ice:#8FA6FF;
+      --mrt-flag:#CE1126;
+      --line:rgba(244,246,251,0.10);
+      --line-strong:rgba(244,246,251,0.18);
+      --display:'Bebas Neue', sans-serif;
+      --body:'Inter', system-ui, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{width:100%;height:100%;}
+    body{
+      background:var(--mrt-ink);
+      color:var(--mrt-white);
+      font-family:var(--body);
+      line-height:1.5;
+    }
+    a{color:var(--mrt-ice);text-decoration:none;}
+    .wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+    
+    /* Login Screen */
+    #loginScreen{
+      display:flex;align-items:center;justify-content:center;min-height:100vh;
+      background:var(--mrt-ink);
+    }
+    #loginScreen.hidden{display:none;}
+    
+    .login-card{
+      background:var(--mrt-panel);
+      border:1px solid var(--line);
+      padding:40px;
+      border-radius:4px;
+      width:100%;
+      max-width:420px;
+    }
+    .login-card h1{
+      font-family:var(--display);font-size:32px;margin-bottom:8px;
+      letter-spacing:0.01em;text-transform:uppercase;
+    }
+    .login-card p{color:var(--mrt-fog);font-size:13.5px;margin-bottom:28px;}
+    
+    .form-group{margin-bottom:18px;}
+    .form-group label{
+      display:block;font-family:'JetBrains Mono',monospace;
+      font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+      color:var(--mrt-ice);margin-bottom:6px;
+    }
+    input[type="email"],input[type="password"],input[type="text"]{
+      width:100%;background:var(--mrt-ink);border:1px solid var(--line-strong);
+      color:var(--mrt-white);padding:10px 12px;font-size:14px;border-radius:2px;
+      font-family:var(--body);
+    }
+    input:focus{outline:none;border-color:var(--mrt-blue);}
+    
+    .btn{
+      font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.05em;
+      text-transform:uppercase;padding:11px 20px;border-radius:2px;border:none;
+      cursor:pointer;transition:all 0.2s;font-weight:600;
+    }
+    .btn-primary{background:var(--mrt-blue);color:#fff;}
+    .btn-primary:hover{background:var(--mrt-blue-deep);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-danger{background:rgba(206,17,38,0.1);border:1px solid var(--mrt-flag);color:#ff8a8a;}
+    .btn-danger:hover{background:rgba(206,17,38,0.2);}
+    .btn-ghost{background:transparent;border:1px solid var(--line-strong);color:var(--mrt-white);}
+    .btn-ghost:hover{border-color:var(--mrt-ice);color:var(--mrt-ice);}
+    .btn-small{padding:8px 14px;font-size:11px;}
+    
+    .error-msg{color:#ff8a8a;font-size:13px;margin-top:12px;}
+    .success-msg{color:#8FE0A8;font-size:13px;margin-top:12px;}
+    
+    /* App Screen */
+    #appScreen{display:none;}
+    #appScreen.active{display:flex;flex-direction:column;min-height:100vh;}
+    
+    header.topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 20px;border-bottom:1px solid var(--line);
+      background:rgba(5,7,13,0.92);
+    }
+    .brand{font-family:var(--display);font-size:24px;letter-spacing:0.02em;}
+    .brand span{color:var(--mrt-ice);}
+    .header-actions{display:flex;gap:12px;align-items:center;}
+    .user-email{font-size:12px;color:var(--mrt-fog);}
+    
+    main{flex:1;padding:32px 0;overflow-y:auto;}
+    h1{font-family:var(--display);font-size:34px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.01em;}
+    h2{font-family:var(--display);font-size:26px;margin:28px 0 16px;text-transform:uppercase;}
+    .subtitle{color:var(--mrt-fog);font-size:14px;margin-bottom:24px;}
+    
+    /* Sections */
+    .section{margin-bottom:40px;}
+    
+    /* New Article Form */
+    .form-card{
+      background:var(--mrt-panel);border:1px solid var(--line);padding:28px;
+      border-radius:2px;margin-bottom:32px;
+    }
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+    .form-row.full{grid-template-columns:1fr;}
+    textarea{
+      width:100%;background:var(--mrt-ink);border:1px solid var(--line-strong);
+      color:var(--mrt-white);padding:10px 12px;font-size:14px;border-radius:2px;
+      font-family:var(--body);resize:vertical;min-height:120px;
+    }
+    textarea:focus{outline:none;border-color:var(--mrt-blue);}
+    
+    .img-preview{
+      margin-top:12px;max-width:100%;max-height:200px;border-radius:2px;
+      border:1px solid var(--line);
+    }
+    
+    /* Articles List */
+    .articles-grid{
+      display:grid;gap:16px;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    }
+    .article-card{
+      background:var(--mrt-panel);border:1px solid var(--line);padding:16px;
+      border-radius:2px;display:flex;flex-direction:column;
+    }
+    .article-card-header{
+      display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:12px;
+    }
+    .article-card h3{
+      font-family:var(--display);font-size:16px;margin:0;text-transform:uppercase;
+      letter-spacing:0.01em;flex:1;
+    }
+    .article-date{font-size:11px;color:var(--mrt-fog);font-family:'JetBrains Mono',monospace;}
+    .article-preview{
+      color:var(--mrt-fog);font-size:13px;margin-bottom:12px;line-height:1.4;
+      overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;
+    }
+    .article-img{
+      width:100%;height:120px;object-fit:cover;margin-bottom:12px;border-radius:2px;
+    }
+    .article-actions{
+      display:flex;gap:8px;margin-top:auto;
+    }
+    .article-actions button{flex:1;}
+    
+    .loading{text-align:center;color:var(--mrt-fog);padding:40px;font-size:14px;}
+    .empty{text-align:center;color:var(--mrt-fog);padding:40px;font-size:14px;}
+    
+    footer{border-top:1px solid var(--line);padding:16px;text-align:center;color:var(--mrt-fog);font-size:11px;}
+    
+    @media (max-width:768px){
+      .form-row{grid-template-columns:1fr;}
+      .articles-grid{grid-template-columns:1fr;}
+      .login-card{padding:24px;}
+      .wrap{padding:0 16px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>MRT Admin</h1>
+    <p>Gestion des actualités de l'écurie</p>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="admin@mrt.ca">
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Se connecter</button>
+      <div id="loginError" class="error-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="appScreen">
+  <header class="topbar">
+    <div class="brand">MRT <span>ADMIN</span></div>
+    <div class="header-actions">
+      <span class="user-email" id="userEmail"></span>
+      <button id="logoutBtn" class="btn btn-danger btn-small">Se déconnecter</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="content">
+      <h1>Actualités MRT</h1>
+      <p class="subtitle">Crée, édite et supprime les articles de l'écurie.</p>
+
+      <!-- NEW ARTICLE -->
+      <div class="section">
+        <h2>Nouvel article</h2>
+        <div class="form-card">
+          <form id="articleForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="articleTitle">Titre</label>
+                <input type="text" id="articleTitle" required placeholder="Ex: Victoire à Portimão">
+              </div>
+              <div class="form-group">
+                <label for="articleDate">Date</label>
+                <input type="date" id="articleDate" required>
+              </div>
+            </div>
+            
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="articleImage">URL de l'image</label>
+                <input type="text" id="articleImage" placeholder="https://imgur.com/... (facultatif)">
+                <small style="color:var(--mrt-fog);font-size:11px;margin-top:4px;display:block;">
+                  Upload sur <a href="https://imgur.com" target="_blank">imgur.com</a>, copie l'URL directe
+                </small>
+                <img id="imgPreview" class="img-preview" style="display:none;">
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="articleContent">Contenu (HTML autorisé)</label>
+                <textarea id="articleContent" required placeholder="Écris l'article ici..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Publier l'article</button>
+            <div id="articleMsg"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ARTICLES LIST -->
+      <div class="section">
+        <h2>Articles publiés</h2>
+        <div id="articlesList" class="articles-grid">
+          <div class="loading">Chargement des articles...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>© Montreal Racing Team 2026 — Admin Panel</footer>
+</div>
+
+<!-- MODALS -->
+<div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;align-items:center;justify-content:center;">
+  <div class="form-card" style="width:90%;max-width:600px;max-height:90vh;overflow-y:auto;">
+    <h2 style="margin-top:0;">Éditer l'article</h2>
+    <form id="editForm">
+      <input type="hidden" id="editId">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editTitle">Titre</label>
+          <input type="text" id="editTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="editDate">Date</label>
+          <input type="date" id="editDate" required>
+        </div>
+      </div>
+      
+      <div class="form-row full">
+        <div class="form-group">
+          <label for="editImage">URL de l'image</label>
+          <input type="text" id="editImage">
+          <img id="editImgPreview" class="img-preview" style="display:none;margin-top:12px;">
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="form-group">
+          <label for="editContent">Contenu</label>
+          <textarea id="editContent" required></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button type="submit" class="btn btn-primary" style="flex:1;">Enregistrer</button>
+        <button type="button" class="btn btn-ghost" onclick="closeEditModal()">Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getDatabase, ref, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA1V8_JYnmrKRGd9C0z3eFsB0-tiCXT7G8",
+  authDomain: "montreal-racing-team.firebaseapp.com",
+  databaseURL: "https://montreal-racing-team-default-rtdb.firebaseio.com",
+  projectId: "montreal-racing-team",
+  storageBucket: "montreal-racing-team.firebasestorage.app",
+  messagingSenderId: "487636328025",
+  appId: "1:487637328025:web:6efb48bd15e8ee9133db48",
+  measurementId: "G-C21EXWEEFB"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let currentUser = null;
+
+// Auth State
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    showApp();
+  } else {
+    currentUser = null;
+    showLogin();
+  }
+});
+
+// UI Functions
+function showLogin() {
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appScreen').classList.remove('active');
+}
+
+function showApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.add('active');
+  document.getElementById('userEmail').textContent = currentUser.email;
+  loadArticles();
+}
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const errorDiv = document.getElementById('loginError');
+  
+  try {
+    errorDiv.textContent = 'Connexion...';
+    await signInWithEmailAndPassword(auth, email, password);
+    errorDiv.textContent = '';
+  } catch (err) {
+    errorDiv.textContent = 'Email ou mot de passe incorrect.';
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  signOut(auth);
+});
+
+// Set today's date
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('articleDate').value = today;
+document.getElementById('editDate').value = today;
+
+// Image preview
+document.getElementById('articleImage').addEventListener('change', function() {
+  const preview = document.getElementById('imgPreview');
+  if (this.value.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+    preview.src = this.value;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+});
+
+document.getElementById('editImage').addEventListener('change', function() {
+  const preview = document.getElementById('editImgPreview');
+  if (this.value.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+    preview.src = this.value;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+});
+
+// Publish Article
+document.getElementById('articleForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const title = document.getElementById('articleTitle').value;
+  const date = document.getElementById('articleDate').value;
+  const image = document.getElementById('articleImage').value;
+  const content = document.getElementById('articleContent').value;
+  const msgDiv = document.getElementById('articleMsg');
+  
+  try {
+    msgDiv.textContent = 'Publication...';
+    msgDiv.className = '';
+    
+    const articlesRef = ref(db, 'articles');
+    await push(articlesRef, {
+      title,
+      date,
+      image,
+      content,
+      createdAt: new Date().toISOString()
+    });
+    
+    msgDiv.textContent = '✓ Article publié!';
+    msgDiv.className = 'success-msg';
+    
+    // Reset form
+    document.getElementById('articleForm').reset();
+    document.getElementById('articleDate').value = today;
+    document.getElementById('imgPreview').style.display = 'none';
+    
+    // Reload
+    setTimeout(() => { msgDiv.textContent = ''; }, 3000);
+  } catch (err) {
+    msgDiv.textContent = 'Erreur: ' + err.message;
+    msgDiv.className = 'error-msg';
+  }
+});
+
+// Load Articles
+function loadArticles() {
+  const articlesRef = ref(db, 'articles');
+  onValue(articlesRef, (snapshot) => {
+    const container = document.getElementById('articlesList');
+    
+    if (!snapshot.exists()) {
+      container.innerHTML = '<div class="empty">Aucun article pour le moment.</div>';
+      return;
+    }
+    
+    const articles = [];
+    snapshot.forEach((childSnapshot) => {
+      articles.push({
+        id: childSnapshot.key,
+        ...childSnapshot.val()
+      });
+    });
+    
+    // Sort by date descending
+    articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    container.innerHTML = articles.map(article => `
+      <div class="article-card">
+        <div class="article-card-header">
+          <h3>${article.title}</h3>
+          <span class="article-date">${article.date}</span>
+        </div>
+        ${article.image ? `<img src="${article.image}" alt="${article.title}" class="article-img">` : ''}
+        <div class="article-preview">${article.content.substring(0, 100)}...</div>
+        <div class="article-actions">
+          <button class="btn btn-ghost btn-small" onclick="editArticle('${article.id}')">Éditer</button>
+          <button class="btn btn-danger btn-small" onclick="deleteArticle('${article.id}')">Supprimer</button>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+// Edit Article
+window.editArticle = function(id) {
+  const articlesRef = ref(db, 'articles/' + id);
+  onValue(articlesRef, (snapshot) => {
+    const article = snapshot.val();
+    if (article) {
+      document.getElementById('editId').value = id;
+      document.getElementById('editTitle').value = article.title;
+      document.getElementById('editDate').value = article.date;
+      document.getElementById('editImage').value = article.image || '';
+      document.getElementById('editContent').value = article.content;
+      
+      if (article.image) {
+        const preview = document.getElementById('editImgPreview');
+        preview.src = article.image;
+        preview.style.display = 'block';
+      }
+      
+      document.getElementById('editModal').style.display = 'flex';
+    }
+  });
+};
+
+window.closeEditModal = function() {
+  document.getElementById('editModal').style.display = 'none';
+};
+
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const id = document.getElementById('editId').value;
+  const title = document.getElementById('editTitle').value;
+  const date = document.getElementById('editDate').value;
+  const image = document.getElementById('editImage').value;
+  const content = document.getElementById('editContent').value;
+  
+  try {
+    const articleRef = ref(db, 'articles/' + id);
+    await update(articleRef, { title, date, image, content });
+    closeEditModal();
+  } catch (err) {
+    alert('Erreur: ' + err.message);
+  }
+});
+
+// Delete Article
+window.deleteArticle = function(id) {
+  if (confirm('Supprimer cet article?')) {
+    const articleRef = ref(db, 'articles/' + id);
+    remove(articleRef);
+  }
+};
+
+</script>
+
+</body>
+</html>
