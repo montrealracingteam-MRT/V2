@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MRT — Console de publication</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Design partagé de l'écurie -->
+<link rel="stylesheet" href="mrt.css">
+<style>
+  /* ===== Console admin — s'appuie sur les variables de mrt.css ===== */
+  body{padding:0;}
+  .admin-top{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:16px 28px;background:rgba(5,7,13,0.92);
+    backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+  }
+  .admin-top .brand{font-family:var(--display);font-size:24px;letter-spacing:.04em;color:var(--mrt-white);display:flex;align-items:center;gap:12px;}
+  .admin-top .brand .num{font-family:var(--mono);font-size:12px;color:var(--mrt-blue);border:1px solid var(--mrt-blue);padding:2px 7px;border-radius:3px;letter-spacing:.1em;}
+  .admin-top .status{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mrt-fog);display:flex;align-items:center;gap:8px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mrt-fog);flex-shrink:0;}
+  .dot.ok{background:#38d17a;box-shadow:0 0 10px rgba(56,209,122,.6);}
+  .dot.bad{background:var(--mrt-flag);}
+
+  .admin-wrap{max-width:1240px;margin:0 auto;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start;}
+  @media (max-width:980px){.admin-wrap{grid-template-columns:1fr;}}
+
+  .card{background:var(--mrt-panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .card-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .card-head h2{font-size:22px;color:var(--mrt-white);letter-spacing:.02em;}
+  .card-head .hint{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mrt-ice);}
+  .card-body{padding:20px;}
+
+  label.field{display:block;margin-bottom:16px;}
+  label.field > span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:7px;}
+  input[type=text], input[type=date], input[type=password], select, textarea{
+    width:100%;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;
+    color:var(--mrt-white);font-family:var(--body);font-size:14.5px;padding:11px 13px;transition:border-color .2s;
+  }
+  input:focus, select:focus, textarea:focus{outline:none;border-color:var(--mrt-blue);}
+  textarea{resize:vertical;line-height:1.5;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:520px){.row2{grid-template-columns:1fr;}}
+  .help{font-size:12px;color:var(--mrt-fog);line-height:1.5;margin-top:6px;}
+
+  /* Éditeur à boutons */
+  .editor-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .tbtn{
+    background:var(--mrt-ink);border:1px solid var(--line-strong);color:var(--mrt-white);
+    font-family:var(--body);font-size:13px;font-weight:600;padding:7px 11px;border-radius:6px;cursor:pointer;transition:all .15s;
+  }
+  .tbtn:hover{border-color:var(--mrt-blue);background:rgba(0,87,255,.12);}
+  .tbtn b{font-weight:800;}
+  .editor{
+    min-height:200px;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;
+    padding:14px 16px;color:#C3CCE0;font-size:15px;line-height:1.7;overflow-y:auto;max-height:420px;
+  }
+  .editor:focus{outline:none;border-color:var(--mrt-blue);}
+  .editor:empty::before{content:attr(data-placeholder);color:var(--mrt-fog);}
+  .editor h4{font-family:var(--display);font-size:20px;color:var(--mrt-white);margin:18px 0 8px;}
+  .editor p{margin:0 0 12px;}
+  .editor ul{margin:0 0 12px 20px;}
+  .editor strong{color:var(--mrt-white);}
+  .editor a{color:var(--mrt-ice);text-decoration:underline;}
+
+  /* Zone image */
+  .dropzone{
+    border:1.5px dashed var(--line-strong);border-radius:9px;padding:22px;text-align:center;cursor:pointer;
+    transition:all .2s;background:var(--mrt-ink);
+  }
+  .dropzone:hover, .dropzone.drag{border-color:var(--mrt-blue);background:rgba(0,87,255,.08);}
+  .dropzone .dz-title{font-family:var(--display);font-size:20px;color:var(--mrt-white);letter-spacing:.02em;}
+  .dropzone .dz-sub{font-size:12.5px;color:var(--mrt-fog);margin-top:6px;}
+  .preview-img{margin-top:14px;border-radius:8px;overflow:hidden;border:1px solid var(--line);position:relative;display:none;}
+  .preview-img img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;}
+  .preview-img .rm{position:absolute;top:8px;right:8px;background:rgba(5,7,13,.85);border:1px solid var(--line-strong);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  .preview-img .recrop{position:absolute;top:8px;right:74px;background:rgba(0,87,255,.85);border:1px solid var(--mrt-blue);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  .editor img{max-width:100%;border-radius:6px;display:block;margin:12px 0;}
+  .img-meta{font-family:var(--mono);font-size:10.5px;color:var(--mrt-ice);margin-top:8px;letter-spacing:.06em;}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+  .actions .btn{cursor:pointer;border:none;font-family:var(--body);}
+
+  /* Aperçu carte */
+  .prev-card{background:var(--mrt-ink);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .prev-card .pc-visual{aspect-ratio:16/9;background:var(--mrt-panel);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  .prev-card .pc-visual img{width:100%;height:100%;object-fit:cover;}
+  .prev-card .pc-visual .ph{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mrt-fog);}
+  .prev-card .pc-body{padding:20px 22px 24px;}
+  .prev-card .pc-meta{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:9px;display:flex;gap:8px;align-items:center;}
+  .prev-card .pc-meta .live{color:var(--mrt-flag);}
+  .prev-card .pc-body h3{font-size:24px;color:var(--mrt-white);line-height:1.1;margin-bottom:9px;}
+  .prev-card .pc-body .pc-desc{font-size:14px;color:var(--mrt-fog);line-height:1.55;}
+
+  /* Liste des articles */
+  .art-list{display:flex;flex-direction:column;}
+  .art-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center;}
+  .art-item:last-child{border-bottom:none;}
+  .art-thumb{width:84px;height:52px;border-radius:6px;overflow:hidden;background:var(--mrt-ink);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .art-thumb img{width:100%;height:100%;object-fit:cover;}
+  .art-thumb .ph{font-family:var(--mono);font-size:9px;color:var(--mrt-fog);}
+  .art-info{min-width:0;flex:1;}
+  .art-info .ai-meta{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:4px;}
+  .art-info h4{font-size:15px;color:var(--mrt-white);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .art-info .ai-date{font-family:var(--mono);font-size:11px;color:var(--mrt-fog);margin-top:3px;}
+  .art-ops{display:flex;gap:8px;flex-shrink:0;}
+  .op{background:var(--mrt-ink);border:1px solid var(--line-strong);color:var(--mrt-white);font-size:12px;font-weight:600;padding:7px 11px;border-radius:6px;cursor:pointer;transition:all .15s;}
+  .op:hover{border-color:var(--mrt-blue);}
+  .op.del:hover{border-color:var(--mrt-flag);color:var(--mrt-flag);}
+  .empty{text-align:center;color:var(--mrt-fog);font-size:13.5px;padding:26px 10px;line-height:1.6;}
+
+  /* Toast */
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+    background:var(--mrt-panel);border:1px solid var(--line-strong);border-radius:8px;padding:14px 20px;
+    font-size:14px;color:var(--mrt-white);z-index:100;transition:all .25s;max-width:90vw;box-shadow:0 12px 40px rgba(0,0,0,.5);}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  #toast.ok{border-color:#38d17a;}
+  #toast.bad{border-color:var(--mrt-flag);}
+
+  details.config{margin-bottom:26px;background:var(--mrt-panel);border:1px solid var(--line);border-radius:10px;}
+  details.config summary{cursor:pointer;padding:16px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mrt-ice);list-style:none;display:flex;align-items:center;justify-content:space-between;}
+  details.config summary::-webkit-details-marker{display:none;}
+  details.config summary::after{content:'▾';color:var(--mrt-fog);}
+  details.config[open] summary::after{content:'▴';}
+  details.config .card-body{border-top:1px solid var(--line);}
+
+  /* ===== RECADREUR 16/9 ===== */
+  .crop-overlay{position:fixed;inset:0;background:rgba(5,7,13,.93);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+  .crop-overlay.hidden{display:none;}
+  .crop-title{font-family:var(--display);font-size:26px;color:var(--mrt-white);letter-spacing:.03em;}
+  .crop-hint{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mrt-fog);}
+  .crop-stage{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:8px;cursor:move;background:#000;user-select:none;}
+  .crop-stage img{display:block;pointer-events:none;}
+  .crop-frame{position:absolute;border:2px solid var(--mrt-blue);box-shadow:0 0 0 9999px rgba(0,0,0,.55);pointer-events:none;}
+  .crop-frame::before,.crop-frame::after{content:'';position:absolute;background:var(--mrt-blue);}
+  .crop-frame::before{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%);opacity:.45;}
+  .crop-frame::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%);opacity:.45;}
+  .crop-actions{display:flex;gap:14px;align-items:center;}
+  .crop-zoom{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--mrt-fog);}
+  .crop-zoom input[type=range]{-webkit-appearance:none;width:140px;height:4px;border-radius:2px;background:var(--line-strong);outline:none;}
+  .crop-zoom input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--mrt-blue);cursor:pointer;}
+
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="admin-top">
+  <div class="brand">CONSOLE MRT <span class="num">#514</span></div>
+  <div class="status"><span class="dot" id="connDot"></span><span id="connText">Non connecté</span></div>
+</div>
+
+<div style="max-width:1240px;margin:0 auto;padding:28px 28px 0;">
+  <!-- Réglages GitHub : à remplir une seule fois -->
+  <details class="config" id="configBox">
+    <summary>Réglages de connexion GitHub — <span id="cfgSummary">à configurer</span></summary>
+    <div class="card-body">
+      <p class="help" style="margin-bottom:16px;">Ces informations permettent à la console d'écrire tes articles dans ton dépôt. Elles restent enregistrées <strong>uniquement dans ce navigateur</strong> — jamais envoyées ailleurs.</p>
+      <div class="row2">
+        <label class="field"><span>Propriétaire du dépôt</span><input type="text" id="cfgOwner" placeholder="montrealracingteam-MRT"></label>
+        <label class="field"><span>Nom du dépôt</span><input type="text" id="cfgRepo" placeholder="V2"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Branche</span><input type="text" id="cfgBranch" placeholder="main"></label>
+        <label class="field"><span>Clé d'accès (token GitHub)</span><input type="password" id="cfgToken" placeholder="ghp_..." autocomplete="off"></label>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="saveCfg">Enregistrer et tester</button>
+        <button class="btn btn-ghost" id="forgetCfg">Oublier la clé</button>
+      </div>
+      <p class="help" style="margin-top:14px;">Pas encore de clé ? Suis le guide fourni : GitHub → Settings → Developer settings → Fine-grained tokens → accès en lecture/écriture au dépôt <em>Contents</em>.</p>
+    </div>
+  </details>
+</div>
+
+<div class="admin-wrap">
+
+  <!-- COLONNE GAUCHE : formulaire -->
+  <div>
+    <div class="card">
+      <div class="card-head"><h2 id="formTitle">Nouvel article</h2><span class="hint" id="editHint"></span></div>
+      <div class="card-body">
+
+        <label class="field"><span>Titre</span><input type="text" id="fTitle" placeholder="Ex : Victoire à Barcelone en LMGT3"></label>
+
+        <div class="row2">
+          <label class="field"><span>Catégorie</span>
+            <select id="fCategory">
+              <option value="evenement">Événement</option>
+              <option value="resultat">Résultat</option>
+              <option value="annonce">Annonce</option>
+              <option value="recrutement">Recrutement</option>
+            </select>
+          </label>
+          <label class="field"><span>Date</span><input type="date" id="fDate"></label>
+        </div>
+
+        <label class="field"><span>Mention (optionnel)</span><input type="text" id="fFlag" placeholder="Ex : CE WEEK-END · EN DIRECT — laisser vide sinon">
+          <p class="help">Petit texte rouge affiché avant la catégorie, pour attirer l'œil. Facultatif.</p>
+        </label>
+
+        <label class="field"><span>Sous-titre / contexte (optionnel)</span><input type="text" id="fDateLabel" placeholder="Ex : 4h de Barcelone · split 1/1 · #514">
+          <p class="help">Petite ligne sous le titre dans l'article. Facultatif.</p>
+        </label>
+
+        <label class="field"><span>Résumé — texte de la carte</span><textarea id="fSummary" rows="3" placeholder="Une ou deux phrases qui donnent envie de cliquer."></textarea></label>
+
+        <label class="field"><span>Photo</span></label>
+        <div class="dropzone" id="dropzone">
+          <div class="dz-title">Glisse une photo ici</div>
+          <div class="dz-sub">ou clique pour choisir — JPG / PNG. Elle sera compressée automatiquement.</div>
+          <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+        <div class="preview-img" id="imgPreview"><img id="imgPreviewEl" alt=""><button class="recrop" id="imgRecrop" type="button">✂ Recadrer</button><button class="rm" id="imgRemove" type="button">Retirer</button></div>
+        <div class="img-meta" id="imgMeta"></div>
+
+        <label class="field" style="margin-top:18px;"><span>Contenu de l'article</span></label>
+        <div class="editor-toolbar">
+          <button class="tbtn" type="button" data-cmd="p">Paragraphe</button>
+          <button class="tbtn" type="button" data-cmd="h4">Sous-titre</button>
+          <button class="tbtn" type="button" data-cmd="bold"><b>Gras</b></button>
+          <button class="tbtn" type="button" data-cmd="ul">• Liste</button>
+          <button class="tbtn" type="button" data-cmd="link">Lien</button>
+          <button class="tbtn" type="button" data-cmd="clear">Effacer mise en forme</button>
+          <button class="tbtn" type="button" data-cmd="inlineimg">📷 Photo dans l'article</button>
+        </div>
+        <div class="editor" id="editor" contenteditable="true" data-placeholder="Écris ton article ici. Sélectionne du texte puis clique sur un bouton pour le mettre en forme."></div>
+
+        <div class="actions" style="margin-top:22px;">
+          <button class="btn btn-primary" id="publishBtn" type="button">Publier</button>
+          <button class="btn btn-ghost" id="resetBtn" type="button">Vider le formulaire</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLONNE DROITE : aperçu + liste -->
+  <div>
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-head"><h2>Aperçu de la carte</h2><span class="hint">temps réel</span></div>
+      <div class="card-body">
+        <div class="prev-card">
+          <div class="pc-visual" id="pvVisual"><span class="ph">Aucune photo</span></div>
+          <div class="pc-body">
+            <div class="pc-meta" id="pvMeta">ÉVÉNEMENT</div>
+            <h3 id="pvTitle">Titre de l'article</h3>
+            <div class="pc-desc" id="pvDesc">Le résumé apparaîtra ici.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Articles publiés</h2><span class="hint" id="countHint">—</span></div>
+      <div class="card-body">
+        <div class="art-list" id="artList"><div class="empty">Connecte-toi pour charger tes articles.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ===========================================================================
+   CONSOLE DE PUBLICATION MRT
+   - Une seule source de vérité : articles.json (à la racine du dépôt).
+   - Les images vont dans images/articles/.
+   - Aucune dépendance externe, aucun framework, aucune ligne de commande.
+   =========================================================================== */
+
+const CATS = { evenement:'ÉVÉNEMENT', resultat:'RÉSULTAT', annonce:'ANNONCE', recrutement:'RECRUTEMENT' };
+const CFG_KEY = 'mrt_admin_cfg_v1';
+const API = 'https://api.github.com';
+
+let articles = [];      // état courant (tableau)
+let articlesSha = null; // sha du fichier articles.json sur GitHub
+let editingId = null;   // id en cours d'édition, ou null
+let pendingImage = null; // { dataUrl, base64, filename, isNew:true } quand une nouvelle photo est chargée
+let currentImagePath = ''; // chemin de l'image existante conservée
+
+/* ---------- utilitaires ---------- */
+const $ = id => document.getElementById(id);
+function toast(msg, kind){ const t=$('toast'); t.textContent=msg; t.className='show '+(kind||''); setTimeout(()=>t.className='',3200); }
+function utf8_to_b64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64_to_utf8(str){ return decodeURIComponent(escape(atob(str.replace(/\n/g,'')))); }
+function todayISO(){ const d=new Date(); return d.toISOString().slice(0,10); }
+function slugify(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60); }
+
+/* ---------- configuration ---------- */
+function getCfg(){ try{ return JSON.parse(localStorage.getItem(CFG_KEY))||{}; }catch(e){ return {}; } }
+function setCfg(c){ localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
+function loadCfgIntoForm(){ const c=getCfg(); $('cfgOwner').value=c.owner||''; $('cfgRepo').value=c.repo||''; $('cfgBranch').value=c.branch||'main'; $('cfgToken').value=c.token||''; }
+
+function ghHeaders(){ const c=getCfg(); return { 'Authorization':'token '+c.token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' }; }
+
+$('saveCfg').addEventListener('click', async ()=>{
+  const c = { owner:$('cfgOwner').value.trim(), repo:$('cfgRepo').value.trim(), branch:($('cfgBranch').value.trim()||'main'), token:$('cfgToken').value.trim() };
+  if(!c.owner||!c.repo||!c.token){ toast('Remplis propriétaire, dépôt et clé.', 'bad'); return; }
+  setCfg(c);
+  await testConnection();
+  loadArticles();
+});
+$('forgetCfg').addEventListener('click', ()=>{ const c=getCfg(); delete c.token; setCfg(c); $('cfgToken').value=''; setConn(false,'Clé oubliée'); toast('Clé effacée de ce navigateur.'); });
+
+function setConn(ok, txt){ $('connDot').className='dot '+(ok?'ok':'bad'); $('connText').textContent=txt; $('cfgSummary').textContent = ok?'connecté':'à configurer'; }
+
+async function testConnection(){
+  const c=getCfg();
+  if(!c.owner||!c.repo||!c.token){ setConn(false,'Non connecté'); return false; }
+  try{
+    const r = await fetch(`${API}/repos/${c.owner}/${c.repo}`, { headers:ghHeaders() });
+    if(r.ok){ setConn(true, c.owner+'/'+c.repo); return true; }
+    setConn(false, r.status===401?'Clé refusée':'Dépôt introuvable'); return false;
+  }catch(e){ setConn(false,'Erreur réseau'); return false; }
+}
+
+/* ---------- chargement des articles ---------- */
+async function loadArticles(){
+  const c=getCfg(); if(!c.owner||!c.repo||!c.token){ return; }
+  try{
+    const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/articles.json?ref=${c.branch}&t=`+Date.now(), { headers:ghHeaders() });
+    if(r.status===404){ articles=[]; articlesSha=null; renderList(); return; }
+    if(!r.ok){ toast('Impossible de lire articles.json ('+r.status+').','bad'); return; }
+    const data = await r.json();
+    articlesSha = data.sha;
+    const parsed = JSON.parse(b64_to_utf8(data.content));
+    articles = Array.isArray(parsed) ? parsed : [];
+    renderList();
+  }catch(e){ toast('Lecture impossible : '+e.message,'bad'); }
+}
+
+function sortedArticles(){ return [...articles].sort((a,b)=> (b.date||'').localeCompare(a.date||'')); }
+
+function renderList(){
+  const list=$('artList'); const arr=sortedArticles();
+  $('countHint').textContent = arr.length+' article'+(arr.length>1?'s':'');
+  if(arr.length===0){ list.innerHTML='<div class="empty">Aucun article pour l\'instant. Écris ton premier à gauche puis clique sur Publier.</div>'; return; }
+  list.innerHTML = arr.map(a=>`
+    <div class="art-item">
+      <div class="art-thumb">${a.image?`<img src="${imgURL(a.image)}" alt="">`:'<span class="ph">—</span>'}</div>
+      <div class="art-info">
+        <div class="ai-meta">${(a.flag?a.flag+' · ':'')+(CATS[a.category]||a.category||'')}</div>
+        <h4>${escapeHtml(a.title||'(sans titre)')}</h4>
+        <div class="ai-date">${a.date||''}</div>
+      </div>
+      <div class="art-ops">
+        <button class="op" data-edit="${a.id}">Modifier</button>
+        <button class="op del" data-del="${a.id}">Supprimer</button>
+      </div>
+    </div>`).join('');
+  list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editArticle(b.dataset.edit)));
+  list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteArticle(b.dataset.del)));
+}
+function imgURL(path){ const c=getCfg(); return `https://raw.githubusercontent.com/${c.owner}/${c.repo}/${c.branch}/${path}?t=`+Date.now(); }
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---------- éditeur à boutons ---------- */
+const editor = $('editor');
+document.querySelectorAll('.tbtn').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.preventDefault(); editor.focus();
+    const cmd = btn.dataset.cmd;
+    if(cmd==='p') document.execCommand('formatBlock', false, 'p');
+    else if(cmd==='h4') document.execCommand('formatBlock', false, 'h4');
+    else if(cmd==='bold') document.execCommand('bold');
+    else if(cmd==='ul') document.execCommand('insertUnorderedList');
+    else if(cmd==='link'){ const url=prompt('Adresse du lien (https://…)'); if(url) document.execCommand('createLink', false, url); }
+    else if(cmd==='clear') document.execCommand('removeFormat');
+    else if(cmd==='inlineimg'){
+      // Ouvre un sélecteur de fichier temporaire pour insérer une photo dans l'article
+      const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+      inp.onchange=()=>{
+        const file=inp.files[0]; if(!file) return;
+        const rdr=new FileReader();
+        rdr.onload=e=>{
+          const src=new Image(); src.onload=()=>{
+            const MAXW=1200;
+            const scale=Math.min(1,MAXW/src.width);
+            const w=Math.round(src.width*scale), h=Math.round(src.height*scale);
+            const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+            canvas.getContext('2d').drawImage(src,0,0,w,h);
+            const dataUrl=canvas.toDataURL('image/jpeg',0.82);
+            // Insérer l'image dans l'éditeur à la position du curseur
+            editor.focus();
+            document.execCommand('insertHTML', false, `<img src="${dataUrl}" alt="Photo de l'article">`);
+            syncPreview();
+          };
+          src.src=e.target.result;
+        };
+        rdr.readAsDataURL(file);
+      };
+      inp.click();
+    }
+    syncPreview();
+  });
+});
+editor.addEventListener('input', syncPreview);
+
+/* Nettoie le HTML de l'éditeur : ne garde que les balises autorisées */
+function cleanHTML(root){
+  const ALLOWED = { P:1, H4:1, UL:1, LI:1, STRONG:1, B:1, EM:1, I:1, A:1, BR:1, IMG:1 };
+  function walk(node){
+    [...node.childNodes].forEach(ch=>{
+      if(ch.nodeType===3) return; // texte
+      if(ch.nodeType!==1){ ch.remove(); return; }
+      const tag=ch.tagName;
+      if(tag==='DIV'){ // les <div> de contenteditable deviennent des <p>
+        const p=document.createElement('p'); p.innerHTML=ch.innerHTML; node.replaceChild(p,ch); walk(p); return;
+      }
+      if(!ALLOWED[tag]){ // balise interdite : on garde le contenu, on jette l'enveloppe
+        while(ch.firstChild) node.insertBefore(ch.firstChild, ch); ch.remove(); return;
+      }
+      // normalise
+      if(tag==='B'){ const s=document.createElement('strong'); s.innerHTML=ch.innerHTML; node.replaceChild(s,ch); walk(s); return; }
+      if(tag==='I'){ const s=document.createElement('em'); s.innerHTML=ch.innerHTML; node.replaceChild(s,ch); walk(s); return; }
+      [...ch.attributes].forEach(at=>{ if(!((tag==='A'&&at.name==='href')||(tag==='IMG'&&(at.name==='src'||at.name==='alt')))) ch.removeAttribute(at.name); });
+      if(tag==='A'){ ch.setAttribute('target','_blank'); ch.setAttribute('rel','noopener'); }
+      walk(ch);
+    });
+  }
+  const tmp=document.createElement('div'); tmp.innerHTML=root.innerHTML; walk(tmp);
+  return tmp.innerHTML.replace(/<p>\s*<\/p>/g,'').trim();
+}
+
+/* ---------- image : compression navigateur ---------- */
+const dz=$('dropzone');
+dz.addEventListener('click',()=>$('fileInput').click());
+$('fileInput').addEventListener('change',e=>{ if(e.target.files[0]) openCropper(e.target.files[0]); e.target.value=''; });
+['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');}));
+dz.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) openCropper(f); });
+$('imgRemove').addEventListener('click',()=>{ pendingImage=null; currentImagePath=''; $('imgPreview').style.display='none'; $('imgMeta').textContent=''; syncPreview(); });
+$('imgRecrop').addEventListener('click',()=>{
+  if(!_cropOrigDataUrl){ toast('Aucune photo chargée à recadrer.','bad'); return; }
+  initCropper();
+});
+
+/* ===== RECADREUR ===== */
+let _cropOrigDataUrl=''; // dataUrl pleine résolution de la source
+let _cropNatW=0, _cropNatH=0; // dimensions naturelles de la source
+
+function openCropper(file){
+  if(!file.type.startsWith('image/')){ toast('Ce fichier n\'est pas une image.','bad'); return; }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    _cropOrigDataUrl=e.target.result;
+    const tmp=new Image();
+    tmp.onload=()=>{
+      _cropNatW=tmp.naturalWidth; _cropNatH=tmp.naturalHeight;
+      initCropper();
+    };
+    tmp.src=_cropOrigDataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+
+function initCropper(){
+  const overlay=$('cropOverlay'), stage=$('cropStage'), ci=$('cropImg'), frame=$('cropFrame'), zoom=$('cropZoom');
+  ci.src=_cropOrigDataUrl;
+  overlay.classList.remove('hidden');
+  zoom.value=100;
+
+  // Taille du stage : 80vw max, hauteur proportionnelle à l'image source, max 70vh
+  const VW=Math.min(window.innerWidth*0.82, 1000);
+  const stageW=VW, stageH=Math.min(stageW*(_cropNatH/_cropNatW), window.innerHeight*0.62);
+  stage.style.width=stageW+'px'; stage.style.height=stageH+'px';
+
+  // Le cadre 16/9 tient dans le stage
+  const frameW=stageW*0.88, frameH=frameW*(9/16);
+  const frameClamped=Math.min(frameH,stageH*0.88);
+  const fw=frameClamped*(16/9), fh=frameClamped;
+  frame.style.width=fw+'px'; frame.style.height=fh+'px';
+  // centrer le cadre (fixe, c'est l'image qui bouge)
+  const frameL=(stageW-fw)/2, frameT=(stageH-fh)/2;
+  frame.style.left=frameL+'px'; frame.style.top=frameT+'px';
+
+  // État de l'image dans le stage
+  // Échelle minimale : l'image doit couvrir le cadre 16/9 dans les deux axes
+  const scaleToFitW = fw / _cropNatW;
+  const scaleToFitH = fh / _cropNatH;
+  let scale = Math.max(scaleToFitW, scaleToFitH); // couvre le cadre
+  let imgW=_cropNatW*scale, imgH=_cropNatH*scale;
+  let ox=(stageW-imgW)/2, oy=(stageH-imgH)/2; // offset image dans le stage
+
+  function applyTransform(){
+    ci.style.width=imgW+'px'; ci.style.height=imgH+'px';
+    ci.style.position='absolute'; ci.style.left=ox+'px'; ci.style.top=oy+'px';
+  }
+  applyTransform();
+
+  // Clamp offset pour que le cadre reste toujours couvert par l'image
+  function clamp(){
+    // le bord gauche de l'image doit être ≤ frameL
+    ox=Math.min(ox, frameL);
+    // le bord droit de l'image doit être ≥ frameL+fw
+    ox=Math.max(ox, frameL+fw-imgW);
+    // haut
+    oy=Math.min(oy, frameT);
+    // bas
+    oy=Math.max(oy, frameT+fh-imgH);
+  }
+
+  // Drag
+  let dragging=false, startX=0, startY=0, startOx=0, startOy=0;
+  stage.onmousedown=e=>{ dragging=true; startX=e.clientX; startY=e.clientY; startOx=ox; startOy=oy; e.preventDefault(); };
+  window.onmousemove=e=>{ if(!dragging) return; ox=startOx+(e.clientX-startX); oy=startOy+(e.clientY-startY); clamp(); applyTransform(); };
+  window.onmouseup=()=>dragging=false;
+  // Touch
+  stage.ontouchstart=e=>{ const t=e.touches[0]; dragging=true; startX=t.clientX; startY=t.clientY; startOx=ox; startOy=oy; };
+  stage.ontouchmove=e=>{ if(!dragging) return; const t=e.touches[0]; ox=startOx+(t.clientX-startX); oy=startOy+(t.clientY-startY); clamp(); applyTransform(); e.preventDefault(); },{passive:false};
+  stage.ontouchend=()=>dragging=false;
+
+  // Zoom — baseScale = couverture minimale du cadre (50% slider = cette valeur)
+  const baseScale=scale;
+  // Valeur initiale du slider : 100 = taille actuelle
+  zoom.value = 100;
+  zoom.oninput=()=>{
+    const zf=parseInt(zoom.value)/100;
+    const newW=_cropNatW*baseScale*zf, newH=_cropNatH*baseScale*zf;
+    // zoom centré sur le centre du cadre
+    const cx=frameL+fw/2, cy=frameT+fh/2;
+    const rx=(cx-ox)/imgW, ry=(cy-oy)/imgH;
+    imgW=newW; imgH=newH;
+    ox=cx-rx*imgW; oy=cy-ry*imgH;
+    clamp(); applyTransform();
+  };
+
+  // Confirmer
+  $('cropConfirm').onclick=()=>{
+    // Calculer la zone source (en pixels naturels) correspondant au cadre
+    const srcX=Math.round((frameL-ox)/imgW*_cropNatW);
+    const srcY=Math.round((frameT-oy)/imgH*_cropNatH);
+    const srcW=Math.round(fw/imgW*_cropNatW);
+    const srcH=Math.round(fh/imgH*_cropNatH);
+    const OUT=1600, outH=Math.round(OUT*(9/16));
+    const canvas=document.createElement('canvas'); canvas.width=OUT; canvas.height=outH;
+    const src=new Image(); src.src=_cropOrigDataUrl;
+    // src est déjà chargée (même objet), on dessine directement
+    canvas.getContext('2d').drawImage(src, srcX, srcY, srcW, srcH, 0, 0, OUT, outH);
+    const dataUrl=canvas.toDataURL('image/jpeg',0.82);
+    const base64=dataUrl.split(',')[1];
+    const kb=Math.round(base64.length*0.75/1024);
+    pendingImage={ dataUrl, base64, isNew:true };
+    $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
+    $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
+    overlay.classList.add('hidden');
+    // cleanup listeners
+    stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
+    stage.ontouchstart=null; stage.ontouchmove=null; stage.ontouchend=null;
+    zoom.oninput=null; $('cropConfirm').onclick=null;
+    syncPreview();
+  };
+
+  $('cropCancel').onclick=()=>{
+    overlay.classList.add('hidden');
+    stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
+    zoom.oninput=null; $('cropConfirm').onclick=null;
+  };
+}
+
+/* ---------- aperçu ---------- */
+$('fTitle').addEventListener('input',syncPreview);
+$('fSummary').addEventListener('input',syncPreview);
+$('fCategory').addEventListener('change',syncPreview);
+$('fFlag').addEventListener('input',syncPreview);
+function syncPreview(){
+  $('pvTitle').textContent = $('fTitle').value || 'Titre de l\'article';
+  $('pvDesc').textContent = $('fSummary').value || 'Le résumé apparaîtra ici.';
+  const flag=$('fFlag').value.trim();
+  $('pvMeta').innerHTML = (flag?`<span class="live">● ${escapeHtml(flag)}</span> `:'') + (CATS[$('fCategory').value]||'');
+  const v=$('pvVisual');
+  if(pendingImage){ v.innerHTML=`<img src="${pendingImage.dataUrl}" alt="">`; }
+  else if(currentImagePath){ v.innerHTML=`<img src="${imgURL(currentImagePath)}" alt="">`; }
+  else { v.innerHTML='<span class="ph">Aucune photo</span>'; }
+}
+
+/* ---------- édition / suppression ---------- */
+function editArticle(id){
+  const a=articles.find(x=>x.id===id); if(!a) return;
+  editingId=id; currentImagePath=a.image||''; pendingImage=null;
+  $('fTitle').value=a.title||''; $('fCategory').value=a.category||'evenement';
+  $('fDate').value=a.date||todayISO(); $('fFlag').value=a.flag||''; $('fDateLabel').value=a.dateLabel||'';
+  $('fSummary').value=a.summary||''; editor.innerHTML=a.content||'';
+  if(currentImagePath){ $('imgPreviewEl').src=imgURL(currentImagePath); $('imgPreview').style.display='block'; $('imgMeta').textContent='Photo actuelle conservée'; }
+  else { $('imgPreview').style.display='none'; $('imgMeta').textContent=''; }
+  $('formTitle').textContent='Modifier l\'article'; $('editHint').textContent='en édition';
+  $('publishBtn').textContent='Enregistrer les modifications';
+  syncPreview(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function deleteArticle(id){
+  const a=articles.find(x=>x.id===id); if(!a) return;
+  if(!confirm(`Supprimer définitivement « ${a.title} » ?`)) return;
+  articles = articles.filter(x=>x.id!==id);
+  const ok = await commitArticles(`Suppression article : ${a.title}`);
+  if(ok){ toast('Article supprimé.','ok'); if(editingId===id) resetForm(); renderList(); }
+}
+
+/* ---------- publication ---------- */
+$('publishBtn').addEventListener('click', publish);
+$('resetBtn').addEventListener('click', resetForm);
+
+async function publish(){
+  const c=getCfg(); if(!c.token){ toast('Configure d\'abord la connexion GitHub.','bad'); $('configBox').open=true; return; }
+  const title=$('fTitle').value.trim();
+  if(!title){ toast('Le titre est obligatoire.','bad'); return; }
+  const content=cleanHTML(editor);
+  if(!content){ toast('Le contenu de l\'article est vide.','bad'); return; }
+
+  const btn=$('publishBtn'); const label=btn.textContent; btn.disabled=true; btn.innerHTML='<span class="spin"></span>Publication…';
+
+  try{
+    const date=$('fDate').value||todayISO();
+    let imagePath=currentImagePath;
+
+    // 1) téléverser la nouvelle image si présente
+    if(pendingImage && pendingImage.isNew){
+      const base = editingId || slugify(title);
+      const filename = `${base}-${Date.now()}.jpg`;
+      imagePath = `images/articles/${filename}`;
+      const okImg = await putFile(imagePath, pendingImage.base64, `Photo article : ${title}`, true);
+      if(!okImg){ throw new Error('échec du téléversement de la photo'); }
+    }
+
+    // 2) construire l'objet article
+    const id = editingId || (slugify(title)+'-'+date);
+    const obj = {
+      id, category:$('fCategory').value, flag:$('fFlag').value.trim(),
+      title, date, dateLabel:$('fDateLabel').value.trim(),
+      summary:$('fSummary').value.trim(), image:imagePath||'', content
+    };
+
+    if(editingId){ const i=articles.findIndex(x=>x.id===editingId); if(i>=0) articles[i]=obj; else articles.push(obj); }
+    else { if(articles.some(x=>x.id===id)) obj.id=id+'-'+Math.floor(Math.random()*1000); articles.push(obj); }
+
+    // 3) écrire articles.json
+    const ok = await commitArticles(editingId?`Modification article : ${title}`:`Nouvel article : ${title}`);
+    if(!ok) throw new Error('écriture de articles.json impossible');
+
+    toast(editingId?'Modifications enregistrées et en ligne.':'Article publié et en ligne.','ok');
+    resetForm(); renderList();
+  }catch(e){ toast('Échec : '+e.message,'bad'); }
+  finally{ btn.disabled=false; btn.textContent=label; }
+}
+
+async function commitArticles(message){
+  const json = JSON.stringify(articles, null, 2);
+  return await putFile('articles.json', utf8_to_b64(json), message, false, ()=>articlesSha, s=>articlesSha=s);
+}
+
+/* PUT générique vers l'API Contents. contentB64 = contenu déjà encodé en base64. */
+async function putFile(path, contentB64, message, isImage, getSha, setSha){
+  const c=getCfg();
+  let sha = getSha ? getSha() : null;
+  if(sha===undefined) sha=null;
+  // pour une image, on vérifie si le fichier existe déjà (pour récupérer son sha)
+  if(sha===null){
+    try{ const g=await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/${path}?ref=${c.branch}`,{headers:ghHeaders()}); if(g.ok){ const d=await g.json(); sha=d.sha; } }catch(e){}
+  }
+  const body={ message, content:contentB64, branch:c.branch };
+  if(sha) body.sha=sha;
+  const r=await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/${path}`,{ method:'PUT', headers:ghHeaders(), body:JSON.stringify(body) });
+  if(!r.ok){ const t=await r.text(); console.error(t); return false; }
+  const d=await r.json();
+  if(setSha && d.content) setSha(d.content.sha);
+  return true;
+}
+
+function resetForm(){
+  editingId=null; pendingImage=null; currentImagePath='';
+  $('fTitle').value=''; $('fCategory').value='evenement'; $('fDate').value=todayISO();
+  $('fFlag').value=''; $('fDateLabel').value=''; $('fSummary').value=''; editor.innerHTML='';
+  $('imgPreview').style.display='none'; $('imgMeta').textContent='';
+  $('formTitle').textContent='Nouvel article'; $('editHint').textContent='';
+  $('publishBtn').textContent='Publier'; syncPreview();
+}
+
+/* ---------- démarrage ---------- */
+(async function init(){
+  loadCfgIntoForm();
+  $('fDate').value=todayISO();
+  const c=getCfg();
+  if(c.owner&&c.repo&&c.token){ const ok=await testConnection(); if(ok) loadArticles(); else $('configBox').open=true; }
+  else { $('configBox').open=true; }
+  syncPreview();
+})();
+</script>
+
+<!-- RECADREUR -->
+<div class="crop-overlay hidden" id="cropOverlay">
+  <div class="crop-title">Recadrer la photo</div>
+  <div class="crop-hint">Déplace l'image · Ajuste le zoom · Le cadre bleu = ce qui sera gardé (16/9)</div>
+  <div class="crop-stage" id="cropStage">
+    <img id="cropImg" alt="">
+    <div class="crop-frame" id="cropFrame"></div>
+  </div>
+  <div class="crop-actions">
+    <div class="crop-zoom">
+      <span>−</span>
+      <input type="range" id="cropZoom" min="50" max="300" value="100" step="1">
+      <span>+</span>
+    </div>
+    <button class="btn btn-primary" id="cropConfirm" type="button">Confirmer le recadrage</button>
+    <button class="btn btn-ghost" id="cropCancel" type="button">Annuler</button>
+  </div>
+</div>
+
+</body>
+</html>
