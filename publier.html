@@ -79,6 +79,8 @@
   .preview-img{margin-top:14px;border-radius:8px;overflow:hidden;border:1px solid var(--line);position:relative;display:none;}
   .preview-img img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;}
   .preview-img .rm{position:absolute;top:8px;right:8px;background:rgba(5,7,13,.85);border:1px solid var(--line-strong);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  .preview-img .recrop{position:absolute;top:8px;right:74px;background:rgba(0,87,255,.85);border:1px solid var(--mrt-blue);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;}
+  .editor img{max-width:100%;border-radius:6px;display:block;margin:12px 0;}
   .img-meta{font-family:var(--mono);font-size:10.5px;color:var(--mrt-ice);margin-top:8px;letter-spacing:.06em;}
 
   .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
@@ -215,7 +217,7 @@
           <div class="dz-sub">ou clique pour choisir — JPG / PNG. Elle sera compressée automatiquement.</div>
           <input type="file" id="fileInput" accept="image/*" hidden>
         </div>
-        <div class="preview-img" id="imgPreview"><img id="imgPreviewEl" alt=""><button class="rm" id="imgRemove" type="button">Retirer</button></div>
+        <div class="preview-img" id="imgPreview"><img id="imgPreviewEl" alt=""><button class="recrop" id="imgRecrop" type="button">✂ Recadrer</button><button class="rm" id="imgRemove" type="button">Retirer</button></div>
         <div class="img-meta" id="imgMeta"></div>
 
         <label class="field" style="margin-top:18px;"><span>Contenu de l'article</span></label>
@@ -226,6 +228,7 @@
           <button class="tbtn" type="button" data-cmd="ul">• Liste</button>
           <button class="tbtn" type="button" data-cmd="link">Lien</button>
           <button class="tbtn" type="button" data-cmd="clear">Effacer mise en forme</button>
+          <button class="tbtn" type="button" data-cmd="inlineimg">📷 Photo dans l'article</button>
         </div>
         <div class="editor" id="editor" contenteditable="true" data-placeholder="Écris ton article ici. Sélectionne du texte puis clique sur un bouton pour le mettre en forme."></div>
 
@@ -371,6 +374,31 @@ document.querySelectorAll('.tbtn').forEach(btn=>{
     else if(cmd==='ul') document.execCommand('insertUnorderedList');
     else if(cmd==='link'){ const url=prompt('Adresse du lien (https://…)'); if(url) document.execCommand('createLink', false, url); }
     else if(cmd==='clear') document.execCommand('removeFormat');
+    else if(cmd==='inlineimg'){
+      // Ouvre un sélecteur de fichier temporaire pour insérer une photo dans l'article
+      const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+      inp.onchange=()=>{
+        const file=inp.files[0]; if(!file) return;
+        const rdr=new FileReader();
+        rdr.onload=e=>{
+          const src=new Image(); src.onload=()=>{
+            const MAXW=1200;
+            const scale=Math.min(1,MAXW/src.width);
+            const w=Math.round(src.width*scale), h=Math.round(src.height*scale);
+            const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+            canvas.getContext('2d').drawImage(src,0,0,w,h);
+            const dataUrl=canvas.toDataURL('image/jpeg',0.82);
+            // Insérer l'image dans l'éditeur à la position du curseur
+            editor.focus();
+            document.execCommand('insertHTML', false, `<img src="${dataUrl}" alt="Photo de l'article">`);
+            syncPreview();
+          };
+          src.src=e.target.result;
+        };
+        rdr.readAsDataURL(file);
+      };
+      inp.click();
+    }
     syncPreview();
   });
 });
@@ -378,7 +406,7 @@ editor.addEventListener('input', syncPreview);
 
 /* Nettoie le HTML de l'éditeur : ne garde que les balises autorisées */
 function cleanHTML(root){
-  const ALLOWED = { P:1, H4:1, UL:1, LI:1, STRONG:1, B:1, EM:1, I:1, A:1, BR:1 };
+  const ALLOWED = { P:1, H4:1, UL:1, LI:1, STRONG:1, B:1, EM:1, I:1, A:1, BR:1, IMG:1 };
   function walk(node){
     [...node.childNodes].forEach(ch=>{
       if(ch.nodeType===3) return; // texte
@@ -393,7 +421,7 @@ function cleanHTML(root){
       // normalise
       if(tag==='B'){ const s=document.createElement('strong'); s.innerHTML=ch.innerHTML; node.replaceChild(s,ch); walk(s); return; }
       if(tag==='I'){ const s=document.createElement('em'); s.innerHTML=ch.innerHTML; node.replaceChild(s,ch); walk(s); return; }
-      [...ch.attributes].forEach(at=>{ if(!(tag==='A'&&at.name==='href')) ch.removeAttribute(at.name); });
+      [...ch.attributes].forEach(at=>{ if(!((tag==='A'&&at.name==='href')||(tag==='IMG'&&(at.name==='src'||at.name==='alt')))) ch.removeAttribute(at.name); });
       if(tag==='A'){ ch.setAttribute('target','_blank'); ch.setAttribute('rel','noopener'); }
       walk(ch);
     });
@@ -410,6 +438,10 @@ $('fileInput').addEventListener('change',e=>{ if(e.target.files[0]) openCropper(
 ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');}));
 dz.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) openCropper(f); });
 $('imgRemove').addEventListener('click',()=>{ pendingImage=null; currentImagePath=''; $('imgPreview').style.display='none'; $('imgMeta').textContent=''; syncPreview(); });
+$('imgRecrop').addEventListener('click',()=>{
+  if(!_cropOrigDataUrl){ toast('Aucune photo chargée à recadrer.','bad'); return; }
+  initCropper();
+});
 
 /* ===== RECADREUR ===== */
 let _cropOrigDataUrl=''; // dataUrl pleine résolution de la source
@@ -451,7 +483,10 @@ function initCropper(){
   frame.style.left=frameL+'px'; frame.style.top=frameT+'px';
 
   // État de l'image dans le stage
-  let scale=stageW/_cropNatW; // échelle de base : image remplit le stage en largeur
+  // Échelle minimale : l'image doit couvrir le cadre 16/9 dans les deux axes
+  const scaleToFitW = fw / _cropNatW;
+  const scaleToFitH = fh / _cropNatH;
+  let scale = Math.max(scaleToFitW, scaleToFitH); // couvre le cadre
   let imgW=_cropNatW*scale, imgH=_cropNatH*scale;
   let ox=(stageW-imgW)/2, oy=(stageH-imgH)/2; // offset image dans le stage
 
@@ -483,8 +518,10 @@ function initCropper(){
   stage.ontouchmove=e=>{ if(!dragging) return; const t=e.touches[0]; ox=startOx+(t.clientX-startX); oy=startOy+(t.clientY-startY); clamp(); applyTransform(); e.preventDefault(); },{passive:false};
   stage.ontouchend=()=>dragging=false;
 
-  // Zoom
+  // Zoom — baseScale = couverture minimale du cadre (50% slider = cette valeur)
   const baseScale=scale;
+  // Valeur initiale du slider : 100 = taille actuelle
+  zoom.value = 100;
   zoom.oninput=()=>{
     const zf=parseInt(zoom.value)/100;
     const newW=_cropNatW*baseScale*zf, newH=_cropNatH*baseScale*zf;
@@ -668,7 +705,7 @@ function resetForm(){
   <div class="crop-actions">
     <div class="crop-zoom">
       <span>−</span>
-      <input type="range" id="cropZoom" min="100" max="300" value="100" step="1">
+      <input type="range" id="cropZoom" min="50" max="300" value="100" step="1">
       <span>+</span>
     </div>
     <button class="btn btn-primary" id="cropConfirm" type="button">Confirmer le recadrage</button>
