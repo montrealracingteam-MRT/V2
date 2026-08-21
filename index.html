@@ -47,6 +47,11 @@
   color:var(--mrt-ice);transition:color .2s;
 }
 .stats-cta a:hover{color:var(--mrt-white);}
+.asr-promo-c{flex-shrink:0;text-align:center;padding:20px 28px;border:1.5px solid rgba(255,255,255,.35);border-radius:8px;background:rgba(255,255,255,.08);margin-left:24px;transition:background .2s,border-color .2s;text-decoration:none;cursor:pointer;}
+.asr-promo-c:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.6);}
+.asr-promo-c-label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(234,241,255,.65);margin-bottom:6px;}
+.asr-promo-c-code{font-family:var(--display);font-size:58px;color:#fff;letter-spacing:.06em;line-height:1;}
+.asr-promo-c-badge{margin-top:8px;background:rgba(255,255,255,.18);border-radius:4px;padding:5px 14px;display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
 
 /* Bloc recrutement accueil */
 .recruit-home{
@@ -177,7 +182,7 @@
 
 <!-- ===== BANNIÈRE MORADNESS ===== -->
 <section class="asr-banner-wrap" aria-label="Partenaire officiel Moradness">
-  <a class="asr-banner reveal" href="https://moradness.com" target="_blank" rel="noopener">
+  <div class="asr-banner reveal">
     <div class="asr-banner-sheen"></div>
     <div class="asr-banner-inner wrap">
       <div class="asr-banner-left">
@@ -195,9 +200,13 @@
           </g>
         </svg>
       </div>
-      <span class="asr-banner-cta">Voir les gants →</span>
+      <a class="asr-promo-c" href="https://moradness.com" target="_blank" rel="noopener">
+        <div class="asr-promo-c-label">Code promo exclusif</div>
+        <div class="asr-promo-c-code">MRT10</div>
+        <div class="asr-promo-c-badge">−10% de rabais</div>
+      </a>
     </div>
-  </a>
+  </div>
 </section>
 
 <!-- ===== ACTUALITÉS ===== -->
@@ -250,7 +259,7 @@
 
 <!-- ===== BANNIÈRE ADVANCED SIM RACING ===== -->
 <section class="asr-banner-wrap" aria-label="Partenaire officiel Advanced Sim Racing">
-  <a class="asr-banner reveal" href="https://advancedsimracing.com" target="_blank" rel="noopener">
+  <div class="asr-banner reveal">
     <div class="asr-banner-sheen"></div>
     <div class="asr-banner-inner wrap">
       <div class="asr-banner-left">
@@ -278,9 +287,13 @@
           </div>
         </div>
       </div>
-      <span class="asr-banner-cta">Découvrir la boutique →</span>
+      <a class="asr-promo-c" href="https://advancedsimracing.com" target="_blank" rel="noopener">
+        <div class="asr-promo-c-label">Code promo exclusif</div>
+        <div class="asr-promo-c-code">MRT5</div>
+        <div class="asr-promo-c-badge">−5% de rabais</div>
+      </a>
     </div>
-  </a>
+  </div>
 </section>
 
 <!-- ===== RECRUTEMENT ===== -->
@@ -400,7 +413,9 @@ function artLink(a){ return `article.html?id=${encodeURIComponent(a.id)}`; }
 
 fetch('articles.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).then(list => {
   const root = document.getElementById('homeNewsLayout');
-  const arr = (Array.isArray(list) ? list : []).sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  const raw = Array.isArray(list) ? list : [];
+  const arr = raw.map((a,i) => ({...a, _i:i}))
+    .sort((a,b) => (b.date||'').localeCompare(a.date||'') || b._i - a._i);
   if(!arr.length){ root.innerHTML = '<div style="color:var(--mrt-fog);padding:40px 0;">Aucune actualité pour l\'instant.</div>'; return; }
 
   const f = arr[0];
