@@ -791,16 +791,13 @@ function openLivEdit(id){
   $('livEditCard').scrollIntoView({behavior:'smooth'});
 }
 
-// Drag & drop multi-photos liveries
+// Drag & drop multi-photos liveries — même pattern qu'articles
 const livDz=$('livDropzone');
-livDz.addEventListener('click', ()=>$('livFileInput').click());
-$('livFileInput').addEventListener('change',e=>{[...e.target.files].forEach(f=>openLivCropper(f)); e.target.value='';});
-['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.add('drag');}));
-['dragleave'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.remove('drag');}));
-livDz.addEventListener('drop',e=>{
-  e.preventDefault(); e.stopPropagation(); livDz.classList.remove('drag');
-  [...e.dataTransfer.files].forEach(f=>{if(f.type.startsWith('image/')) openLivCropper(f);});
-});
+livDz.addEventListener('click',()=>$('livFileInput').click());
+$('livFileInput').addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
+['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.remove('drag');}));
+livDz.addEventListener('drop',e=>{ [...e.dataTransfer.files].forEach(f=>{ if(f.type.startsWith('image/')) openLivCropper(f); }); });
 
 // File d'attente pour les fichiers à recadrer un par un
 let _livCropQueue = [];
@@ -933,8 +930,8 @@ document.addEventListener('drop', e => e.preventDefault());
         <div class="dropzone" id="livDropzone">
           <div class="dz-title">Glisse tes photos ici</div>
           <div class="dz-sub">ou clique pour choisir — plusieurs fichiers acceptés — JPG / PNG</div>
-          <input type="file" id="livFileInput" accept="image/*" multiple hidden>
         </div>
+        <input type="file" id="livFileInput" accept="image/*" multiple hidden>
 
         <!-- File des photos en attente (avec aperçu recadrable) -->
         <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
