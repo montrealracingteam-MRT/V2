@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liveries — Montreal Racing Team | MRT #514</title>
+<meta name="description" content="Découvrez les livrées de l'écurie MRT — Hypercar, LMP2, LMP3 et LMGT3, créées par l'artiste SDL.">
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  .page-top { padding-top: 120px; padding-bottom: 90px; }
+  .page-head { margin-bottom: 48px; }
+  .page-head h1 { font-size: clamp(52px,8vw,100px); color: var(--mrt-white); line-height:.92; }
+  .page-head p { color: var(--mrt-fog); margin-top: 14px; max-width: 60ch; line-height: 1.6; }
+
+  /* Onglets catégorie */
+  .cat-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 40px; border-bottom: 1px solid var(--line); padding-bottom: 0; }
+  .cat-tab {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--mrt-fog); padding: 12px 20px; cursor: pointer; border: none; background: none;
+    border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s;
+  }
+  .cat-tab:hover { color: var(--mrt-white); }
+  .cat-tab.active { color: var(--mrt-white); border-bottom-color: var(--mrt-blue); }
+
+  /* Grille voitures */
+  .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .car-card { background: var(--mrt-panel); display: block; text-decoration: none; transition: background .2s; position: relative; overflow: hidden; }
+  .car-card:hover { background: var(--mrt-ink); }
+  .car-card:hover .car-cta { color: var(--mrt-white); }
+  .car-visual { aspect-ratio: 16/9; overflow: hidden; background: var(--mrt-ink); display: flex; align-items: center; justify-content: center; }
+  .car-visual img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
+  .car-card:hover .car-visual img { transform: scale(1.04); }
+  .car-no-photo { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mrt-fog); }
+  .car-body { padding: 20px 22px 22px; }
+  .car-cat { font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-blue); margin-bottom: 6px; }
+  .car-model { font-family: var(--display); font-size: 22px; color: var(--mrt-white); line-height: 1.05; margin-bottom: 6px; }
+  .car-artist { font-size: 12px; color: var(--mrt-fog); }
+  .car-cta { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mrt-ice); margin-top: 14px; display: inline-block; transition: color .2s; }
+
+  /* SVG placeholder livery */
+  .livery-ph { width: 100%; height: 100%; }
+
+  .empty-state { grid-column: 1/-1; padding: 60px 20px; text-align: center; color: var(--mrt-fog); font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html"><img class="nav-logo-img" src="/mrt-logo.png" alt="MRT"></a>
+  <div class="nav-links">
+    <a href="a-propos.html">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html">Palmarès</a>
+    <a href="liveries.html" style="color:var(--mrt-white);">Liveries</a>
+    <a href="boutique.html">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="boutique.html" class="nav-cta">Boutique →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap page-top">
+  <header class="page-head reveal">
+    <div class="eyebrow">L'écurie MRT</div>
+    <h1>Liveries</h1>
+    <p>Toutes les livrées de l'écurie, créées par l'artiste <strong style="color:var(--mrt-white);">SDL</strong> — Hypercar, LMP2, LMP3 et LMGT3.</p>
+  </header>
+
+  <!-- Onglets -->
+  <div class="cat-tabs reveal" id="catTabs">
+    <button class="cat-tab active" data-cat="all">Toutes</button>
+    <button class="cat-tab" data-cat="hypercar">Hypercar</button>
+    <button class="cat-tab" data-cat="lmp2">LMP2</button>
+    <button class="cat-tab" data-cat="lmp3">LMP3</button>
+    <button class="cat-tab" data-cat="lmgt3">LMGT3</button>
+  </div>
+
+  <!-- Grille -->
+  <div class="cars-grid reveal" id="carsGrid">
+    <div class="empty-state">Chargement des livrées…</div>
+  </div>
+</div>
+
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:14px;"><img class="nav-logo-img" src="/mrt-logo.png" alt="MRT"></div>
+        <p>Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col"><h4>Équipe</h4><a href="a-propos.html">À propos</a><a href="actualites.html">Actualités</a><a href="palmares.html">Palmarès</a><a href="liveries.html">Liveries</a></div>
+        <div class="footer-col"><h4>Catalogue</h4><a href="boutique.html">Boutique</a><a href="recrutement.html">Recrutement</a></div>
+        <div class="footer-col"><h4>Communauté</h4><a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook</a><a href="https://discord.gg/npSrdHH67" target="_blank" rel="noopener">Discord</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC</span><span>LE MANS ULTIMATE</span></div>
+  </div>
+</footer>
+
+<div id="mobileNav" style="display:none;position:fixed;inset:0;background:rgba(5,7,13,.97);z-index:200;flex-direction:column;padding:80px 32px 40px;gap:24px;">
+  <button id="mobileNavClose" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">×</button>
+  <a href="a-propos.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">À propos</a>
+  <a href="actualites.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Actualités</a>
+  <a href="palmares.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Palmarès</a>
+  <a href="liveries.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Liveries</a>
+  <a href="boutique.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Boutique</a>
+  <a href="recrutement.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Recrutement</a>
+</div>
+
+<script>
+const CATS = { hypercar:'HYPERCAR', lmp2:'LMP2', lmp3:'LMP3', lmgt3:'LMGT3' };
+const SVG_PH = `<svg class="livery-ph" viewBox="0 0 400 225" preserveAspectRatio="xMidYMid slice">
+  <rect width="400" height="225" fill="#0A1128"/>
+  <g stroke="#0057FF" stroke-width="1.5" opacity="0.3">
+    <line x1="-20" y1="280" x2="200" y2="-40"/><line x1="60" y1="280" x2="280" y2="-40"/>
+    <line x1="140" y1="280" x2="360" y2="-40"/><line x1="220" y1="280" x2="440" y2="-40"/>
+  </g>
+  <text x="200" y="100" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="28" fill="#1a2a5a">MRT</text>
+  <text x="200" y="130" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="14" fill="#1a2a5a" letter-spacing="4">LIVERY</text>
+  <text x="200" y="160" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#1a3a6a" letter-spacing="3">PHOTO À VENIR</text>
+</svg>`;
+
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+let allCars = [];
+let activeCat = 'all';
+
+fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).then(list => {
+  allCars = Array.isArray(list) ? list : [];
+  render();
+}).catch(() => {
+  document.getElementById('carsGrid').innerHTML = '<div class="empty-state">Impossible de charger les livrées.</div>';
+});
+
+function render(){
+  const grid = document.getElementById('carsGrid');
+  const filtered = activeCat === 'all' ? allCars : allCars.filter(c => c.category === activeCat);
+  if(!filtered.length){
+    grid.innerHTML = '<div class="empty-state">Aucune livrée dans cette catégorie pour l\'instant.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(car => `
+    <a class="car-card" href="livery.html?id=${encodeURIComponent(car.id)}">
+      <div class="car-visual">
+        ${car.cover ? `<img src="${car.cover}" alt="${esc(car.model)}" loading="lazy">` : SVG_PH}
+      </div>
+      <div class="car-body">
+        <div class="car-cat">${CATS[car.category]||car.category}</div>
+        <div class="car-model">${esc(car.model)}</div>
+        <div class="car-artist">Livrée par ${esc(car.artist||'SDL')}</div>
+        <span class="car-cta">Voir la livrée →</span>
+      </div>
+    </a>`).join('');
+}
+
+// Onglets
+document.getElementById('catTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-tab');
+  if(!btn) return;
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
+  render();
+});
+
+// Nav
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+const mobileNav = document.getElementById('mobileNav');
+document.getElementById('navToggle').addEventListener('click', () => mobileNav.style.display = 'flex');
+document.getElementById('mobileNavClose').addEventListener('click', () => mobileNav.style.display = 'none');
+const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
