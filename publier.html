@@ -792,12 +792,7 @@ function openLivEdit(id){
 }
 
 // Drag & drop multi-photos liveries — même pattern qu'articles
-const livDz=$('livDropzone');
-livDz.addEventListener('click',()=>$('livFileInput').click());
 $('livFileInput').addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
-['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.add('drag');}));
- livDz.addEventListener('dragleave',e=>{e.preventDefault();livDz.classList.remove('drag');});
- livDz.addEventListener('drop',e=>{e.preventDefault();livDz.classList.remove('drag'); [...e.dataTransfer.files].forEach(f=>{ if(f.type.startsWith('image/')) openLivCropper(f); }); });
 
 // File d'attente pour les fichiers à recadrer un par un
 let _livCropQueue = [];
@@ -887,9 +882,9 @@ $('livSaveBtn').addEventListener('click', async ()=>{
 
 $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display='none'; editingLiv=null; livPendingPhotos=[]; livRemovedPhotos=[]; });
 
-// Bloquer le drag global SAUF sur les dropzones
-window.addEventListener('dragover', e => { if(!e.target.closest('.dropzone')) e.preventDefault(); });
-window.addEventListener('drop', e => { if(!e.target.closest('.dropzone')) e.preventDefault(); });
+// Bloquer ouverture d'images dans le navigateur
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', e => e.preventDefault());
 
 /* ---------- démarrage ---------- */
 (async function init(){
@@ -927,11 +922,11 @@ window.addEventListener('drop', e => { if(!e.target.closest('.dropzone')) e.prev
         <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
 
         <label class="field"><span>Ajouter des photos</span></label>
-        <div class="dropzone" id="livDropzone">
-          <div class="dz-title">Glisse tes photos ici</div>
-          <div class="dz-sub">ou clique pour choisir — plusieurs fichiers acceptés — JPG / PNG</div>
+        <div style="margin-bottom:8px;">
+          <button type="button" id="livChooseBtn" class="btn btn-primary" style="font-size:15px;padding:14px 28px;">+ Choisir des photos</button>
+          <input type="file" id="livFileInput" accept="image/*" multiple style="display:none;">
         </div>
-        <input type="file" id="livFileInput" accept="image/*" multiple hidden>
+        <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
 
         <!-- File des photos en attente (avec aperçu recadrable) -->
         <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
