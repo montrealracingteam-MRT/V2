@@ -1,15 +1,108 @@
 [
-  { "id": "peugeot-9x8", "category": "hypercar", "model": "Peugeot 9X8", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "genesis-gmr-001", "category": "hypercar", "model": "Genesis GMR-001 LMDh", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "oreca-07-elms", "category": "lmp2", "model": "Oreca 07 ELMS", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "oreca-07-wec", "category": "lmp2", "model": "Oreca 07 WEC", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "ginetta-g61-ltp3-evo", "category": "lmp3", "model": "Ginetta G61-LT-P3 Evo", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "aston-martin-vantage-lmgt3", "category": "lmgt3", "model": "Aston Martin Vantage AMR LMGT3", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "lamborghini-huracan-lmgt3-evo2", "category": "lmgt3", "model": "Lamborghini Huracán LMGT3 Evo2", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "mercedes-amg-lmgt3-evo", "category": "lmgt3", "model": "Mercedes AMG LMGT3 Evo", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "ford-mustang-lmgt3", "category": "lmgt3", "model": "Ford Mustang LMGT3", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "mclaren-720s-lmgt3-evo", "category": "lmgt3", "model": "McLaren 720S LMGT3 Evo", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "porsche-911-lmgt3-r-992", "category": "lmgt3", "model": "Porsche 911 LMGT3 R (992)", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "bmw-m4-lmgt3-evo", "category": "lmgt3", "model": "BMW M4 LMGT3 Evo", "artist": "SDL", "cover": "", "photos": [] },
-  { "id": "lexus-rc-f-lmgt3", "category": "lmgt3", "model": "Lexus RC F LMGT3", "artist": "SDL", "cover": "", "photos": [] }
+  {
+    "id": "peugeot-9x8",
+    "category": "hypercar",
+    "model": "Peugeot 9X8",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "genesis-gmr-001",
+    "category": "hypercar",
+    "model": "Genesis GMR-001 LMDh",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "oreca-07-elms",
+    "category": "lmp2",
+    "model": "Oreca 07 ELMS",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "oreca-07-wec",
+    "category": "lmp2",
+    "model": "Oreca 07 WEC",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "ginetta-g61-ltp3-evo",
+    "category": "lmp3",
+    "model": "Ginetta G61-LT-P3 Evo",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "aston-martin-vantage-lmgt3",
+    "category": "lmgt3",
+    "model": "Aston Martin Vantage AMR LMGT3",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "lamborghini-huracan-lmgt3-evo2",
+    "category": "lmgt3",
+    "model": "Lamborghini Huracán LMGT3 Evo2",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "mercedes-amg-lmgt3-evo",
+    "category": "lmgt3",
+    "model": "Mercedes AMG LMGT3 Evo",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "ford-mustang-lmgt3",
+    "category": "lmgt3",
+    "model": "Ford Mustang LMGT3",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "mclaren-720s-lmgt3-evo",
+    "category": "lmgt3",
+    "model": "McLaren 720S LMGT3 Evo",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "porsche-911-lmgt3-r-992",
+    "category": "lmgt3",
+    "model": "Porsche 911 LMGT3 R (992)",
+    "artist": "SDL",
+    "cover": "images/liveries/porsche-911-lmgt3-r-992/photo-1787526636159.jpg",
+    "photos": [
+      "images/liveries/porsche-911-lmgt3-r-992/photo-1787526636159.jpg"
+    ]
+  },
+  {
+    "id": "bmw-m4-lmgt3-evo",
+    "category": "lmgt3",
+    "model": "BMW M4 LMGT3 Evo",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  },
+  {
+    "id": "lexus-rc-f-lmgt3",
+    "category": "lmgt3",
+    "model": "Lexus RC F LMGT3",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
+  }
 ]
