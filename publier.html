@@ -306,25 +306,24 @@
       <label class="field"><span>Artiste</span><input type="text" id="lv-artist" value="SDL"></label>
 
       <!-- Photo principale -->
-      <label class="field"><span>Photo principale (couverture)</span></label>
-      <div id="lv-cover-box" style="aspect-ratio:16/9;max-width:480px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--mrt-ink);display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+      <label class="field"><span>Photo principale — affichée sur le site (couverture)</span></label>
+      <div id="lv-cover-box" style="aspect-ratio:16/9;max-width:480px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--mrt-ink);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;">
         <span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);">Aucune photo</span>
+      </div>
+      <div style="margin-bottom:24px;">
+        <input type="file" id="lv-cover-input" accept="image/*" style="display:block;max-width:480px;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;color:var(--mrt-white);font-family:var(--body);font-size:13px;padding:9px;">
+        <p class="help" style="margin-top:6px;">Cette photo est celle affichée sur la page Liveries et en haut de la fiche de la voiture.</p>
       </div>
 
       <!-- Carrousel des autres photos -->
-      <label class="field"><span>Autres photos de l'album</span></label>
-      <div id="lv-carousel" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;min-height:70px;padding:10px;border:1px dashed var(--line-strong);border-radius:8px;">
-        <span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo supplémentaire</span>
+      <label class="field"><span>Photos du carrousel — galerie de la voiture</span></label>
+      <div id="lv-carousel" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;min-height:70px;padding:10px;border:1px dashed var(--line-strong);border-radius:8px;">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo dans le carrousel</span>
       </div>
-
-      <!-- Ajout de photos : formulaire natif, sans JS pour l'ouverture -->
-      <form id="lv-upload-form" style="margin-bottom:10px;">
-        <label class="field"><span>Ajouter des photos</span>
-          <input type="file" id="lv-input" accept="image/*" multiple
-                 style="display:block;width:100%;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;color:var(--mrt-white);font-family:var(--body);font-size:13.5px;padding:10px;">
-        </label>
-      </form>
-      <p class="help" style="margin-bottom:20px;">Sélectionne une ou plusieurs photos JPG/PNG. Elles seront compressées automatiquement et ajoutées à l'album (aucun recadrage requis — l'affichage se fait déjà en 16/9 sur le site).</p>
+      <div style="margin-bottom:24px;">
+        <input type="file" id="lv-carousel-input" accept="image/*" multiple style="display:block;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;color:var(--mrt-white);font-family:var(--body);font-size:13px;padding:9px;">
+        <p class="help" style="margin-top:6px;">Sélectionne une ou plusieurs photos supplémentaires — elles apparaîtront dans le carrousel de la fiche voiture.</p>
+      </div>
 
       <div class="actions">
         <button class="btn btn-primary" id="lv-save" type="button">Enregistrer l'album</button>
@@ -584,15 +583,12 @@ function initCropper(){
   applyTransform();
 
   // Clamp offset pour que le cadre reste toujours couvert par l'image
+  // Quand l'image est plus petite que le cadre (zoom réduit), on la centre au lieu de la coller
   function clamp(){
-    // le bord gauche de l'image doit être ≤ frameL
-    ox=Math.min(ox, frameL);
-    // le bord droit de l'image doit être ≥ frameL+fw
-    ox=Math.max(ox, frameL+fw-imgW);
-    // haut
-    oy=Math.min(oy, frameT);
-    // bas
-    oy=Math.max(oy, frameT+fh-imgH);
+    if(imgW <= fw){ ox = frameL + (fw-imgW)/2; }
+    else { ox = Math.max(Math.min(ox, frameL), frameL+fw-imgW); }
+    if(imgH <= fh){ oy = frameT + (fh-imgH)/2; }
+    else { oy = Math.max(Math.min(oy, frameT), frameT+fh-imgH); }
   }
 
   // Drag
@@ -623,15 +619,22 @@ function initCropper(){
   // Confirmer
   $('cropConfirm').onclick=()=>{
     // Calculer la zone source (en pixels naturels) correspondant au cadre
-    const srcX=Math.round((frameL-ox)/imgW*_cropNatW);
-    const srcY=Math.round((frameT-oy)/imgH*_cropNatH);
-    const srcW=Math.round(fw/imgW*_cropNatW);
-    const srcH=Math.round(fh/imgH*_cropNatH);
+    let srcX=Math.round((frameL-ox)/imgW*_cropNatW);
+    let srcY=Math.round((frameT-oy)/imgH*_cropNatH);
+    let srcW=Math.round(fw/imgW*_cropNatW);
+    let srcH=Math.round(fh/imgH*_cropNatH);
+    // Sécurité : ne jamais dépasser les bornes réelles de l'image source
+    srcX=Math.max(0, Math.min(srcX, _cropNatW-1));
+    srcY=Math.max(0, Math.min(srcY, _cropNatH-1));
+    srcW=Math.max(1, Math.min(srcW, _cropNatW-srcX));
+    srcH=Math.max(1, Math.min(srcH, _cropNatH-srcY));
     const OUT=1600, outH=Math.round(OUT*(9/16));
     const canvas=document.createElement('canvas'); canvas.width=OUT; canvas.height=outH;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#05070D'; ctx.fillRect(0,0,OUT,outH);
     const src=new Image(); src.src=_cropOrigDataUrl;
     // src est déjà chargée (même objet), on dessine directement
-    canvas.getContext('2d').drawImage(src, srcX, srcY, srcW, srcH, 0, 0, OUT, outH);
+    ctx.drawImage(src, srcX, srcY, srcW, srcH, 0, 0, OUT, outH);
     const dataUrl=canvas.toDataURL('image/jpeg',0.82);
     const base64=dataUrl.split(',')[1];
     const kb=Math.round(base64.length*0.75/1024);
@@ -789,9 +792,11 @@ document.querySelectorAll('.console-tab').forEach(tab => {
 const LV = {
   cars: [],
   sha: null,
-  current: null,   // voiture ouverte
-  pendingFiles: [], // [{base64, dataUrl, name}] nouvelles photos à uploader
-  removedPaths: [], // photos existantes à retirer
+  current: null,
+  newCover: null,       // {base64, dataUrl, name} nouvelle photo de couverture, ou null
+  coverRemoved: false,  // true si l'utilisateur retire la couverture existante
+  pendingCarousel: [],  // [{base64, dataUrl, name}] nouvelles photos du carrousel
+  removedCarousel: [],  // chemins existants du carrousel à retirer
 
   async load(){
     const c = getCfg();
@@ -828,45 +833,53 @@ const LV = {
   openAlbum(id){
     LV.current = LV.cars.find(c => c.id === id);
     if(!LV.current) return;
-    LV.pendingFiles = [];
-    LV.removedPaths = [];
+    LV.newCover = null;
+    LV.coverRemoved = false;
+    LV.pendingCarousel = [];
+    LV.removedCarousel = [];
     document.getElementById('lv-album-title').textContent = LV.current.model;
     document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
     document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
-    document.getElementById('lv-input').value = '';
+    document.getElementById('lv-cover-input').value = '';
+    document.getElementById('lv-carousel-input').value = '';
     LV.renderAlbum();
     const albumEl = document.getElementById('lv-album');
     albumEl.style.display = 'block';
-    albumEl.scrollIntoView({ behavior:'smooth' });
+    if(albumEl.scrollIntoView) albumEl.scrollIntoView({ behavior:'smooth' });
   },
 
-  // Reconstruit l'affichage cover + carrousel à partir de l'état courant
+  // Photos du carrousel actuellement gardées (existantes non supprimées)
+  keptCarouselExisting(){
+    const car = LV.current;
+    const allExisting = (car.photos || []).filter(p => p !== car.cover);
+    return allExisting.filter(p => !LV.removedCarousel.includes(p));
+  },
+
   renderAlbum(){
     const car = LV.current;
-    const existingAll = [...(car.cover ? [car.cover] : []), ...(car.photos||[]).filter(p => p !== car.cover)];
-    const existingKept = existingAll.filter(p => !LV.removedPaths.includes(p));
-    const newOnes = LV.pendingFiles.filter(Boolean);
 
-    // Photo principale = première photo existante gardée, sinon première nouvelle
+    // ---- Photo principale ----
     const coverBox = document.getElementById('lv-cover-box');
-    if(existingKept.length){
-      coverBox.innerHTML = `<img src="${existingKept[0]}" style="width:100%;height:100%;object-fit:cover;">`;
-    } else if(newOnes.length){
-      coverBox.innerHTML = `<img src="${newOnes[0].dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+    if(LV.newCover){
+      coverBox.innerHTML = `<img src="${LV.newCover.dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+    } else if(car.cover && !LV.coverRemoved){
+      coverBox.innerHTML = `<img src="${car.cover}" style="width:100%;height:100%;object-fit:cover;">
+        <button id="lv-cover-remove" style="position:absolute;top:8px;right:8px;background:rgba(5,7,13,.85);border:1px solid var(--line-strong);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Retirer</button>`;
+      document.getElementById('lv-cover-remove').addEventListener('click', () => { LV.coverRemoved = true; LV.renderAlbum(); });
     } else {
       coverBox.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);">Aucune photo</span>`;
     }
 
-    // Carrousel = tout le reste (existantes gardées sauf la 1ère, + toutes les nouvelles sauf si c'est la seule photo)
+    // ---- Carrousel ----
     const carousel = document.getElementById('lv-carousel');
-    const restExisting = existingKept.slice(existingKept.length ? 1 : 0);
-    const restNew = existingKept.length ? newOnes : newOnes.slice(1);
+    const existingKept = LV.keptCarouselExisting();
+    const newOnes = LV.pendingCarousel.filter(Boolean);
     const items = [];
-    restExisting.forEach(p => items.push({ type:'existing', src:p }));
-    restNew.forEach((f, i) => items.push({ type:'new', src:f.dataUrl, idx: LV.pendingFiles.indexOf(f) }));
+    existingKept.forEach(p => items.push({ type:'existing', src:p }));
+    newOnes.forEach((f) => items.push({ type:'new', src:f.dataUrl, idx: LV.pendingCarousel.indexOf(f) }));
 
     if(!items.length){
-      carousel.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo supplémentaire</span>`;
+      carousel.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo dans le carrousel</span>`;
     } else {
       carousel.innerHTML = items.map(it => `
         <div style="position:relative;width:110px;height:69px;border-radius:6px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;">
@@ -876,16 +889,15 @@ const LV = {
       carousel.querySelectorAll('[data-rm]').forEach(btn => {
         btn.addEventListener('click', () => {
           const [type, val] = btn.dataset.rm.split(':');
-          if(type === 'existing'){ LV.removedPaths.push(val); }
-          else { LV.pendingFiles[parseInt(val)] = null; }
+          if(type === 'existing'){ LV.removedCarousel.push(val); }
+          else { LV.pendingCarousel[parseInt(val)] = null; }
           LV.renderAlbum();
         });
       });
     }
   },
 
-  // Compression simple d'un fichier (pas de recadrage — cover sur le site en 16/9 via CSS)
-  handleFile(file){
+  compress(file, cb){
     if(!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
@@ -896,14 +908,21 @@ const LV = {
         const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
         const canvas = document.createElement('canvas'); canvas.width=w; canvas.height=h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
         const base64 = dataUrl.split(',')[1];
-        LV.pendingFiles.push({ base64, dataUrl, name: 'photo-'+Date.now()+'-'+Math.floor(Math.random()*1000)+'.jpg' });
-        LV.renderAlbum();
+        cb({ base64, dataUrl, name: 'photo-'+Date.now()+'-'+Math.floor(Math.random()*1000)+'.jpg' });
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+  },
+
+  handleCoverFile(file){
+    LV.compress(file, obj => { LV.newCover = obj; LV.coverRemoved = false; LV.renderAlbum(); });
+  },
+
+  handleCarouselFile(file){
+    LV.compress(file, obj => { LV.pendingCarousel.push(obj); LV.renderAlbum(); });
   },
 
   async save(){
@@ -912,19 +931,30 @@ const LV = {
     const label = btn.textContent;
     btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Enregistrement…';
     try{
-      const newFiles = LV.pendingFiles.filter(Boolean);
+      // 1) Couverture
+      let coverPath = LV.coverRemoved ? '' : (LV.current.cover || '');
+      if(LV.newCover){
+        const path = `images/liveries/${LV.current.id}/cover-${LV.newCover.name}`;
+        const ok = await putFile(path, LV.newCover.base64, `Couverture livrée ${LV.current.model}`, true);
+        if(ok) coverPath = path;
+      }
+
+      // 2) Carrousel : uploader les nouvelles
+      const newFiles = LV.pendingCarousel.filter(Boolean);
       const uploadedPaths = [];
       for(const f of newFiles){
         const path = `images/liveries/${LV.current.id}/${f.name}`;
-        const ok = await putFile(path, f.base64, `Photo livrée ${LV.current.model}`, true);
+        const ok = await putFile(path, f.base64, `Photo carrousel ${LV.current.model}`, true);
         if(ok) uploadedPaths.push(path);
       }
-      const existingAll = [...(LV.current.cover ? [LV.current.cover] : []), ...(LV.current.photos||[]).filter(p => p !== LV.current.cover)];
-      const existingKept = existingAll.filter(p => !LV.removedPaths.includes(p));
-      const allPhotos = [...new Set([...existingKept, ...uploadedPaths])];
+      const carouselKept = LV.keptCarouselExisting();
+      const carouselFinal = [...new Set([...carouselKept, ...uploadedPaths])];
+
+      // 3) photos = couverture + carrousel (dédupliqué), pour la galerie complète sur livery.html
+      const allPhotos = [...new Set([...(coverPath ? [coverPath] : []), ...carouselFinal])];
 
       const idx = LV.cars.findIndex(c => c.id === LV.current.id);
-      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', cover: allPhotos[0] || '', photos: allPhotos };
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', cover: coverPath, photos: allPhotos };
 
       const json = JSON.stringify(LV.cars, null, 2);
       const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
@@ -932,20 +962,25 @@ const LV = {
 
       toast('Album mis à jour !', 'ok');
       document.getElementById('lv-album').style.display = 'none';
-      LV.current = null; LV.pendingFiles = []; LV.removedPaths = [];
+      LV.current = null; LV.newCover = null; LV.coverRemoved = false; LV.pendingCarousel = []; LV.removedCarousel = [];
       LV.renderList();
     }catch(e){ toast('Échec : '+e.message, 'bad'); }
     finally{ btn.disabled = false; btn.textContent = label; }
   }
 };
 
-document.getElementById('lv-input').addEventListener('change', e => {
-  [...e.target.files].forEach(f => LV.handleFile(f));
+document.getElementById('lv-cover-input').addEventListener('change', e => {
+  if(e.target.files[0]) LV.handleCoverFile(e.target.files[0]);
+  e.target.value = '';
+});
+document.getElementById('lv-carousel-input').addEventListener('change', e => {
+  [...e.target.files].forEach(f => LV.handleCarouselFile(f));
+  e.target.value = '';
 });
 document.getElementById('lv-save').addEventListener('click', () => LV.save());
 document.getElementById('lv-cancel').addEventListener('click', () => {
   document.getElementById('lv-album').style.display = 'none';
-  LV.current = null; LV.pendingFiles = []; LV.removedPaths = [];
+  LV.current = null; LV.newCover = null; LV.coverRemoved = false; LV.pendingCarousel = []; LV.removedCarousel = [];
 });
 
 /* ---------- démarrage ---------- */
