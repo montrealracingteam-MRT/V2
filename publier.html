@@ -886,6 +886,12 @@ $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display=
 window.addEventListener('dragover', e => e.preventDefault());
 window.addEventListener('drop', e => e.preventDefault());
 
+// Input liveries
+document.getElementById('livFileInput').addEventListener('change', e => {
+  [...e.target.files].forEach(f => openLivCropper(f));
+  e.target.value = '';
+});
+
 /* ---------- démarrage ---------- */
 (async function init(){
   loadCfgIntoForm();
@@ -923,7 +929,10 @@ window.addEventListener('drop', e => e.preventDefault());
 
         <label class="field"><span>Ajouter des photos</span></label>
         <div style="margin-bottom:8px;">
-          <button type="button" id="livChooseBtn" class="btn btn-primary" style="font-size:15px;padding:14px 28px;">+ Choisir des photos</button>
+          <label class="btn btn-primary" style="font-size:15px;padding:14px 28px;cursor:pointer;display:inline-block;">
+            + Choisir des photos
+            <input type="file" accept="image/*" multiple id="livFileInput" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
+          </label>
         </div>
         <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
 
