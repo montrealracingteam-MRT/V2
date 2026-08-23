@@ -281,6 +281,79 @@
 
 <div id="toast"></div>
 
+
+
+
+</div><!-- /panel-articles -->
+
+<!-- ===== PANEL LIVERIES ===== -->
+<div class="console-panel" id="panel-liveries">
+<div style="max-width:1240px;margin:0 auto;padding:28px;">
+
+  <div class="admin-wrap" style="display:block;">
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-head"><h2>Gérer les livrées</h2><span class="hint" id="livCountHint">—</span></div>
+      <div class="card-body">
+        <p class="help" style="margin-bottom:18px;">Clique sur une livrée pour ajouter ou modifier ses photos. La première photo devient automatiquement la photo de couverture sur la page Liveries.</p>
+        <div id="livList"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les livrées.</div></div>
+      </div>
+    </div>
+
+    <!-- Formulaire édition livrée -->
+    <div class="card" id="livEditCard" style="display:none;">
+      <div class="card-head"><h2 id="livEditTitle">Photos de la livrée</h2><span class="hint" id="livEditSub"></span></div>
+      <div class="card-body">
+
+        <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
+
+        <label class="field"><span>Ajouter des photos</span></label>
+        <div style="margin-bottom:8px;">
+          <label class="btn btn-primary" style="font-size:15px;padding:14px 28px;cursor:pointer;display:inline-block;">
+            + Choisir des photos
+            <input type="file" accept="image/*" multiple id="livFileInput" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
+          </label>
+        </div>
+        <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
+
+        <!-- File des photos en attente (avec aperçu recadrable) -->
+        <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
+
+        <!-- Photos déjà publiées -->
+        <div id="livExistingWrap" style="margin-top:20px;display:none;">
+          <div class="help" style="margin-bottom:10px;">Photos déjà en ligne — clique sur ✕ pour supprimer :</div>
+          <div id="livExisting" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+        </div>
+
+        <div class="actions" style="margin-top:22px;">
+          <button class="btn btn-primary" id="livSaveBtn" type="button">Enregistrer</button>
+          <button class="btn btn-ghost" id="livCancelBtn" type="button">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /panel-liveries -->
+
+<!-- RECADREUR -->
+<div class="crop-overlay hidden" id="cropOverlay">
+  <div class="crop-title">Recadrer la photo</div>
+  <div class="crop-hint">Déplace l'image · Ajuste le zoom · Le cadre bleu = ce qui sera gardé (16/9)</div>
+  <div class="crop-stage" id="cropStage">
+    <img id="cropImg" alt="">
+    <div class="crop-frame" id="cropFrame"></div>
+  </div>
+  <div class="crop-actions">
+    <div class="crop-zoom">
+      <span>−</span>
+      <input type="range" id="cropZoom" min="50" max="300" value="100" step="1">
+      <span>+</span>
+    </div>
+    <button class="btn btn-primary" id="cropConfirm" type="button">Confirmer le recadrage</button>
+    <button class="btn btn-ghost" id="cropCancel" type="button">Annuler</button>
+  </div>
+</div>
+
 <script>
 /* ===========================================================================
    CONSOLE DE PUBLICATION MRT
@@ -902,78 +975,5 @@ document.getElementById('livFileInput').addEventListener('change', e => {
   syncPreview();
 })();
 </script>
-
-
-
-</div><!-- /panel-articles -->
-
-<!-- ===== PANEL LIVERIES ===== -->
-<div class="console-panel" id="panel-liveries">
-<div style="max-width:1240px;margin:0 auto;padding:28px;">
-
-  <div class="admin-wrap" style="display:block;">
-    <div class="card" style="margin-bottom:24px;">
-      <div class="card-head"><h2>Gérer les livrées</h2><span class="hint" id="livCountHint">—</span></div>
-      <div class="card-body">
-        <p class="help" style="margin-bottom:18px;">Clique sur une livrée pour ajouter ou modifier ses photos. La première photo devient automatiquement la photo de couverture sur la page Liveries.</p>
-        <div id="livList"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les livrées.</div></div>
-      </div>
-    </div>
-
-    <!-- Formulaire édition livrée -->
-    <div class="card" id="livEditCard" style="display:none;">
-      <div class="card-head"><h2 id="livEditTitle">Photos de la livrée</h2><span class="hint" id="livEditSub"></span></div>
-      <div class="card-body">
-
-        <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
-
-        <label class="field"><span>Ajouter des photos</span></label>
-        <div style="margin-bottom:8px;">
-          <label class="btn btn-primary" style="font-size:15px;padding:14px 28px;cursor:pointer;display:inline-block;">
-            + Choisir des photos
-            <input type="file" accept="image/*" multiple id="livFileInput" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
-          </label>
-        </div>
-        <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
-
-        <!-- File des photos en attente (avec aperçu recadrable) -->
-        <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
-
-        <!-- Photos déjà publiées -->
-        <div id="livExistingWrap" style="margin-top:20px;display:none;">
-          <div class="help" style="margin-bottom:10px;">Photos déjà en ligne — clique sur ✕ pour supprimer :</div>
-          <div id="livExisting" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
-        </div>
-
-        <div class="actions" style="margin-top:22px;">
-          <button class="btn btn-primary" id="livSaveBtn" type="button">Enregistrer</button>
-          <button class="btn btn-ghost" id="livCancelBtn" type="button">Annuler</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
-</div><!-- /panel-liveries -->
-
-<!-- RECADREUR -->
-<div class="crop-overlay hidden" id="cropOverlay">
-  <div class="crop-title">Recadrer la photo</div>
-  <div class="crop-hint">Déplace l'image · Ajuste le zoom · Le cadre bleu = ce qui sera gardé (16/9)</div>
-  <div class="crop-stage" id="cropStage">
-    <img id="cropImg" alt="">
-    <div class="crop-frame" id="cropFrame"></div>
-  </div>
-  <div class="crop-actions">
-    <div class="crop-zoom">
-      <span>−</span>
-      <input type="range" id="cropZoom" min="50" max="300" value="100" step="1">
-      <span>+</span>
-    </div>
-    <button class="btn btn-primary" id="cropConfirm" type="button">Confirmer le recadrage</button>
-    <button class="btn btn-ghost" id="cropCancel" type="button">Annuler</button>
-  </div>
-</div>
-
 </body>
 </html>
