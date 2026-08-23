@@ -864,8 +864,7 @@ function openLivEdit(id){
   $('livEditCard').scrollIntoView({behavior:'smooth'});
 }
 
-// Drag & drop multi-photos liveries — même pattern qu'articles
-null.addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
+// (ancien listener liveries retiré — remplacé par le listener sur livFileInput plus bas)
 
 // File d'attente pour les fichiers à recadrer un par un
 let _livCropQueue = [];
