@@ -792,7 +792,7 @@ function openLivEdit(id){
 }
 
 // Drag & drop multi-photos liveries — même pattern qu'articles
-$('livFileInput').addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
+null.addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
 
 // File d'attente pour les fichiers à recadrer un par un
 let _livCropQueue = [];
@@ -924,7 +924,6 @@ window.addEventListener('drop', e => e.preventDefault());
         <label class="field"><span>Ajouter des photos</span></label>
         <div style="margin-bottom:8px;">
           <button type="button" id="livChooseBtn" class="btn btn-primary" style="font-size:15px;padding:14px 28px;">+ Choisir des photos</button>
-          <input type="file" id="livFileInput" accept="image/*" multiple style="display:none;">
         </div>
         <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
 
