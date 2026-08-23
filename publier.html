@@ -305,6 +305,10 @@
 
       <label class="field"><span>Artiste</span><input type="text" id="lv-artist" value="SDL"></label>
 
+      <label class="field"><span>Description de la voiture (optionnel)</span>
+        <textarea id="lv-description" rows="4" placeholder="Quelques lignes sur cette livrée, sa signification, son histoire, etc."></textarea>
+      </label>
+
       <!-- Photo principale -->
       <label class="field"><span>Photo principale — affichée sur le site (couverture)</span></label>
       <div id="lv-cover-box" style="aspect-ratio:16/9;max-width:480px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--mrt-ink);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;">
@@ -840,6 +844,7 @@ const LV = {
     document.getElementById('lv-album-title').textContent = LV.current.model;
     document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
     document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
+    document.getElementById('lv-description').value = LV.current.description || '';
     document.getElementById('lv-cover-input').value = '';
     document.getElementById('lv-carousel-input').value = '';
     LV.renderAlbum();
@@ -954,7 +959,7 @@ const LV = {
       const allPhotos = [...new Set([...(coverPath ? [coverPath] : []), ...carouselFinal])];
 
       const idx = LV.cars.findIndex(c => c.id === LV.current.id);
-      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', cover: coverPath, photos: allPhotos };
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), cover: coverPath, photos: allPhotos };
 
       const json = JSON.stringify(LV.cars, null, 2);
       const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
