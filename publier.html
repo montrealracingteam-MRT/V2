@@ -191,7 +191,6 @@
       <p class="help" style="margin-top:14px;">Pas encore de clé ? Suis le guide fourni : GitHub → Settings → Developer settings → Fine-grained tokens → accès en lecture/écriture au dépôt <em>Contents</em>.</p>
     </div>
   </details>
-</div>
 
 <div class="admin-wrap" id="articlesWrap">
 
@@ -779,11 +778,13 @@ function openLivEdit(id){
 
 // Drag & drop multi-photos
 const livDz=$('livDropzone');
-livDz.addEventListener('click',()=>$('livFileInput').click());
 $('livFileInput').addEventListener('change',e=>{[...e.target.files].forEach(handleLivPhoto); e.target.value='';});
-['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.add('drag');}));
-['dragleave','drop'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.remove('drag');}));
-livDz.addEventListener('drop',e=>{[...e.dataTransfer.files].forEach(f=>{if(f.type.startsWith('image/')) handleLivPhoto(f);});});
+['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.add('drag');}));
+['dragleave'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.remove('drag');}));
+livDz.addEventListener('drop',e=>{
+  e.preventDefault(); e.stopPropagation(); livDz.classList.remove('drag');
+  [...e.dataTransfer.files].forEach(f=>{if(f.type.startsWith('image/')) handleLivPhoto(f);});
+});
 
 function handleLivPhoto(file){
   const reader=new FileReader();
@@ -842,6 +843,10 @@ $('livSaveBtn').addEventListener('click', async ()=>{
 
 $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display='none'; editingLiv=null; livPendingPhotos=[]; livRemovedPhotos=[]; });
 
+// Bloquer le drag global (évite que les images s'ouvrent dans un onglet)
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+
 /* ---------- démarrage ---------- */
 (async function init(){
   loadCfgIntoForm();
@@ -852,6 +857,7 @@ $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display=
   syncPreview();
 })();
 </script>
+
 
 
 </div><!-- /panel-articles -->
@@ -877,11 +883,11 @@ $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display=
         <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
 
         <label class="field"><span>Ajouter des photos</span></label>
-        <div class="dropzone" id="livDropzone">
+        <label for="livFileInput" class="dropzone" id="livDropzone" style="cursor:pointer;">
           <div class="dz-title">Glisse tes photos ici</div>
           <div class="dz-sub">ou clique pour choisir — plusieurs fichiers acceptés — JPG / PNG</div>
-          <input type="file" id="livFileInput" accept="image/*" multiple hidden>
-        </div>
+          <input type="file" id="livFileInput" accept="image/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;">
+        </label>
 
         <!-- File des photos en attente -->
         <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
