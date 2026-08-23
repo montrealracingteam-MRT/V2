@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actualité — Montreal Racing Team</title>
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  .art-top{padding-top:110px;}
+  .art-back{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mrt-fog);display:inline-flex;gap:8px;align-items:center;margin-bottom:26px;transition:color .2s;}
+  .art-back:hover{color:var(--mrt-white);}
+  .art-hero{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:12px;border:1px solid var(--line);margin-bottom:30px;background:var(--mrt-panel);}
+  .art-hero img,.art-hero svg{width:100%;height:100%;object-fit:cover;display:block;}
+  .art-meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:14px;display:flex;gap:10px;align-items:center;}
+  .art-meta .live{color:var(--mrt-flag);}
+  .art-title{font-size:clamp(34px,5.5vw,66px);color:var(--mrt-white);line-height:.96;margin-bottom:12px;}
+  .art-sub{font-family:var(--mono);font-size:13px;color:var(--mrt-fog);letter-spacing:.03em;margin-bottom:34px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+  .art-loading{padding:80px 0;text-align:center;color:var(--mrt-fog);}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" aria-label="Accueil"><img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT"></a>
+  <div class="nav-links">
+    <a href="a-propos.html">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html">Palmarès</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
+    <a href="boutique.html">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="boutique.html" class="nav-cta">Boutique →</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap art-top" style="max-width:900px;">
+  <a class="art-back" href="actualites.html">← Toutes les actualités</a>
+  <div id="root"><div class="art-loading">Chargement de l'article…</div></div>
+</div>
+
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);text-align:center;">
+    <a class="nav-logo footer-brand" href="index.html" style="justify-content:center;margin-bottom:16px;"><img class="nav-logo-img" src="/mrt-logo.png" alt="MRT"></a>
+    <p style="color:var(--mrt-fog);font-size:13px;">© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC · LE MANS ULTIMATE</p>
+  </div>
+</footer>
+
+<script>
+const CATS = { evenement:'ÉVÉNEMENT', resultat:'RÉSULTAT', annonce:'ANNONCE', recrutement:'RECRUTEMENT' };
+const SVG_PRESS = `<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="400" height="220" fill="#0A1128"/><g stroke="#0057FF" stroke-width="2" opacity="0.5"><line x1="-20" y1="260" x2="200" y2="-40"/><line x1="40" y1="260" x2="260" y2="-40"/><line x1="100" y1="260" x2="320" y2="-40"/></g><text x="30" y="118" font-family="Bebas Neue, sans-serif" font-size="32" fill="#F4F6FB">COMMUNIQUÉ</text><text x="30" y="154" font-family="Bebas Neue, sans-serif" font-size="32" fill="#0057FF">DE PRESSE</text></svg>`;
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+const id = new URLSearchParams(location.search).get('id');
+fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
+  const a=(Array.isArray(list)?list:[]).find(x=>x.id===id);
+  const root=document.getElementById('root');
+  if(!a){ root.innerHTML='<div class="art-loading">Article introuvable. <a href="actualites.html" style="color:var(--mrt-ice);text-decoration:underline;">Retour aux actualités</a></div>'; return; }
+  document.title = a.title + ' — Montreal Racing Team';
+  const flag = a.flag?`<span class="live">● ${esc(a.flag)}</span>`:'';
+  root.innerHTML = `
+    <div class="art-hero">${a.image?`<img src="${a.image}" alt="${esc(a.title)}">`:SVG_PRESS}</div>
+    <div class="art-meta">${flag}${CATS[a.category]||''}</div>
+    <h1 class="art-title">${esc(a.title)}</h1>
+    ${a.dateLabel?`<div class="art-sub">${esc(a.dateLabel)}</div>`:'<div class="art-sub">'+(a.date||'')+'</div>'}
+    <div class="article-content">${a.content||''}</div>`;
+}).catch(()=>{ document.getElementById('root').innerHTML='<div class="art-loading">Impossible de charger l\'article.</div>'; });
+
+addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('scrolled', scrollY>20); });
+</script>
+</body>
+</html>

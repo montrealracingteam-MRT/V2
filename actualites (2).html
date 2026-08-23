@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Actualités — Montreal Racing Team | MRT #514</title>
+<meta name="description" content="Toute l'actualité de l'écurie Montreal Racing Team : résultats, événements, annonces et recrutement sur Le Mans Ultimate.">
+<link rel="canonical" href="https://montrealracingteam.ca/actualites.html">
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  /* Ajustements propres à la page Actualités */
+  .page-top{padding-top:120px;}
+  .page-head{margin-bottom:40px;}
+  .page-head .eyebrow{margin-bottom:14px;}
+  .page-head h1{font-size:clamp(44px,7vw,88px);color:var(--mrt-white);line-height:.92;}
+  .page-head p{color:var(--mrt-fog);margin-top:16px;max-width:60ch;line-height:1.6;}
+  .news-empty{padding:60px 0;text-align:center;color:var(--mrt-fog);}
+  .grid-head{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mrt-ice);margin:56px 0 22px;display:flex;align-items:center;gap:12px;}
+  .grid-head::after{content:'';flex:1;height:1px;background:var(--line);}
+</style>
+</head>
+<body>
+
+<!-- NAV (sera centralisée en phase 2) -->
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" aria-label="Accueil"><img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT"></a>
+  <div class="nav-links">
+    <a href="a-propos.html">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html">Palmarès</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
+    <a href="boutique.html">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="boutique.html" class="nav-cta">Boutique →</a>
+  <button class="nav-toggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap page-top">
+  <header class="page-head">
+    <div class="eyebrow">L'écurie MRT</div>
+    <h1>Actualités</h1>
+    <p>Résultats, événements, annonces et recrutement — toute la vie de l'équipe #514.</p>
+  </header>
+
+  <div id="newsRoot"><div class="news-empty">Chargement des actualités…</div></div>
+</div>
+
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);text-align:center;">
+    <a class="nav-logo footer-brand" href="index.html" style="justify-content:center;margin-bottom:16px;"><img class="nav-logo-img" src="/mrt-logo.png" alt="MRT"></a>
+    <p style="color:var(--mrt-fog);font-size:13px;">© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC · LE MANS ULTIMATE</p>
+  </div>
+</footer>
+
+<script>
+const CATS = { evenement:'ÉVÉNEMENT', resultat:'RÉSULTAT', annonce:'ANNONCE', recrutement:'RECRUTEMENT' };
+const SVG_PRESS = `<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="width:100%;height:100%;">
+  <rect width="400" height="220" fill="#0A1128"/>
+  <g stroke="#0057FF" stroke-width="2" opacity="0.5"><line x1="-20" y1="260" x2="200" y2="-40"/><line x1="40" y1="260" x2="260" y2="-40"/><line x1="100" y1="260" x2="320" y2="-40"/></g>
+  <text x="30" y="118" font-family="Bebas Neue, sans-serif" font-size="32" fill="#F4F6FB">COMMUNIQUÉ</text>
+  <text x="30" y="154" font-family="Bebas Neue, sans-serif" font-size="32" fill="#0057FF">DE PRESSE</text>
+  <text x="30" y="188" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="3" fill="#8FA6FF">MONTREAL RACING TEAM</text>
+</svg>`;
+
+function meta(a){ return (a.flag?`<span class="live">● ${esc(a.flag)}</span> `:'') + (CATS[a.category]||a.category||''); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function visual(a){ return a.image ? `<img src="${a.image}" alt="${esc(a.title)}" loading="lazy">` : SVG_PRESS; }
+function link(a){ return `article.html?id=${encodeURIComponent(a.id)}`; }
+
+fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
+  const root=document.getElementById('newsRoot');
+  const raw=Array.isArray(list)?list:[];
+  const arr=raw.map((a,i)=>({...a,_i:i})).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b._i-a._i);
+  if(arr.length===0){ root.innerHTML='<div class="news-empty">Aucune actualité pour l\'instant — reviens bientôt.</div>'; return; }
+
+  const f=arr[0]; const side=arr.slice(1,4); const rest=arr.slice(4);
+  let html = `<div class="news-layout">
+    <a class="news-feature" href="${link(f)}">
+      <div class="news-glow"></div>
+      <div class="news-visual">${visual(f)}</div>
+      <div class="news-body">
+        <div class="news-meta">${meta(f)}</div>
+        <h3>${esc(f.title)}</h3>
+        <p>${esc((f.summary||'').slice(0,240))}</p>
+        <span class="news-cta-inline">Lire l'article →</span>
+      </div>
+    </a>`;
+  if(side.length){
+    html += `<div class="news-side"><div class="news-side-head">À la une</div>` + side.map(a=>`
+      <a class="news-side-item" href="${link(a)}">
+        <div class="news-side-thumb">${visual(a)}</div>
+        <div class="news-side-txt"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc((a.summary||'').slice(0,110))}</p></div>
+      </a>`).join('') + `</div>`;
+  }
+  html += `</div>`;
+
+  if(rest.length){
+    html += `<div class="grid-head">Plus d'actualités</div><div class="allnews-grid">` + rest.map(a=>`
+      <a class="news-card2" href="${link(a)}">
+        <div class="news-card2-visual">${visual(a)}</div>
+        <div class="news-card2-body"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc((a.summary||'').slice(0,130))}</p><span class="news-cta-inline">Lire l'article →</span></div>
+      </a>`).join('') + `</div>`;
+  }
+  root.innerHTML=html;
+}).catch(()=>{ document.getElementById('newsRoot').innerHTML='<div class="news-empty">Impossible de charger les actualités.</div>'; });
+
+// nav : effet au scroll
+addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('scrolled', scrollY>20); });
+</script>
+</body>
+</html>
