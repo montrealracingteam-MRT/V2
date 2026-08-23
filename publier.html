@@ -286,48 +286,49 @@
 
 </div><!-- /panel-articles -->
 
-<!-- ===== PANEL LIVERIES ===== -->
+<!-- ===== PANEL LIVERIES (module autonome) ===== -->
 <div class="console-panel" id="panel-liveries">
 <div style="max-width:1240px;margin:0 auto;padding:28px;">
 
-  <div class="admin-wrap" style="display:block;">
-    <div class="card" style="margin-bottom:24px;">
-      <div class="card-head"><h2>Gérer les livrées</h2><span class="hint" id="livCountHint">—</span></div>
-      <div class="card-body">
-        <p class="help" style="margin-bottom:18px;">Clique sur une livrée pour ajouter ou modifier ses photos. La première photo devient automatiquement la photo de couverture sur la page Liveries.</p>
-        <div id="livList"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les livrées.</div></div>
-      </div>
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-head"><h2>Gérer les livrées</h2><span class="hint" id="lv-count">—</span></div>
+    <div class="card-body">
+      <p class="help" style="margin-bottom:18px;">Clique sur une livrée pour voir son album et ajouter des photos.</p>
+      <div id="lv-list"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les livrées.</div></div>
     </div>
+  </div>
 
-    <!-- Formulaire édition livrée -->
-    <div class="card" id="livEditCard" style="display:none;">
-      <div class="card-head"><h2 id="livEditTitle">Photos de la livrée</h2><span class="hint" id="livEditSub"></span></div>
-      <div class="card-body">
+  <!-- Album d'une livrée -->
+  <div class="card" id="lv-album" style="display:none;">
+    <div class="card-head"><h2 id="lv-album-title">—</h2><span class="hint" id="lv-album-sub"></span></div>
+    <div class="card-body">
 
-        <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
+      <label class="field"><span>Artiste</span><input type="text" id="lv-artist" value="SDL"></label>
 
-        <label class="field"><span>Ajouter des photos</span></label>
-        <div style="margin-bottom:8px;">
-          <label class="btn btn-primary" style="font-size:15px;padding:14px 28px;cursor:pointer;display:inline-block;">
-            + Choisir des photos
-            <input type="file" accept="image/*" multiple id="livFileInput" style="position:absolute;left:-9999px;opacity:0;width:1px;height:1px;">
-          </label>
-        </div>
-        <p class="help">JPG / PNG — plusieurs fichiers acceptés — chaque photo s'ouvrira dans le recadreur.</p>
+      <!-- Photo principale -->
+      <label class="field"><span>Photo principale (couverture)</span></label>
+      <div id="lv-cover-box" style="aspect-ratio:16/9;max-width:480px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--mrt-ink);display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);">Aucune photo</span>
+      </div>
 
-        <!-- File des photos en attente (avec aperçu recadrable) -->
-        <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
+      <!-- Carrousel des autres photos -->
+      <label class="field"><span>Autres photos de l'album</span></label>
+      <div id="lv-carousel" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;min-height:70px;padding:10px;border:1px dashed var(--line-strong);border-radius:8px;">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo supplémentaire</span>
+      </div>
 
-        <!-- Photos déjà publiées -->
-        <div id="livExistingWrap" style="margin-top:20px;display:none;">
-          <div class="help" style="margin-bottom:10px;">Photos déjà en ligne — clique sur ✕ pour supprimer :</div>
-          <div id="livExisting" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
-        </div>
+      <!-- Ajout de photos : formulaire natif, sans JS pour l'ouverture -->
+      <form id="lv-upload-form" style="margin-bottom:10px;">
+        <label class="field"><span>Ajouter des photos</span>
+          <input type="file" id="lv-input" accept="image/*" multiple
+                 style="display:block;width:100%;background:var(--mrt-ink);border:1px solid var(--line-strong);border-radius:7px;color:var(--mrt-white);font-family:var(--body);font-size:13.5px;padding:10px;">
+        </label>
+      </form>
+      <p class="help" style="margin-bottom:20px;">Sélectionne une ou plusieurs photos JPG/PNG. Elles seront compressées automatiquement et ajoutées à l'album (aucun recadrage requis — l'affichage se fait déjà en 16/9 sur le site).</p>
 
-        <div class="actions" style="margin-top:22px;">
-          <button class="btn btn-primary" id="livSaveBtn" type="button">Enregistrer</button>
-          <button class="btn btn-ghost" id="livCancelBtn" type="button">Annuler</button>
-        </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="lv-save" type="button">Enregistrer l'album</button>
+        <button class="btn btn-ghost" id="lv-cancel" type="button">Fermer</button>
       </div>
     </div>
   </div>
@@ -642,22 +643,10 @@ function initCropper(){
     stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
     stage.ontouchstart=null; stage.ontouchmove=null; stage.ontouchend=null;
     zoom.oninput=null; $('cropConfirm').onclick=null;
-    if(_livCropMode){
-      _livCropMode=false;
-      if(_livRecropIdx>=0){
-        // Mise à jour d'une photo existante dans la file
-        livPendingPhotos[_livRecropIdx]={base64, dataUrl, name:livPendingPhotos[_livRecropIdx]?.name||'photo-'+Date.now()+'.jpg'};
-        if(_livRecropDiv){ _livRecropDiv.querySelector('img').src=dataUrl; }
-        _livRecropIdx=-1; _livRecropDiv=null;
-      } else {
-        onLivCropConfirmed(dataUrl, base64);
-      }
-    } else {
-      pendingImage={ dataUrl, base64, isNew:true };
-      $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
-      $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
-      syncPreview();
-    }
+    pendingImage={ dataUrl, base64, isNew:true };
+    $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
+    $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
+    syncPreview();
   };
 
   $('cropCancel').onclick=()=>{
@@ -792,176 +781,171 @@ document.querySelectorAll('.console-tab').forEach(tab => {
     document.querySelectorAll('.console-panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
-    if(tab.dataset.panel === 'liveries') loadLiveries();
+    if(tab.dataset.panel === 'liveries') LV.load();
   });
 });
 
-/* ===== LIVERIES ===== */
-let liveries = [];
-let liveriesSha = null;
-let editingLiv = null;  // objet voiture en cours d'édition
-let livPendingPhotos = []; // [{base64, dataUrl, name}]
-let livRemovedPhotos = []; // chemins à retirer
+/* ===== MODULE LIVERIES (autonome, isolé) ===== */
+const LV = {
+  cars: [],
+  sha: null,
+  current: null,   // voiture ouverte
+  pendingFiles: [], // [{base64, dataUrl, name}] nouvelles photos à uploader
+  removedPaths: [], // photos existantes à retirer
 
-async function loadLiveries(){
-  const c=getCfg(); if(!c.owner||!c.repo||!c.token) return;
-  try{
-    const r=await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/liveries.json?ref=${c.branch}&t=`+Date.now(),{headers:ghHeaders()});
-    if(!r.ok){ toast('Impossible de lire liveries.json ('+r.status+').','bad'); return; }
-    const data=await r.json(); liveriesSha=data.sha;
-    liveries=JSON.parse(b64_to_utf8(data.content));
-    renderLivList();
-  }catch(e){ toast('Erreur liveries : '+e.message,'bad'); }
-}
+  async load(){
+    const c = getCfg();
+    if(!c.owner || !c.repo || !c.token) return;
+    try{
+      const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/liveries.json?ref=${c.branch}&t=`+Date.now(), { headers: ghHeaders() });
+      if(!r.ok){ toast('Impossible de lire liveries.json ('+r.status+').','bad'); return; }
+      const data = await r.json();
+      LV.sha = data.sha;
+      LV.cars = JSON.parse(b64_to_utf8(data.content));
+      LV.renderList();
+    }catch(e){ toast('Erreur liveries : '+e.message, 'bad'); }
+  },
 
-const LIV_CATS = { hypercar:'HYPERCAR', lmp2:'LMP2', lmp3:'LMP3', lmgt3:'LMGT3' };
-function renderLivList(){
-  const el=document.getElementById('livList');
-  $('livCountHint').textContent=liveries.length+' livrée'+(liveries.length>1?'s':'');
-  if(!liveries.length){ el.innerHTML='<div class="empty">Aucune livrée trouvée dans liveries.json.</div>'; return; }
-  el.innerHTML=liveries.map(car=>`
-    <div class="art-item">
-      <div class="art-thumb">${car.cover?`<img src="${car.cover}" alt="">` : '<span class="ph">—</span>'}</div>
-      <div class="art-info">
-        <div class="ai-meta">${LIV_CATS[car.category]||car.category}</div>
-        <h4>${escapeHtml(car.model)}</h4>
-        <div class="ai-date">${(car.photos||[]).length} photo(s)</div>
-      </div>
-      <div class="art-ops">
-        <button class="op" data-livid="${car.id}">Modifier les photos</button>
-      </div>
-    </div>`).join('');
-  el.querySelectorAll('[data-livid]').forEach(b=>b.addEventListener('click',()=>openLivEdit(b.dataset.livid)));
-}
+  CATS: { hypercar:'HYPERCAR', lmp2:'LMP2', lmp3:'LMP3', lmgt3:'LMGT3' },
 
-function openLivEdit(id){
-  editingLiv = liveries.find(c=>c.id===id);
-  if(!editingLiv) return;
-  livPendingPhotos=[]; livRemovedPhotos=[];
-  $('livEditTitle').textContent = editingLiv.model;
-  $('livEditSub').textContent = LIV_CATS[editingLiv.category]||editingLiv.category;
-  $('livArtist').value = editingLiv.artist||'SDL';
-  $('livQueue').innerHTML='';
-  // Photos existantes
-  const existing=document.getElementById('livExisting');
-  const existWrap=document.getElementById('livExistingWrap');
-  const photos=[...(editingLiv.cover?[editingLiv.cover]:[]), ...(editingLiv.photos||[]).filter(p=>p!==editingLiv.cover)];
-  const uniquePhotos=[...new Set(photos)];
-  if(uniquePhotos.length){
-    existWrap.style.display='block';
-    existing.innerHTML=uniquePhotos.map(p=>`
-      <div style="position:relative;width:100px;height:63px;border-radius:6px;overflow:hidden;border:1px solid var(--line);">
-        <img src="${p}" style="width:100%;height:100%;object-fit:cover;">
-        <button data-path="${escapeHtml(p)}" style="position:absolute;top:3px;right:3px;background:rgba(5,7,13,.85);border:none;color:#fff;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;">✕</button>
+  renderList(){
+    const el = document.getElementById('lv-list');
+    document.getElementById('lv-count').textContent = LV.cars.length + ' livrée' + (LV.cars.length>1?'s':'');
+    if(!LV.cars.length){ el.innerHTML = '<div class="empty">Aucune livrée trouvée.</div>'; return; }
+    el.innerHTML = LV.cars.map(car => `
+      <div class="art-item">
+        <div class="art-thumb">${car.cover ? `<img src="${car.cover}" alt="">` : '<span class="ph">—</span>'}</div>
+        <div class="art-info">
+          <div class="ai-meta">${LV.CATS[car.category]||car.category}</div>
+          <h4>${car.model.replace(/</g,'&lt;')}</h4>
+          <div class="ai-date">${(car.photos||[]).length} photo(s)</div>
+        </div>
+        <div class="art-ops"><button class="op" data-open="${car.id}">Ouvrir l'album</button></div>
       </div>`).join('');
-    existing.querySelectorAll('button[data-path]').forEach(b=>b.addEventListener('click',()=>{
-      livRemovedPhotos.push(b.dataset.path);
-      b.parentElement.remove();
-      if(!existing.children.length) existWrap.style.display='none';
-    }));
-  } else { existWrap.style.display='none'; }
-  $('livEditCard').style.display='block';
-  $('livEditCard').scrollIntoView({behavior:'smooth'});
-}
+    el.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => LV.openAlbum(b.dataset.open)));
+  },
 
-// (ancien listener liveries retiré — remplacé par le listener sur livFileInput plus bas)
+  openAlbum(id){
+    LV.current = LV.cars.find(c => c.id === id);
+    if(!LV.current) return;
+    LV.pendingFiles = [];
+    LV.removedPaths = [];
+    document.getElementById('lv-album-title').textContent = LV.current.model;
+    document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
+    document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
+    document.getElementById('lv-input').value = '';
+    LV.renderAlbum();
+    const albumEl = document.getElementById('lv-album');
+    albumEl.style.display = 'block';
+    albumEl.scrollIntoView({ behavior:'smooth' });
+  },
 
-// File d'attente pour les fichiers à recadrer un par un
-let _livCropQueue = [];
-let _livCropProcessing = false;
+  // Reconstruit l'affichage cover + carrousel à partir de l'état courant
+  renderAlbum(){
+    const car = LV.current;
+    const existingAll = [...(car.cover ? [car.cover] : []), ...(car.photos||[]).filter(p => p !== car.cover)];
+    const existingKept = existingAll.filter(p => !LV.removedPaths.includes(p));
+    const newOnes = LV.pendingFiles.filter(Boolean);
 
-function openLivCropper(file){
-  if(!file.type.startsWith('image/')){ toast('Pas une image.','bad'); return; }
-  _livCropQueue.push(file);
-  if(!_livCropProcessing) processLivCropQueue();
-}
-
-function processLivCropQueue(){
-  if(!_livCropQueue.length){ _livCropProcessing=false; return; }
-  _livCropProcessing=true;
-  const file=_livCropQueue.shift();
-  const reader=new FileReader();
-  reader.onload=e=>{
-    _cropOrigDataUrl=e.target.result;
-    const tmp=new Image();
-    tmp.onload=()=>{
-      _cropNatW=tmp.naturalWidth; _cropNatH=tmp.naturalHeight;
-      _livCropMode=true; // signale qu'on recadre pour liveries
-      initCropper();
-    };
-    tmp.src=_cropOrigDataUrl;
-  };
-  reader.readAsDataURL(file);
-}
-
-// Callback appelé par le recadreur une fois confirmé
-function onLivCropConfirmed(dataUrl, base64){
-  const idx=livPendingPhotos.length;
-  const name='photo-'+Date.now()+'.jpg';
-  livPendingPhotos.push({base64, dataUrl, name});
-  // Miniature dans la file avec bouton recadrer + supprimer
-  const div=document.createElement('div');
-  div.style.cssText='position:relative;width:120px;height:76px;border-radius:6px;overflow:hidden;border:1px solid var(--mrt-blue);flex-shrink:0;';
-  div.innerHTML=`<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;display:block;">
-    <div style="position:absolute;bottom:0;left:0;right:0;display:flex;gap:2px;padding:3px;background:rgba(5,7,13,.7);">
-      <button data-recrop="${idx}" style="flex:1;background:rgba(0,87,255,.8);border:none;color:#fff;border-radius:3px;font-size:10px;cursor:pointer;padding:3px 0;">✂</button>
-      <button data-rmq="${idx}" style="flex:1;background:rgba(200,40,40,.8);border:none;color:#fff;border-radius:3px;font-size:10px;cursor:pointer;padding:3px 0;">✕</button>
-    </div>`;
-  div.querySelector('[data-rmq]').addEventListener('click',()=>{livPendingPhotos[idx]=null; div.remove();});
-  div.querySelector('[data-recrop]').addEventListener('click',()=>{
-    // Recharge l'image originale pour recadrer à nouveau
-    _cropOrigDataUrl=dataUrl; _cropNatW=0; _cropNatH=0;
-    const tmp2=new Image(); tmp2.onload=()=>{ _cropNatW=tmp2.naturalWidth; _cropNatH=tmp2.naturalHeight; _livCropMode=true; _livRecropIdx=idx; _livRecropDiv=div; initCropper(); }; tmp2.src=dataUrl;
-  });
-  $('livQueue').appendChild(div);
-  // Continuer la file
-  setTimeout(processLivCropQueue, 300);
-}
-let _livCropMode=false;
-let _livRecropIdx=-1;
-let _livRecropDiv=null;
-
-$('livSaveBtn').addEventListener('click', async ()=>{
-  if(!editingLiv){ toast('Aucune livrée sélectionnée.','bad'); return; }
-  const btn=$('livSaveBtn'); btn.disabled=true; btn.innerHTML='<span class="spin"></span>Enregistrement…';
-  try{
-    const c=getCfg();
-    const newPhotos=livPendingPhotos.filter(Boolean);
-    const uploadedPaths=[];
-    // Upload nouvelles photos
-    for(const p of newPhotos){
-      const path=`images/liveries/${editingLiv.id}/${p.name}`;
-      const ok=await putFile(path, p.base64, `Photo livrée ${editingLiv.model}`, true);
-      if(ok) uploadedPaths.push(path);
+    // Photo principale = première photo existante gardée, sinon première nouvelle
+    const coverBox = document.getElementById('lv-cover-box');
+    if(existingKept.length){
+      coverBox.innerHTML = `<img src="${existingKept[0]}" style="width:100%;height:100%;object-fit:cover;">`;
+    } else if(newOnes.length){
+      coverBox.innerHTML = `<img src="${newOnes[0].dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+    } else {
+      coverBox.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);">Aucune photo</span>`;
     }
-    // Reconstruire la liste de photos
-    const existingKept=[...(editingLiv.cover?[editingLiv.cover]:[]), ...(editingLiv.photos||[]).filter(p=>p!==editingLiv.cover)]
-      .filter(p=>!livRemovedPhotos.includes(p));
-    const allPhotos=[...new Set([...existingKept, ...uploadedPaths])];
-    // Mettre à jour la voiture
-    const idx=liveries.findIndex(c=>c.id===editingLiv.id);
-    liveries[idx]={ ...editingLiv, artist: $('livArtist').value.trim()||'SDL', cover: allPhotos[0]||'', photos: allPhotos };
-    // Écrire liveries.json
-    const json=JSON.stringify(liveries,null,2);
-    const ok=await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${editingLiv.model}`, false, ()=>liveriesSha, s=>liveriesSha=s);
-    if(!ok) throw new Error('écriture liveries.json impossible');
-    toast('Livrée mise à jour !','ok');
-    $('livEditCard').style.display='none'; editingLiv=null; livPendingPhotos=[]; livRemovedPhotos=[];
-    renderLivList();
-  }catch(e){ toast('Échec : '+e.message,'bad'); }
-  finally{ btn.disabled=false; btn.textContent='Enregistrer'; }
+
+    // Carrousel = tout le reste (existantes gardées sauf la 1ère, + toutes les nouvelles sauf si c'est la seule photo)
+    const carousel = document.getElementById('lv-carousel');
+    const restExisting = existingKept.slice(existingKept.length ? 1 : 0);
+    const restNew = existingKept.length ? newOnes : newOnes.slice(1);
+    const items = [];
+    restExisting.forEach(p => items.push({ type:'existing', src:p }));
+    restNew.forEach((f, i) => items.push({ type:'new', src:f.dataUrl, idx: LV.pendingFiles.indexOf(f) }));
+
+    if(!items.length){
+      carousel.innerHTML = `<span style="font-family:var(--mono);font-size:11px;color:var(--mrt-fog);align-self:center;">Aucune photo supplémentaire</span>`;
+    } else {
+      carousel.innerHTML = items.map(it => `
+        <div style="position:relative;width:110px;height:69px;border-radius:6px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;">
+          <img src="${it.src}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <button data-rm="${it.type}:${it.type==='existing'?it.src:it.idx}" style="position:absolute;top:3px;right:3px;background:rgba(5,7,13,.85);border:none;color:#fff;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;">✕</button>
+        </div>`).join('');
+      carousel.querySelectorAll('[data-rm]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const [type, val] = btn.dataset.rm.split(':');
+          if(type === 'existing'){ LV.removedPaths.push(val); }
+          else { LV.pendingFiles[parseInt(val)] = null; }
+          LV.renderAlbum();
+        });
+      });
+    }
+  },
+
+  // Compression simple d'un fichier (pas de recadrage — cover sur le site en 16/9 via CSS)
+  handleFile(file){
+    if(!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAXW = 1600;
+        const scale = Math.min(1, MAXW/img.width);
+        const w = Math.round(img.width*scale), h = Math.round(img.height*scale);
+        const canvas = document.createElement('canvas'); canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        const base64 = dataUrl.split(',')[1];
+        LV.pendingFiles.push({ base64, dataUrl, name: 'photo-'+Date.now()+'-'+Math.floor(Math.random()*1000)+'.jpg' });
+        LV.renderAlbum();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
+
+  async save(){
+    if(!LV.current){ toast('Aucune livrée ouverte.','bad'); return; }
+    const btn = document.getElementById('lv-save');
+    const label = btn.textContent;
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Enregistrement…';
+    try{
+      const newFiles = LV.pendingFiles.filter(Boolean);
+      const uploadedPaths = [];
+      for(const f of newFiles){
+        const path = `images/liveries/${LV.current.id}/${f.name}`;
+        const ok = await putFile(path, f.base64, `Photo livrée ${LV.current.model}`, true);
+        if(ok) uploadedPaths.push(path);
+      }
+      const existingAll = [...(LV.current.cover ? [LV.current.cover] : []), ...(LV.current.photos||[]).filter(p => p !== LV.current.cover)];
+      const existingKept = existingAll.filter(p => !LV.removedPaths.includes(p));
+      const allPhotos = [...new Set([...existingKept, ...uploadedPaths])];
+
+      const idx = LV.cars.findIndex(c => c.id === LV.current.id);
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', cover: allPhotos[0] || '', photos: allPhotos };
+
+      const json = JSON.stringify(LV.cars, null, 2);
+      const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
+      if(!ok) throw new Error('écriture liveries.json impossible');
+
+      toast('Album mis à jour !', 'ok');
+      document.getElementById('lv-album').style.display = 'none';
+      LV.current = null; LV.pendingFiles = []; LV.removedPaths = [];
+      LV.renderList();
+    }catch(e){ toast('Échec : '+e.message, 'bad'); }
+    finally{ btn.disabled = false; btn.textContent = label; }
+  }
+};
+
+document.getElementById('lv-input').addEventListener('change', e => {
+  [...e.target.files].forEach(f => LV.handleFile(f));
 });
-
-$('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display='none'; editingLiv=null; livPendingPhotos=[]; livRemovedPhotos=[]; });
-
-// Bloquer ouverture d'images dans le navigateur
-window.addEventListener('dragover', e => e.preventDefault());
-window.addEventListener('drop', e => e.preventDefault());
-
-// Input liveries
-document.getElementById('livFileInput').addEventListener('change', e => {
-  [...e.target.files].forEach(f => openLivCropper(f));
-  e.target.value = '';
+document.getElementById('lv-save').addEventListener('click', () => LV.save());
+document.getElementById('lv-cancel').addEventListener('click', () => {
+  document.getElementById('lv-album').style.display = 'none';
+  LV.current = null; LV.pendingFiles = []; LV.removedPaths = [];
 });
 
 /* ---------- démarrage ---------- */
