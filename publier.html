@@ -448,8 +448,8 @@ const dz=$('dropzone');
 dz.addEventListener('click',()=>$('fileInput').click());
 $('fileInput').addEventListener('change',e=>{ if(e.target.files[0]) openCropper(e.target.files[0]); e.target.value=''; });
 ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag');}));
-['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag');}));
-dz.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) openCropper(f); });
+ dz.addEventListener('dragleave',e=>{e.preventDefault();dz.classList.remove('drag');});
+ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag'); const f=e.dataTransfer.files[0]; if(f) openCropper(f); });
 $('imgRemove').addEventListener('click',()=>{ pendingImage=null; currentImagePath=''; $('imgPreview').style.display='none'; $('imgMeta').textContent=''; syncPreview(); });
 $('imgRecrop').addEventListener('click',()=>{
   if(!_cropOrigDataUrl){ toast('Aucune photo chargée à recadrer.','bad'); return; }
@@ -796,8 +796,8 @@ const livDz=$('livDropzone');
 livDz.addEventListener('click',()=>$('livFileInput').click());
 $('livFileInput').addEventListener('change',e=>{ [...e.target.files].forEach(f=>openLivCropper(f)); e.target.value=''; });
 ['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.add('drag');}));
-['dragleave','drop'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();livDz.classList.remove('drag');}));
-livDz.addEventListener('drop',e=>{ [...e.dataTransfer.files].forEach(f=>{ if(f.type.startsWith('image/')) openLivCropper(f); }); });
+ livDz.addEventListener('dragleave',e=>{e.preventDefault();livDz.classList.remove('drag');});
+ livDz.addEventListener('drop',e=>{e.preventDefault();livDz.classList.remove('drag'); [...e.dataTransfer.files].forEach(f=>{ if(f.type.startsWith('image/')) openLivCropper(f); }); });
 
 // File d'attente pour les fichiers à recadrer un par un
 let _livCropQueue = [];
@@ -887,9 +887,9 @@ $('livSaveBtn').addEventListener('click', async ()=>{
 
 $('livCancelBtn').addEventListener('click',()=>{ $('livEditCard').style.display='none'; editingLiv=null; livPendingPhotos=[]; livRemovedPhotos=[]; });
 
-// Bloquer le drag global (évite que les images s'ouvrent dans un onglet)
-document.addEventListener('dragover', e => e.preventDefault());
-document.addEventListener('drop', e => e.preventDefault());
+// Bloquer le drag global SAUF sur les dropzones
+window.addEventListener('dragover', e => { if(!e.target.closest('.dropzone')) e.preventDefault(); });
+window.addEventListener('drop', e => { if(!e.target.closest('.dropzone')) e.preventDefault(); });
 
 /* ---------- démarrage ---------- */
 (async function init(){
