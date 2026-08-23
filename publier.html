@@ -933,8 +933,8 @@ document.addEventListener('drop', e => e.preventDefault());
         <div class="dropzone" id="livDropzone">
           <div class="dz-title">Glisse tes photos ici</div>
           <div class="dz-sub">ou clique pour choisir — plusieurs fichiers acceptés — JPG / PNG</div>
+          <input type="file" id="livFileInput" accept="image/*" multiple hidden>
         </div>
-        <input type="file" id="livFileInput" accept="image/*" multiple style="display:none;">
 
         <!-- File des photos en attente (avec aperçu recadrable) -->
         <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
