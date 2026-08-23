@@ -569,7 +569,22 @@ function initCropper(){
     stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
     stage.ontouchstart=null; stage.ontouchmove=null; stage.ontouchend=null;
     zoom.oninput=null; $('cropConfirm').onclick=null;
-    syncPreview();
+    if(_livCropMode){
+      _livCropMode=false;
+      if(_livRecropIdx>=0){
+        // Mise à jour d'une photo existante dans la file
+        livPendingPhotos[_livRecropIdx]={base64, dataUrl, name:livPendingPhotos[_livRecropIdx]?.name||'photo-'+Date.now()+'.jpg'};
+        if(_livRecropDiv){ _livRecropDiv.querySelector('img').src=dataUrl; }
+        _livRecropIdx=-1; _livRecropDiv=null;
+      } else {
+        onLivCropConfirmed(dataUrl, base64);
+      }
+    } else {
+      pendingImage={ dataUrl, base64, isNew:true };
+      $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
+      $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
+      syncPreview();
+    }
   };
 
   $('cropCancel').onclick=()=>{
@@ -776,39 +791,71 @@ function openLivEdit(id){
   $('livEditCard').scrollIntoView({behavior:'smooth'});
 }
 
-// Drag & drop multi-photos
+// Drag & drop multi-photos liveries
 const livDz=$('livDropzone');
-$('livFileInput').addEventListener('change',e=>{[...e.target.files].forEach(handleLivPhoto); e.target.value='';});
+livDz.addEventListener('click', ()=>$('livFileInput').click());
+$('livFileInput').addEventListener('change',e=>{[...e.target.files].forEach(f=>openLivCropper(f)); e.target.value='';});
 ['dragover','dragenter'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.add('drag');}));
 ['dragleave'].forEach(ev=>livDz.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();livDz.classList.remove('drag');}));
 livDz.addEventListener('drop',e=>{
   e.preventDefault(); e.stopPropagation(); livDz.classList.remove('drag');
-  [...e.dataTransfer.files].forEach(f=>{if(f.type.startsWith('image/')) handleLivPhoto(f);});
+  [...e.dataTransfer.files].forEach(f=>{if(f.type.startsWith('image/')) openLivCropper(f);});
 });
 
-function handleLivPhoto(file){
+// File d'attente pour les fichiers à recadrer un par un
+let _livCropQueue = [];
+let _livCropProcessing = false;
+
+function openLivCropper(file){
+  if(!file.type.startsWith('image/')){ toast('Pas une image.','bad'); return; }
+  _livCropQueue.push(file);
+  if(!_livCropProcessing) processLivCropQueue();
+}
+
+function processLivCropQueue(){
+  if(!_livCropQueue.length){ _livCropProcessing=false; return; }
+  _livCropProcessing=true;
+  const file=_livCropQueue.shift();
   const reader=new FileReader();
   reader.onload=e=>{
-    const img=new Image(); img.onload=()=>{
-      const MAXW=1920; const scale=Math.min(1,MAXW/img.width);
-      const w=Math.round(img.width*scale), h=Math.round(img.height*scale);
-      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      const dataUrl=canvas.toDataURL('image/jpeg',0.85);
-      const base64=dataUrl.split(',')[1];
-      const idx=livPendingPhotos.length;
-      livPendingPhotos.push({base64, dataUrl, name: file.name.replace(/\.[^.]+$/,'')+'-'+Date.now()+'.jpg'});
-      // Miniature dans la file
-      const div=document.createElement('div');
-      div.style.cssText='position:relative;width:100px;height:63px;border-radius:6px;overflow:hidden;border:1px solid var(--mrt-blue);';
-      div.innerHTML=`<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;"><button data-idx="${idx}" style="position:absolute;top:3px;right:3px;background:rgba(5,7,13,.85);border:none;color:#fff;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;">✕</button>`;
-      div.querySelector('button').addEventListener('click',()=>{livPendingPhotos[idx]=null; div.remove();});
-      $('livQueue').appendChild(div);
+    _cropOrigDataUrl=e.target.result;
+    const tmp=new Image();
+    tmp.onload=()=>{
+      _cropNatW=tmp.naturalWidth; _cropNatH=tmp.naturalHeight;
+      _livCropMode=true; // signale qu'on recadre pour liveries
+      initCropper();
     };
-    img.src=e.target.result;
+    tmp.src=_cropOrigDataUrl;
   };
   reader.readAsDataURL(file);
 }
+
+// Callback appelé par le recadreur une fois confirmé
+function onLivCropConfirmed(dataUrl, base64){
+  const idx=livPendingPhotos.length;
+  const name='photo-'+Date.now()+'.jpg';
+  livPendingPhotos.push({base64, dataUrl, name});
+  // Miniature dans la file avec bouton recadrer + supprimer
+  const div=document.createElement('div');
+  div.style.cssText='position:relative;width:120px;height:76px;border-radius:6px;overflow:hidden;border:1px solid var(--mrt-blue);flex-shrink:0;';
+  div.innerHTML=`<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;display:block;">
+    <div style="position:absolute;bottom:0;left:0;right:0;display:flex;gap:2px;padding:3px;background:rgba(5,7,13,.7);">
+      <button data-recrop="${idx}" style="flex:1;background:rgba(0,87,255,.8);border:none;color:#fff;border-radius:3px;font-size:10px;cursor:pointer;padding:3px 0;">✂</button>
+      <button data-rmq="${idx}" style="flex:1;background:rgba(200,40,40,.8);border:none;color:#fff;border-radius:3px;font-size:10px;cursor:pointer;padding:3px 0;">✕</button>
+    </div>`;
+  div.querySelector('[data-rmq]').addEventListener('click',()=>{livPendingPhotos[idx]=null; div.remove();});
+  div.querySelector('[data-recrop]').addEventListener('click',()=>{
+    // Recharge l'image originale pour recadrer à nouveau
+    _cropOrigDataUrl=dataUrl; _cropNatW=0; _cropNatH=0;
+    const tmp2=new Image(); tmp2.onload=()=>{ _cropNatW=tmp2.naturalWidth; _cropNatH=tmp2.naturalHeight; _livCropMode=true; _livRecropIdx=idx; _livRecropDiv=div; initCropper(); }; tmp2.src=dataUrl;
+  });
+  $('livQueue').appendChild(div);
+  // Continuer la file
+  setTimeout(processLivCropQueue, 300);
+}
+let _livCropMode=false;
+let _livRecropIdx=-1;
+let _livRecropDiv=null;
 
 $('livSaveBtn').addEventListener('click', async ()=>{
   if(!editingLiv){ toast('Aucune livrée sélectionnée.','bad'); return; }
@@ -883,13 +930,13 @@ document.addEventListener('drop', e => e.preventDefault());
         <label class="field"><span>Artiste</span><input type="text" id="livArtist" value="SDL"></label>
 
         <label class="field"><span>Ajouter des photos</span></label>
-        <label for="livFileInput" class="dropzone" id="livDropzone" style="cursor:pointer;">
+        <div class="dropzone" id="livDropzone">
           <div class="dz-title">Glisse tes photos ici</div>
           <div class="dz-sub">ou clique pour choisir — plusieurs fichiers acceptés — JPG / PNG</div>
-          <input type="file" id="livFileInput" accept="image/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;">
-        </label>
+        </div>
+        <input type="file" id="livFileInput" accept="image/*" multiple style="display:none;">
 
-        <!-- File des photos en attente -->
+        <!-- File des photos en attente (avec aperçu recadrable) -->
         <div id="livQueue" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;"></div>
 
         <!-- Photos déjà publiées -->
