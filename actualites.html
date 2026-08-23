@@ -33,7 +33,15 @@
     <a href="a-propos.html">À propos</a>
     <a href="actualites.html">Actualités</a>
     <a href="palmares.html">Palmarès</a>
-    <a href="liveries.html">Liveries</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
     <a href="boutique.html">Boutique</a>
     <a href="recrutement.html">Recrutement</a>
   </div>
@@ -75,7 +83,8 @@ function link(a){ return `article.html?id=${encodeURIComponent(a.id)}`; }
 
 fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
   const root=document.getElementById('newsRoot');
-  const arr=(Array.isArray(list)?list:[]).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const raw=Array.isArray(list)?list:[];
+  const arr=raw.map((a,i)=>({...a,_i:i})).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b._i-a._i);
   if(arr.length===0){ root.innerHTML='<div class="news-empty">Aucune actualité pour l\'instant — reviens bientôt.</div>'; return; }
 
   const f=arr[0]; const side=arr.slice(1,4); const rest=arr.slice(4);
