@@ -93,7 +93,19 @@
       "images/liveries/porsche-911-lmgt3-r-992/photo-1787527574712-174.jpg",
       "images/liveries/porsche-911-lmgt3-r-992/photo-1787527574751-854.jpg",
       "images/liveries/porsche-911-lmgt3-r-992/photo-1787527574792-698.jpg"
-    ]
+    ],
+    "description": "<p>Aspirée, hurlante et chirurgicale : la Porsche 911 RSR-19 est l'une des rares voitures capables de déplacer des foules entières au seul son de sa mécanique. Véritable monument de la catégorie LMGTE, elle a fait vibrer les circuits de la planète grâce au chant inimitable de son bloc 6 cylindres à plat atmosphérique, tout en amassant un palmarès d'une richesse exceptionnelle.</p><p><strong>Une suprématie née au sommet du WEC</strong></p><p>L'histoire d'amour entre la plateforme 911 et l'endurance mondiale a atteint des sommets lors de la saison 2018-2019. Cette année-là, le duo Michael Christensen / Kévin Estre imposait sa loi en LMGTE Pro, tandis que l'écurie Team Project 1 confirmait la domination du constructeur de Stuttgart en décrochant le titre en LMGTE Am. L'évolution RSR-19 qui a suivi est immédiatement devenue l'arme absolue, enchaînant les victoires aux mains des pilotes d'usine comme des structures privées.</p><p><strong>L'ultime chapitre de l'ère GTE</strong></p><p>Lors de la dernière saison de la catégorie GTE, les écuries clientes telles que Proton Competition, Dempsey Racing, Project 1 et les Iron Dames ont entretenu la légende. L'année 2023 aura notamment été rythmée par d'intenses duels en qualifications, où Sarah Bovy poussait la 911 dans ses derniers retranchements pour arracher des dixièmes décisifs face à la Corvette de Ben Keating.</p><p>La trajectoire de la RSR-19 s'est achevée en apothéose avec la victoire de Dempsey-Proton à Monza, suivie du triomphe mémorable des Iron Dames à Bahreïn. Ce succès marquait non seulement la toute première victoire d'un équipage 100 % féminin en championnat du monde FIA, mais scellait également la toute dernière victoire de l'histoire pour la catégorie GTE sur la scène mondiale.</p><p><strong>Les chiffres clés de la légende RSR-19</strong></p><ul><li><p><strong>6</strong> : Le nombre de cylindres à plat de son moteur atmosphérique à la sonorité mythique.</p></li><li><p><strong>2</strong> : Le double sacre mondial (LMGTE Pro et LMGTE Am) décroché dès la campagne 2018-2019.</p></li><li><p><strong>2023</strong> : L'année de sa première victoire de la saison à Monza (Dempsey-Proton Racing).</p></li><li><p><strong>100 %</strong> : Le succès historique du projet féminin Iron Dames à Bahreïn, ultime vainqueur de l'ère GTE en WEC.</p></li></ul>",
+    "palmares": "Champion de la catégorie LMGT3 dans le championnat OOFS Racing",
+    "specs": {
+      "moteur": "six cylindres à plat 4.0 litres",
+      "puissance": "510 bhp",
+      "poids": "1243 kg (sans carburant ni pilote)",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4557 mm",
+      "largeur": "2042 mm",
+      "hauteur": "1250 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "bmw-m4-lmgt3-evo",
