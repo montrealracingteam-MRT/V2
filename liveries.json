@@ -146,7 +146,23 @@
     "category": "lmgt3",
     "model": "Corvette Z06 LMGT3.R",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/corvette-z06-lmgt3-r/cover-cover-1787590523202.jpg",
+    "photos": [
+      "images/liveries/corvette-z06-lmgt3-r/cover-cover-1787590523202.jpg",
+      "images/liveries/corvette-z06-lmgt3-r/photo-1787590529514-131.jpg",
+      "images/liveries/corvette-z06-lmgt3-r/photo-1787590529611-605.jpg"
+    ],
+    "description": "<p>Conçue pour succéder à la C8.R et réussir le passage de Chevrolet au règlement GT3, la Corvette Z06 GT3.R repose sur des fondations techniques éprouvées. L'américaine hérite directement de sa devancière en reprenant son aérodynamique, sa géométrie de suspension et surtout son emblématique moteur V8 atmosphérique LT6 de 5,5 litres. Cette architecture mécanique garantit une remise des gaz particulièrement linéaire tout en conservant une signature sonore unique qui fait vibrer les tribunes.</p><p>Exploitée par l'écurie britannique TF Sport, la Z06 GT3.R a réussi un baptême du feu éclatant dès sa première campagne en 2024. Après avoir marqué les esprits en décrochant la pole position dès la manche d'ouverture au Qatar, la voiture a confirmé son potentiel en réalisant un brillant double podium à Bahreïn. Portée par cette prise en main immédiate et une compétitivité d'entrée de jeu, la nouvelle arme de Detroit s'impose déjà comme une référence incontournable des grilles de départ GT à travers le monde.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "5.5l V8",
+      "puissance": "600bhp",
+      "poids": "1344 kg (sans carburant ni pilote)",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4630 mm",
+      "largeur": "2050 mm",
+      "hauteur": "1148 mm",
+      "resultat": ""
+    }
   }
 ]
