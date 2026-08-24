@@ -305,9 +305,16 @@
 
       <label class="field"><span>Artiste</span><input type="text" id="lv-artist" value="SDL"></label>
 
-      <label class="field"><span>Description de la voiture (optionnel)</span>
-        <textarea id="lv-description" rows="4" placeholder="Quelques lignes sur cette livrée, sa signification, son histoire, etc."></textarea>
-      </label>
+      <label class="field"><span>Description de la voiture (optionnel)</span></label>
+      <div class="editor-toolbar" id="lv-desc-toolbar">
+        <button class="tbtn" type="button" data-cmd="p">Paragraphe</button>
+        <button class="tbtn" type="button" data-cmd="h4">Sous-titre</button>
+        <button class="tbtn" type="button" data-cmd="bold"><b>Gras</b></button>
+        <button class="tbtn" type="button" data-cmd="ul">• Liste</button>
+        <button class="tbtn" type="button" data-cmd="link">Lien</button>
+        <button class="tbtn" type="button" data-cmd="clear">Effacer mise en forme</button>
+      </div>
+      <div class="editor" id="lv-description" contenteditable="true" data-placeholder="Écris une description ou un portrait de la voiture ici. Sélectionne du texte puis clique sur un bouton pour le mettre en forme." style="margin-bottom:18px;"></div>
 
       <label class="field"><span>Palmarès de cette voiture chez MRT (optionnel)</span>
         <textarea id="lv-palmares" rows="4" placeholder="Un résultat par ligne. Ex :&#10;1er — 4h de Spa (2026)&#10;3e — 6h de COTA (2026)"></textarea>
@@ -475,9 +482,9 @@ function renderList(){
 function imgURL(path){ const c=getCfg(); return `https://raw.githubusercontent.com/${c.owner}/${c.repo}/${c.branch}/${path}?t=`+Date.now(); }
 function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* ---------- éditeur à boutons ---------- */
+/* ---------- éditeur à boutons (articles) ---------- */
 const editor = $('editor');
-document.querySelectorAll('.tbtn').forEach(btn=>{
+document.querySelector('.card-body .editor-toolbar:not(#lv-desc-toolbar)')?.querySelectorAll('.tbtn').forEach(btn=>{
   btn.addEventListener('click', e=>{
     e.preventDefault(); editor.focus();
     const cmd = btn.dataset.cmd;
@@ -516,6 +523,23 @@ document.querySelectorAll('.tbtn').forEach(btn=>{
   });
 });
 editor.addEventListener('input', syncPreview);
+
+/* ---------- éditeur à boutons (livrées) — générique, réutilisable ---------- */
+function wireSimpleEditorToolbar(toolbarEl, editorEl){
+  toolbarEl.querySelectorAll('.tbtn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.preventDefault(); editorEl.focus();
+      const cmd = btn.dataset.cmd;
+      if(cmd==='p') document.execCommand('formatBlock', false, 'p');
+      else if(cmd==='h4') document.execCommand('formatBlock', false, 'h4');
+      else if(cmd==='bold') document.execCommand('bold');
+      else if(cmd==='ul') document.execCommand('insertUnorderedList');
+      else if(cmd==='link'){ const url=prompt('Adresse du lien (https://…)'); if(url) document.execCommand('createLink', false, url); }
+      else if(cmd==='clear') document.execCommand('removeFormat');
+    });
+  });
+}
+wireSimpleEditorToolbar(document.getElementById('lv-desc-toolbar'), document.getElementById('lv-description'));
 
 /* Nettoie le HTML de l'éditeur : ne garde que les balises autorisées */
 function cleanHTML(root){
@@ -867,7 +891,7 @@ const LV = {
     document.getElementById('lv-album-title').textContent = LV.current.model;
     document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
     document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
-    document.getElementById('lv-description').value = LV.current.description || '';
+    document.getElementById('lv-description').innerHTML = LV.current.description || '';
     document.getElementById('lv-palmares').value = LV.current.palmares || '';
     const specs = LV.current.specs || {};
     document.getElementById('lv-spec-moteur').value = specs.moteur || '';
@@ -1002,7 +1026,7 @@ const LV = {
         hauteur: document.getElementById('lv-spec-hauteur').value.trim(),
         resultat: document.getElementById('lv-spec-resultat').value.trim()
       };
-      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), palmares: document.getElementById('lv-palmares').value.trim(), specs, cover: coverPath, photos: allPhotos };
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: cleanHTML(document.getElementById('lv-description')), palmares: document.getElementById('lv-palmares').value.trim(), specs, cover: coverPath, photos: allPhotos };
 
       const json = JSON.stringify(LV.cars, null, 2);
       const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
