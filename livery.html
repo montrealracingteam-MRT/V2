@@ -20,26 +20,36 @@
   .hero-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-cover .ph { width: 100%; height: 100%; }
 
-  /* Description */
-  .car-description { font-size: 15px; color: var(--mrt-fog); line-height: 1.75; max-width: 75ch; margin-bottom: 44px; white-space: pre-line; }
+  /* Fiche technique : description + caractéristiques */
+  .specs-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: start; margin-bottom: 52px; }
+  @media (max-width: 780px) { .specs-layout { grid-template-columns: 1fr; } }
+  .car-description { font-size: 15px; color: var(--mrt-fog); line-height: 1.75; white-space: pre-line; }
+
+  .specs-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .specs-head { background: var(--mrt-blue); padding: 14px 20px; font-family: var(--display); font-size: 18px; letter-spacing: .04em; color: #fff; text-align: center; }
+  .specs-list { display: flex; flex-direction: column; }
+  .specs-row { padding: 13px 20px; border-bottom: 1px solid var(--line); text-align: center; }
+  .specs-row:last-child { border-bottom: none; }
+  .specs-row .k { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mrt-blue); margin-right: 6px; }
+  .specs-row .v { font-size: 13.5px; color: var(--mrt-white); font-weight: 600; }
 
   .gallery-head { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
   .gallery-head::after { content:''; flex:1; height:1px; background: var(--line); }
 
-  /* Hero carousel (galerie du dessous) */
-  .carousel { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--mrt-panel); margin-bottom: 14px; }
+  /* Carrousel galerie — plus petit, n'écrase jamais le format d'une photo */
+  .carousel { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--mrt-ink); margin: 0 auto 14px; max-width: 640px; }
   .carousel-track { display: flex; transition: transform .35s cubic-bezier(.4,0,.2,1); }
-  .carousel-slide { min-width: 100%; aspect-ratio: 16/9; overflow: hidden; }
-  .carousel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .carousel-slide .ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--mrt-ink); }
-  .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.75); border: 1px solid var(--line-strong); color: #fff; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 2; }
+  .carousel-slide { min-width: 100%; height: 360px; display: flex; align-items: center; justify-content: center; background: var(--mrt-ink); }
+  .carousel-slide img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+  .carousel-slide .ph { width: 100%; height: 100%; }
+  .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.75); border: 1px solid var(--line-strong); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 2; }
   .carousel-btn:hover { background: rgba(0,87,255,.7); }
-  .carousel-btn.prev { left: 14px; }
-  .carousel-btn.next { right: 14px; }
-  .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-  .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
+  .carousel-btn.prev { left: 12px; }
+  .carousel-btn.next { right: 12px; }
+  .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
+  .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
   .carousel-dot.active { background: var(--mrt-blue); }
-  .carousel-counter { position: absolute; bottom: 14px; right: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: rgba(255,255,255,.7); background: rgba(5,7,13,.6); padding: 4px 10px; border-radius: 4px; }
+  .carousel-counter { position: absolute; bottom: 10px; right: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; color: rgba(255,255,255,.7); background: rgba(5,7,13,.6); padding: 3px 9px; border-radius: 4px; }
 
   /* Info voiture */
   .car-info { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; margin-bottom: 40px; }
@@ -115,6 +125,26 @@
 <script>
 const CATS = { hypercar:'HYPERCAR', lmp2:'LMP2', lmp3:'LMP3', lmgt3:'LMGT3' };
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function specsHTML(car){
+  const s = car.specs || {};
+  const rows = [
+    ['Catégorie', CATS[car.category]||car.category],
+    ['Moteur', s.moteur],
+    ['Puissance', s.puissance],
+    ['Poids', s.poids],
+    ['Longueur', s.longueur],
+    ['Largeur', s.largeur],
+    ['Hauteur', s.hauteur],
+    ['Transmission', s.transmission],
+    ['Meilleur résultat', s.resultat]
+  ].filter(([k,v]) => v && String(v).trim());
+  if(rows.length <= 1) return ''; // rien d'utile à afficher hors catégorie seule
+  return `<div class="specs-card">
+    <div class="specs-head">Caractéristiques techniques</div>
+    <div class="specs-list">${rows.map(([k,v]) => `<div class="specs-row"><span class="k">${esc(k)} :</span><span class="v">${esc(v)}</span></div>`).join('')}</div>
+  </div>`;
+}
 const id = new URLSearchParams(location.search).get('id');
 
 const SVG_PH = `<svg viewBox="0 0 400 225" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid slice">
@@ -160,7 +190,11 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
       </div>
     </div>
 
-    ${car.description ? `<p class="car-description">${esc(car.description)}</p>` : ''}
+    ${(car.description || specsHTML(car)) ? `
+    <div class="specs-layout">
+      ${car.description ? `<p class="car-description">${esc(car.description)}</p>` : '<div></div>'}
+      ${specsHTML(car)}
+    </div>` : ''}
 
     ${galleryPhotos.length ? `
     <div class="gallery-head">Galerie photos</div>
