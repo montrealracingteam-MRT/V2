@@ -33,23 +33,32 @@
   .specs-row .k { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mrt-blue); margin-right: 6px; }
   .specs-row .v { font-size: 13.5px; color: var(--mrt-white); font-weight: 600; }
 
-  .gallery-head { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .gallery-head { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 22px; display: flex; align-items: center; gap: 12px; }
   .gallery-head::after { content:''; flex:1; height:1px; background: var(--line); }
 
-  /* Carrousel galerie — plus petit, n'écrase jamais le format d'une photo */
-  .carousel { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--mrt-ink); margin: 0 auto 14px; max-width: 640px; }
-  .carousel-track { display: flex; transition: transform .35s cubic-bezier(.4,0,.2,1); }
-  .carousel-slide { min-width: 100%; height: 360px; display: flex; align-items: center; justify-content: center; background: var(--mrt-ink); }
-  .carousel-slide img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
-  .carousel-slide .ph { width: 100%; height: 100%; }
-  .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.75); border: 1px solid var(--line-strong); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 2; }
-  .carousel-btn:hover { background: rgba(0,87,255,.7); }
-  .carousel-btn.prev { left: 12px; }
-  .carousel-btn.next { right: 12px; }
+  /* Carrousel en profondeur — pas de cadre, aperçu gauche/droite plus petit */
+  .gallery-wrap { position: relative; display: flex; align-items: center; justify-content: center; gap: 16px; height: 320px; margin: 0 auto 20px; }
+  .gallery-side { width: 130px; height: 210px; opacity: .38; filter: brightness(.55); transform: scale(.92); transition: all .3s ease; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .gallery-side:hover { opacity: .6; }
+  .gallery-side img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .gallery-main { width: 420px; max-width: 58vw; height: 320px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .gallery-main img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  @media (max-width: 700px) { .gallery-side { display: none; } .gallery-main { max-width: 90vw; } }
+  .gallery-wrap .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.7); border: 1px solid var(--line-strong); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 3; }
+  .gallery-wrap .carousel-btn:hover { background: rgba(0,87,255,.7); }
+  .gallery-wrap .carousel-btn.prev { left: 0; }
+  .gallery-wrap .carousel-btn.next { right: 0; }
+  .gallery-counter { text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--mrt-fog); margin-bottom: 26px; }
   .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
   .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
   .carousel-dot.active { background: var(--mrt-blue); }
-  .carousel-counter { position: absolute; bottom: 10px; right: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; color: rgba(255,255,255,.7); background: rgba(5,7,13,.6); padding: 3px 9px; border-radius: 4px; }
+
+  /* Palmarès */
+  .palmares-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px 30px; margin-bottom: 52px; }
+  .palmares-card h3 { font-family: var(--display); font-size: 22px; color: var(--mrt-white); margin-bottom: 14px; letter-spacing: .02em; }
+  .palmares-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .palmares-card li { font-size: 14px; color: var(--mrt-fog); padding-left: 20px; position: relative; }
+  .palmares-card li::before { content: '●'; position: absolute; left: 0; color: var(--mrt-blue); font-size: 9px; top: 5px; }
 
   /* Info voiture */
   .car-info { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; margin-bottom: 40px; }
@@ -59,12 +68,6 @@
   .car-info .artist-block { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; text-align: center; }
   .car-info .artist-label { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-fog); margin-bottom: 6px; }
   .car-info .artist-name { font-family: var(--display); font-size: 28px; color: var(--mrt-white); letter-spacing: .04em; }
-
-  /* Miniatures */
-  .thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
-  .thumb { width: 80px; height: 50px; border-radius: 5px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .2s; flex-shrink: 0; }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .thumb.active { border-color: var(--mrt-blue); }
 
   .no-photos { padding: 60px 0; text-align: center; color: var(--mrt-fog); font-size: 14px; line-height: 1.7; }
 </style>
@@ -160,18 +163,39 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
   document.title = car.model + ' — Montreal Racing Team';
 
-  // Photo de couverture = hero fixe. Le reste (hors couverture) = galerie/carrousel en dessous.
+  // Photo de couverture = hero fixe. Le reste (hors couverture) = galerie en profondeur.
   const galleryPhotos = (car.photos || []).filter(p => p !== car.cover);
   let current = 0;
 
-  function slideHTML(){
-    if(!galleryPhotos.length) return '';
-    return galleryPhotos.map(p => `<div class="carousel-slide"><img src="${p}" alt="${esc(car.model)}" loading="lazy"></div>`).join('');
+  function palmaresHTML(car){
+    if(!car.palmares) return '';
+    const lines = car.palmares.split('\n').map(l => l.trim()).filter(Boolean);
+    if(!lines.length) return '';
+    return `<div class="palmares-card">
+      <h3>Palmarès avec cette livrée</h3>
+      <ul>${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+    </div>`;
   }
 
-  function thumbsHTML(){
-    if(galleryPhotos.length < 2) return '';
-    return `<div class="thumbs" id="thumbs">${galleryPhotos.map((p,i)=>`<div class="thumb${i===0?' active':''}" data-i="${i}"><img src="${p}" alt=""></div>`).join('')}</div>`;
+  function galleryHTML(){
+    const n = galleryPhotos.length;
+    if(!n) return '';
+    if(n === 1){
+      return `
+        <div class="gallery-head">Galerie photos</div>
+        <div class="gallery-wrap"><div class="gallery-main"><img src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
+    }
+    return `
+      <div class="gallery-head">Galerie photos</div>
+      <div class="gallery-wrap">
+        <button class="carousel-btn prev" id="prev" aria-label="Précédent">‹</button>
+        <div class="gallery-side" id="galLeft"><img id="galLeftImg" alt=""></div>
+        <div class="gallery-main"><img id="galMainImg" alt="${esc(car.model)}"></div>
+        <div class="gallery-side" id="galRight"><img id="galRightImg" alt=""></div>
+        <button class="carousel-btn next" id="next" aria-label="Suivant">›</button>
+      </div>
+      <div class="gallery-counter" id="counter"></div>
+      <div class="carousel-dots" id="dots">${galleryPhotos.map((_,i)=>`<button class="carousel-dot" data-i="${i}" aria-label="Photo ${i+1}"></button>`).join('')}</div>`;
   }
 
   root.innerHTML = `
@@ -196,45 +220,40 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
       ${specsHTML(car)}
     </div>` : ''}
 
-    ${galleryPhotos.length ? `
-    <div class="gallery-head">Galerie photos</div>
-    <div class="carousel" id="carousel">
-      <div class="carousel-track" id="track">${slideHTML()}</div>
-      ${galleryPhotos.length > 1 ? `
-        <button class="carousel-btn prev" id="prev" aria-label="Précédent">‹</button>
-        <button class="carousel-btn next" id="next" aria-label="Suivant">›</button>
-        <div class="carousel-counter" id="counter">1 / ${galleryPhotos.length}</div>` : ''}
-    </div>
-    ${galleryPhotos.length > 1 ? `<div class="carousel-dots" id="dots">${galleryPhotos.map((_,i)=>`<button class="carousel-dot${i===0?' active':''}" data-i="${i}" aria-label="Photo ${i+1}"></button>`).join('')}</div>` : ''}
-    ${thumbsHTML()}` : ''}`;
+    ${palmaresHTML(car)}
+
+    ${galleryHTML()}`;
 
   if(galleryPhotos.length < 2) return;
 
-  const track = document.getElementById('track');
   const dots = document.getElementById('dots');
-  const thumbsEl = document.getElementById('thumbs');
   const counter = document.getElementById('counter');
+  const mainImg = document.getElementById('galMainImg');
+  const leftImg = document.getElementById('galLeftImg');
+  const rightImg = document.getElementById('galRightImg');
+  const n = galleryPhotos.length;
 
-  function goTo(n){
-    current = (n + galleryPhotos.length) % galleryPhotos.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
-    if(dots) dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
-    if(thumbsEl) thumbsEl.querySelectorAll('.thumb').forEach((t,i) => t.classList.toggle('active', i===current));
-    if(counter) counter.textContent = `${current+1} / ${galleryPhotos.length}`;
+  function render(){
+    const leftIdx = (current - 1 + n) % n;
+    const rightIdx = (current + 1) % n;
+    mainImg.src = galleryPhotos[current];
+    leftImg.src = galleryPhotos[leftIdx];
+    rightImg.src = galleryPhotos[rightIdx];
+    counter.textContent = `${current+1} / ${n}`;
+    dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
   }
+  function goTo(i){ current = (i + n) % n; render(); }
 
-  document.getElementById('prev')?.addEventListener('click', () => goTo(current - 1));
-  document.getElementById('next')?.addEventListener('click', () => goTo(current + 1));
-  dots?.addEventListener('click', e => { const b=e.target.closest('.carousel-dot'); if(b) goTo(parseInt(b.dataset.i)); });
-  thumbsEl?.addEventListener('click', e => { const t=e.target.closest('.thumb'); if(t) goTo(parseInt(t.dataset.i)); });
-
-  // Swipe
-  let sx=0;
-  track.addEventListener('touchstart', e => sx=e.touches[0].clientX, {passive:true});
-  track.addEventListener('touchend', e => { const dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40) goTo(current+(dx<0?1:-1)); }, {passive:true});
+  document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('next').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('galLeft').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('galRight').addEventListener('click', () => goTo(current + 1));
+  dots.addEventListener('click', e => { const b=e.target.closest('.carousel-dot'); if(b) goTo(parseInt(b.dataset.i)); });
 
   // Clavier
   document.addEventListener('keydown', e => { if(e.key==='ArrowLeft') goTo(current-1); if(e.key==='ArrowRight') goTo(current+1); });
+
+  render();
 
 }).catch(() => { document.getElementById('root').innerHTML = '<div class="no-photos">Impossible de charger la livrée.</div>'; });
 
