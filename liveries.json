@@ -94,8 +94,22 @@
     "category": "lmgt3",
     "model": "McLaren 720S LMGT3 Evo",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/mclaren-720s-lmgt3-evo/cover-cover-1787590848288.jpg",
+    "photos": [
+      "images/liveries/mclaren-720s-lmgt3-evo/cover-cover-1787590848288.jpg"
+    ],
+    "description": "<p>Introduite en 2019 et perfectionnée début 2023 grâce au package « Evo », la McLaren 720S GT3 s'impose comme l'une des machines les plus affûtées du plateau GT. Fidèle à la philosophie d'évolution continue propre à la marque de Woking, cette supercar repose sur une architecture à moteur central arrière offrant un centre de gravité très bas et un équilibre naturel parfait. Son optimisation aérodynamique poussée lui confère une agilité redoutable dans les enchaînements rapides ainsi qu'une excellente finesse en pointe de vitesse.</p><p>Sur les grilles d'endurance, la GT britannique s'illustre sous les couleurs de l'écurie de pointe United Autosport. Habillée de livrées d'inspiration rétro qui rappellent le glorieux héritage de McLaren aux 24 Heures du Mans, la 720S GT3 Evo allie une régularité impressionnante en relais à une présence visuelle spectaculaire, confirmant le savoir-faire de la marque britannique au sommet de la compétition automobile.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "4.0l twin turbo V8",
+      "puissance": "600 bhp",
+      "poids": "1345 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4543 mm",
+      "largeur": "2161 mm",
+      "hauteur": "1196 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "porsche-911-lmgt3-r-992",
