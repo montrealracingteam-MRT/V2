@@ -142,6 +142,9 @@
   .crop-frame::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%);opacity:.45;}
   .crop-actions{display:flex;gap:14px;align-items:center;}
   .crop-zoom{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--mrt-fog);}
+  .zoom-step-btn{width:28px;height:28px;border-radius:50%;background:var(--mrt-ink);border:1px solid var(--line-strong);color:#fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+  .zoom-step-btn:hover{border-color:var(--mrt-blue);background:rgba(0,87,255,.15);}
+  .zoom-step-btn:active{transform:scale(.92);}
   .crop-zoom input[type=range]{-webkit-appearance:none;width:140px;height:4px;border-radius:2px;background:var(--line-strong);outline:none;}
   .crop-zoom input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--mrt-blue);cursor:pointer;}
 
@@ -400,9 +403,9 @@
   </div>
   <div class="crop-actions">
     <div class="crop-zoom">
-      <span>−</span>
+      <button type="button" id="cropZoomMinus" class="zoom-step-btn" aria-label="Dézoomer">−</button>
       <input type="range" id="cropZoom" min="50" max="300" value="100" step="1">
-      <span>+</span>
+      <button type="button" id="cropZoomPlus" class="zoom-step-btn" aria-label="Zoomer">+</button>
     </div>
     <button class="btn btn-primary" id="cropConfirm" type="button">Confirmer le recadrage</button>
     <button class="btn btn-ghost" id="cropCancel" type="button">Annuler</button>
@@ -678,7 +681,8 @@ function initCropper(){
   const baseScale=scale;
   // Valeur initiale du slider : 100 = taille actuelle
   zoom.value = 100;
-  zoom.oninput=()=>{
+
+  function applyZoom(){
     const zf=parseInt(zoom.value)/100;
     const newW=_cropNatW*baseScale*zf, newH=_cropNatH*baseScale*zf;
     // zoom centré sur le centre du cadre
@@ -687,27 +691,30 @@ function initCropper(){
     imgW=newW; imgH=newH;
     ox=cx-rx*imgW; oy=cy-ry*imgH;
     clamp(); applyTransform();
-  };
+  }
+  zoom.oninput = applyZoom;
+
+  $('cropZoomMinus').onclick = () => { zoom.value = Math.max(parseInt(zoom.min), parseInt(zoom.value) - 10); applyZoom(); };
+  $('cropZoomPlus').onclick = () => { zoom.value = Math.min(parseInt(zoom.max), parseInt(zoom.value) + 10); applyZoom(); };
 
   // Confirmer
   $('cropConfirm').onclick=()=>{
-    // Calculer la zone source (en pixels naturels) correspondant au cadre
-    let srcX=Math.round((frameL-ox)/imgW*_cropNatW);
-    let srcY=Math.round((frameT-oy)/imgH*_cropNatH);
-    let srcW=Math.round(fw/imgW*_cropNatW);
-    let srcH=Math.round(fh/imgH*_cropNatH);
-    // Sécurité : ne jamais dépasser les bornes réelles de l'image source
-    srcX=Math.max(0, Math.min(srcX, _cropNatW-1));
-    srcY=Math.max(0, Math.min(srcY, _cropNatH-1));
-    srcW=Math.max(1, Math.min(srcW, _cropNatW-srcX));
-    srcH=Math.max(1, Math.min(srcH, _cropNatH-srcY));
+    // Méthode sans jamais déformer : on met à l'échelle l'image ENTIÈRE (proportions intactes)
+    // à la même position/taille relative que ce qui est visible dans le cadre, et on comble
+    // l'espace vide éventuel (quand l'image est plus petite que le cadre) avec un fond uni.
     const OUT=1600, outH=Math.round(OUT*(9/16));
+    const k = OUT / fw; // facteur d'échelle unique du stage vers le rendu final (mêmes proportions 16/9)
+    const drawX = (ox - frameL) * k;
+    const drawY = (oy - frameT) * k;
+    const imgWOut = imgW * k;
+    const imgHOut = imgH * k;
+
     const canvas=document.createElement('canvas'); canvas.width=OUT; canvas.height=outH;
     const ctx=canvas.getContext('2d');
     ctx.fillStyle='#05070D'; ctx.fillRect(0,0,OUT,outH);
     const src=new Image(); src.src=_cropOrigDataUrl;
-    // src est déjà chargée (même objet), on dessine directement
-    ctx.drawImage(src, srcX, srcY, srcW, srcH, 0, 0, OUT, outH);
+    // src est déjà chargée (même objet) — on dessine l'image entière, jamais déformée
+    ctx.drawImage(src, 0, 0, _cropNatW, _cropNatH, drawX, drawY, imgWOut, imgHOut);
     const dataUrl=canvas.toDataURL('image/jpeg',0.82);
     const base64=dataUrl.split(',')[1];
     const kb=Math.round(base64.length*0.75/1024);
@@ -716,6 +723,7 @@ function initCropper(){
     stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
     stage.ontouchstart=null; stage.ontouchmove=null; stage.ontouchend=null;
     zoom.oninput=null; $('cropConfirm').onclick=null;
+    $('cropZoomMinus').onclick=null; $('cropZoomPlus').onclick=null;
 
     if(_cropTarget === 'lv-cover'){
       LV.newCover = { base64, dataUrl, name: 'cover-'+Date.now()+'.jpg' };
@@ -733,6 +741,7 @@ function initCropper(){
     overlay.classList.add('hidden');
     stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
     zoom.oninput=null; $('cropConfirm').onclick=null;
+    $('cropZoomMinus').onclick=null; $('cropZoomPlus').onclick=null;
   };
 }
 
