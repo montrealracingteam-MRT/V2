@@ -158,8 +158,27 @@
     "category": "lmgt3",
     "model": "BMW M4 LMGT3 Evo",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/bmw-m4-lmgt3-evo/cover-cover-1787592436051.jpg",
+    "photos": [
+      "images/liveries/bmw-m4-lmgt3-evo/cover-cover-1787592436051.jpg",
+      "images/liveries/bmw-m4-lmgt3-evo/photo-1787592444173-400.jpg",
+      "images/liveries/bmw-m4-lmgt3-evo/photo-1787592444220-948.jpg",
+      "images/liveries/bmw-m4-lmgt3-evo/photo-1787592444269-379.jpg",
+      "images/liveries/bmw-m4-lmgt3-evo/photo-1787592444311-167.jpg",
+      "images/liveries/bmw-m4-lmgt3-evo/photo-1787592444340-912.jpg"
+    ],
+    "description": "<p>Après cinq ans d'absence dans la catégorie GT du FIA WEC, BMW a réussi son retour au sommet grâce à la M4 GT3. Pour cette offensive internationale, la firme bavaroise s'est associée à la structure de référence Team WRT, confiant notamment l'une de ses machines au nonuple champion du monde de moto Valentino Rossi. Cette alliance stratégique a immédiatement tiré le meilleur d'un châssis allemand affûté, conçu pour succéder aux lignées victorieuses des Z4, M6 et M8 GTE.</p><p>Le temps fort de la saison a été atteint à Imola grâce à un doublé magistral verrouillé par l'écurie. Fort d'une excellente gestion des pneumatiques et d'une grande régularité tout au long de l'année — y compris lors des 24 Heures du Mans —, le Team WRT a décroché une solide 4ᵉ place au classement général final. Cette première campagne réussie confirme le potentiel du package et pose des bases très prometteuses pour les saisons à venir.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "3.0l straight six turbo",
+      "puissance": "590 bhp",
+      "poids": "1339 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "5020 mm",
+      "largeur": "2040 mm",
+      "hauteur": "1308 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "lexus-rc-f-lmgt3",
