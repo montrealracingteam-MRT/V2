@@ -20,40 +20,43 @@
   .hero-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .hero-cover .ph { width: 100%; height: 100%; }
 
-  /* Fiche technique : description + caractéristiques */
-  .specs-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: start; margin-bottom: 52px; }
+  /* Fiche technique : description + caractéristiques — design épuré */
+  .specs-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 44px; align-items: start; margin-bottom: 52px; }
   @media (max-width: 780px) { .specs-layout { grid-template-columns: 1fr; } }
   .car-description { max-width: none; }
 
-  .specs-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  .specs-head { background: var(--mrt-blue); padding: 14px 20px; font-family: var(--display); font-size: 18px; letter-spacing: .04em; color: #fff; text-align: center; }
-  .specs-list { display: flex; flex-direction: column; }
-  .specs-row { padding: 13px 20px; border-bottom: 1px solid var(--line); text-align: center; }
-  .specs-row:last-child { border-bottom: none; }
-  .specs-row .k { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mrt-blue); margin-right: 6px; }
-  .specs-row .v { font-size: 13.5px; color: var(--mrt-white); font-weight: 600; }
+  .specs-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .specs-tile { padding: 4px 0; }
+  .specs-tile .stk { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--mrt-fog); margin-bottom: 4px; }
+  .specs-tile .stv { font-size: 14.5px; color: var(--mrt-white); font-weight: 600; line-height: 1.3; }
 
   .gallery-head { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 22px; display: flex; align-items: center; gap: 12px; }
   .gallery-head::after { content:''; flex:1; height:1px; background: var(--line); }
 
-  /* Carrousel en profondeur — pas de cadre, aperçu gauche/droite plus petit */
-  .gallery-wrap { position: relative; display: flex; align-items: center; justify-content: center; gap: 16px; height: 320px; margin: 0 auto 20px; }
-  .gallery-side { width: 130px; height: 210px; opacity: .38; filter: brightness(.55); transform: scale(.92); transition: all .3s ease; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-  .gallery-side:hover { opacity: .6; }
-  .gallery-side img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .gallery-main { width: 420px; max-width: 58vw; height: 320px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
-  .gallery-main img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; transition: opacity .3s ease, transform .4s ease; cursor: zoom-in; }
-  .gallery-main:hover img { transform: scale(1.07); }
-  .gallery-side img { transition: opacity .3s ease; }
-  @media (max-width: 700px) { .gallery-side { display: none; } .gallery-main { max-width: 90vw; } }
-  .gallery-wrap .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.7); border: 1px solid var(--line-strong); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 3; }
+  /* Carrousel en anneau — glissement physique réel */
+  .gallery-wrap { position: relative; height: 340px; max-width: 900px; margin: 0 auto 22px; overflow: hidden; }
+  .g-slide { position: absolute; left: 50%; top: 50%; width: 380px; height: 280px; display: flex; align-items: center; justify-content: center; transition: transform .5s cubic-bezier(.22,.68,0,1), opacity .5s ease; }
+  .g-slide img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .g-slide.center img { cursor: zoom-in; transition: transform .3s ease; }
+  .g-slide.center:hover img { transform: scale(1.04); }
+  .g-slide.peek { cursor: pointer; }
+  @media (max-width: 700px) { .gallery-wrap { height: 260px; } .g-slide { width: 280px; height: 220px; } }
+
+  .gallery-wrap .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.7); border: 1px solid var(--line-strong); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 20; }
   .gallery-wrap .carousel-btn:hover { background: rgba(0,87,255,.7); }
-  .gallery-wrap .carousel-btn.prev { left: 0; }
-  .gallery-wrap .carousel-btn.next { right: 0; }
-  .gallery-counter { text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--mrt-fog); margin-bottom: 26px; }
+  .gallery-wrap .carousel-btn.prev { left: 8px; }
+  .gallery-wrap .carousel-btn.next { right: 8px; }
   .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
   .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
   .carousel-dot.active { background: var(--mrt-blue); }
+
+  /* Lightbox */
+  .lightbox { position: fixed; inset: 0; background: rgba(5,7,13,.94); z-index: 400; display: none; align-items: center; justify-content: center; padding: 30px; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
+  .lightbox-close { position: absolute; top: 22px; right: 26px; background: rgba(255,255,255,.08); border: 1px solid var(--line-strong); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .lightbox-close:hover { background: rgba(255,255,255,.18); }
 
   /* Palmarès */
   .palmares-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px 30px; margin-bottom: 52px; }
@@ -103,6 +106,11 @@
   <div id="root"><div class="no-photos">Chargement…</div></div>
 </div>
 
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">×</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
 <footer style="margin-top:90px;">
   <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);">
     <div class="footer-top">
@@ -144,10 +152,10 @@ function specsHTML(car){
     ['Transmission', s.transmission],
     ['Meilleur résultat', s.resultat]
   ].filter(([k,v]) => v && String(v).trim());
-  if(rows.length <= 1) return ''; // rien d'utile à afficher hors catégorie seule
-  return `<div class="specs-card">
-    <div class="specs-head">Caractéristiques techniques</div>
-    <div class="specs-list">${rows.map(([k,v]) => `<div class="specs-row"><span class="k">${esc(k)} :</span><span class="v">${esc(v)}</span></div>`).join('')}</div>
+  if(rows.length <= 1) return '';
+  return `<div>
+    <div class="specs-eyebrow">Caractéristiques techniques</div>
+    <div class="specs-grid">${rows.map(([k,v]) => `<div class="specs-tile"><div class="stk">${esc(k)}</div><div class="stv">${esc(v)}</div></div>`).join('')}</div>
   </div>`;
 }
 const id = new URLSearchParams(location.search).get('id');
@@ -185,18 +193,15 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
     if(n === 1){
       return `
         <div class="gallery-head">Galerie photos</div>
-        <div class="gallery-wrap"><div class="gallery-main"><img src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
+        <div class="gallery-wrap"><div class="g-slide center" style="transform:translate(-50%,-50%);"><img id="lightboxTrigger0" src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
     }
     return `
       <div class="gallery-head">Galerie photos</div>
-      <div class="gallery-wrap">
+      <div class="gallery-wrap" id="galWrap">
         <button class="carousel-btn prev" id="prev" aria-label="Précédent">‹</button>
-        <div class="gallery-side" id="galLeft"><img id="galLeftImg" alt=""></div>
-        <div class="gallery-main"><img id="galMainImg" alt="${esc(car.model)}"></div>
-        <div class="gallery-side" id="galRight"><img id="galRightImg" alt=""></div>
+        ${galleryPhotos.map((p,i) => `<div class="g-slide" data-i="${i}"><img src="${p}" alt="${esc(car.model)}" loading="lazy"></div>`).join('')}
         <button class="carousel-btn next" id="next" aria-label="Suivant">›</button>
       </div>
-      <div class="gallery-counter" id="counter"></div>
       <div class="carousel-dots" id="dots">${galleryPhotos.map((_,i)=>`<button class="carousel-dot" data-i="${i}" aria-label="Photo ${i+1}"></button>`).join('')}</div>`;
   }
 
@@ -226,42 +231,74 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
     ${galleryHTML()}`;
 
-  if(galleryPhotos.length < 2) return;
+  if(galleryPhotos.length < 2){
+    // Une seule photo : juste la lightbox au clic
+    const only = document.getElementById('lightboxTrigger0');
+    if(only) only.addEventListener('click', () => openLightbox(only.src));
+    wireLightboxClose();
+    return;
+  }
 
+  const wrap = document.getElementById('galWrap');
   const dots = document.getElementById('dots');
-  const counter = document.getElementById('counter');
-  const mainImg = document.getElementById('galMainImg');
-  const leftImg = document.getElementById('galLeftImg');
-  const rightImg = document.getElementById('galRightImg');
+  const slides = [...wrap.querySelectorAll('.g-slide')];
   const n = galleryPhotos.length;
 
-  function render(){
-    const leftIdx = (current - 1 + n) % n;
-    const rightIdx = (current + 1) % n;
-    [mainImg, leftImg, rightImg].forEach(im => im.style.opacity = '0');
-    setTimeout(() => {
-      mainImg.src = galleryPhotos[current];
-      leftImg.src = galleryPhotos[leftIdx];
-      rightImg.src = galleryPhotos[rightIdx];
-      counter.textContent = `${current+1} / ${n}`;
-      dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
-      [mainImg, leftImg, rightImg].forEach(im => im.style.opacity = '1');
-    }, 180);
+  function layout(){
+    slides.forEach((el, i) => {
+      let delta = i - current;
+      if(delta > n/2) delta -= n;
+      if(delta < -n/2) delta += n;
+      const abs = Math.abs(delta);
+      const SPACING = 300;
+      const x = delta * SPACING;
+      const scale = abs === 0 ? 1 : abs === 1 ? 0.72 : 0.5;
+      const opacity = abs <= 1 ? 1 : 0;
+      const z = 10 - abs;
+      el.style.transform = `translate(-50%, -50%) translateX(${x}px) scale(${scale})`;
+      el.style.opacity = opacity;
+      el.style.zIndex = z;
+      el.style.pointerEvents = abs <= 1 ? 'auto' : 'none';
+      el.classList.toggle('center', delta === 0);
+      el.classList.toggle('peek', abs === 1);
+    });
+    dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
   }
-  function goTo(i){ current = (i + n) % n; render(); }
+
+  function goTo(i){ current = (i + n) % n; layout(); }
+
+  slides.forEach((el, i) => {
+    el.addEventListener('click', () => {
+      const delta = ((i - current + n + Math.floor(n/2)) % n) - Math.floor(n/2);
+      if(delta === 0){ openLightbox(galleryPhotos[i]); }
+      else { goTo(i); }
+    });
+  });
 
   document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
   document.getElementById('next').addEventListener('click', () => goTo(current + 1));
-  document.getElementById('galLeft').addEventListener('click', () => goTo(current - 1));
-  document.getElementById('galRight').addEventListener('click', () => goTo(current + 1));
   dots.addEventListener('click', e => { const b=e.target.closest('.carousel-dot'); if(b) goTo(parseInt(b.dataset.i)); });
 
-  // Clavier
-  document.addEventListener('keydown', e => { if(e.key==='ArrowLeft') goTo(current-1); if(e.key==='ArrowRight') goTo(current+1); });
+  document.addEventListener('keydown', e => {
+    if(e.key==='ArrowLeft') goTo(current-1);
+    if(e.key==='ArrowRight') goTo(current+1);
+    if(e.key==='Escape') closeLightbox();
+  });
 
-  render();
+  wireLightboxClose();
+  layout();
 
 }).catch(() => { document.getElementById('root').innerHTML = '<div class="no-photos">Impossible de charger la livrée.</div>'; });
+
+function openLightbox(src){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+function wireLightboxClose(){
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id === 'lightbox') closeLightbox(); });
+}
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
