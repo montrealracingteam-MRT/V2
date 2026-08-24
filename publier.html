@@ -291,12 +291,33 @@
 <div style="max-width:1240px;margin:0 auto;padding:28px;">
 
   <div class="card" style="margin-bottom:24px;">
+    <div class="card-head"><h2>Ajouter une voiture</h2></div>
+    <div class="card-body">
+      <div class="row2">
+        <label class="field"><span>Modèle</span><input type="text" id="lv-new-model" placeholder="Ex : Ferrari 296 GT3"></label>
+        <label class="field"><span>Catégorie</span>
+          <select id="lv-new-category">
+            <option value="hypercar">Hypercar</option>
+            <option value="lmp2">LMP2</option>
+            <option value="lmp3">LMP3</option>
+            <option value="lmgt3" selected>LMGT3</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="lv-create-btn" type="button">+ Ajouter cette voiture</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;">
     <div class="card-head"><h2>Gérer les livrées</h2><span class="hint" id="lv-count">—</span></div>
     <div class="card-body">
       <p class="help" style="margin-bottom:18px;">Clique sur une livrée pour voir son album et ajouter des photos.</p>
       <div id="lv-list"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les livrées.</div></div>
     </div>
   </div>
+
 
   <!-- Album d'une livrée -->
   <div class="card" id="lv-album" style="display:none;">
@@ -872,7 +893,7 @@ const LV = {
   renderList(){
     const el = document.getElementById('lv-list');
     document.getElementById('lv-count').textContent = LV.cars.length + ' livrée' + (LV.cars.length>1?'s':'');
-    if(!LV.cars.length){ el.innerHTML = '<div class="empty">Aucune livrée trouvée.</div>'; return; }
+    if(!LV.cars.length){ el.innerHTML = '<div class="empty">Aucune livrée trouvée. Ajoute ta première voiture ci-dessus.</div>'; return; }
     el.innerHTML = LV.cars.map(car => `
       <div class="art-item">
         <div class="art-thumb">${car.cover ? `<img src="${car.cover}" alt="">` : '<span class="ph">—</span>'}</div>
@@ -881,9 +902,61 @@ const LV = {
           <h4>${car.model.replace(/</g,'&lt;')}</h4>
           <div class="ai-date">${(car.photos||[]).length} photo(s)</div>
         </div>
-        <div class="art-ops"><button class="op" data-open="${car.id}">Ouvrir l'album</button></div>
+        <div class="art-ops">
+          <button class="op" data-open="${car.id}">Ouvrir l'album</button>
+          <button class="op del" data-del="${car.id}">Supprimer</button>
+        </div>
       </div>`).join('');
     el.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => LV.openAlbum(b.dataset.open)));
+    el.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => LV.deleteCar(b.dataset.del)));
+  },
+
+  async createCar(){
+    const modelInput = document.getElementById('lv-new-model');
+    const model = modelInput.value.trim();
+    if(!model){ toast('Donne un nom de modèle.', 'bad'); return; }
+    const category = document.getElementById('lv-new-category').value;
+    let id = slugify(model);
+    if(LV.cars.some(c => c.id === id)) id = id + '-' + Math.floor(Math.random()*1000);
+    const newCar = { id, category, model, artist: 'SDL', cover: '', photos: [] };
+
+    const btn = document.getElementById('lv-create-btn');
+    const label = btn.textContent;
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Ajout…';
+    try{
+      LV.cars.push(newCar);
+      const json = JSON.stringify(LV.cars, null, 2);
+      const ok = await putFile('liveries.json', utf8_to_b64(json), `Nouvelle voiture : ${model}`, false, () => LV.sha, s => LV.sha = s);
+      if(!ok) throw new Error('écriture liveries.json impossible');
+      toast('Voiture ajoutée !', 'ok');
+      modelInput.value = '';
+      LV.renderList();
+      LV.openAlbum(id); // ouvre directement l'album pour ajouter une photo
+    }catch(e){
+      LV.cars = LV.cars.filter(c => c.id !== id); // annule l'ajout local si l'écriture a échoué
+      toast('Échec : ' + e.message, 'bad');
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  },
+
+  async deleteCar(id){
+    const car = LV.cars.find(c => c.id === id);
+    if(!car) return;
+    if(!confirm(`Supprimer définitivement « ${car.model} » et toutes ses photos de la liste ?\n\n(Les fichiers image resteront sur GitHub mais ne seront plus utilisés.)`)) return;
+    const previous = LV.cars;
+    LV.cars = LV.cars.filter(c => c.id !== id);
+    try{
+      const json = JSON.stringify(LV.cars, null, 2);
+      const ok = await putFile('liveries.json', utf8_to_b64(json), `Suppression voiture : ${car.model}`, false, () => LV.sha, s => LV.sha = s);
+      if(!ok) throw new Error('écriture liveries.json impossible');
+      toast('Voiture supprimée.', 'ok');
+      if(LV.current && LV.current.id === id){ document.getElementById('lv-album').style.display = 'none'; LV.current = null; }
+      LV.renderList();
+    }catch(e){
+      LV.cars = previous;
+      toast('Échec : ' + e.message, 'bad');
+    }
   },
 
   openAlbum(id){
@@ -1049,6 +1122,8 @@ const LV = {
     finally{ btn.disabled = false; btn.textContent = label; }
   }
 };
+
+document.getElementById('lv-create-btn').addEventListener('click', () => LV.createCar());
 
 document.getElementById('lv-cover-input').addEventListener('change', e => {
   const file = e.target.files[0];
