@@ -20,8 +20,26 @@
     "category": "lmp2",
     "model": "Oreca 07 ELMS",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/oreca-07-elms/cover-photo-1787589177785-724.jpg",
+    "photos": [
+      "images/liveries/oreca-07-elms/cover-photo-1787589177785-724.jpg",
+      "images/liveries/oreca-07-elms/photo-1787589187496-876.jpg",
+      "images/liveries/oreca-07-elms/photo-1787589187533-999.jpg",
+      "images/liveries/oreca-07-elms/photo-1787589187568-854.jpg",
+      "images/liveries/oreca-07-elms/photo-1787589187625-984.jpg"
+    ],
+    "description": "<p>La catégorie LMP2 s'impose comme le baromètre de la performance pure et le tremplin ultime vers l'élite du FIA WEC. Reposant sur une formule éprouvée, un châssis ORECA agile, un moteur V8 atmosphérique Gibson de 4,2 litres et une monte pneumatique unique Goodyear, elle garantit une équité technique parfaite. Sa légèreté et ses vitesses en courbe permettent même aux meilleurs équipages de venir menacer les Hypercars les moins rapides dans le trafic.</p><p>L'édition 2024 des 24 Heures du Mans a une nouvelle fois illustré la densité de ce plateau, où chaque dixième de seconde s'arrache à la régularité du pilotage et à la stratégie. En combinant matériel identique et affrontements roue contre roue du départ au drapeau à damier, le LMP2 demeure l'une des formules les plus exigeantes et spectaculaires de l'endurance moderne.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "4.2-litre V8",
+      "puissance": "603 bhp",
+      "poids": "930kg (sans carburant ni pilote)",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4745mm",
+      "largeur": "1895mm",
+      "hauteur": "1045mm",
+      "resultat": ""
+    }
   },
   {
     "id": "oreca-07-wec",
