@@ -582,6 +582,7 @@ $('imgRecrop').addEventListener('click',()=>{
 
 /* ===== RECADREUR ===== */
 let _cropOrigDataUrl=''; // dataUrl pleine résolution de la source
+let _cropTarget='article'; // 'article' ou 'lv-cover' — décide où va le résultat du recadrage
 let _cropNatW=0, _cropNatH=0; // dimensions naturelles de la source
 
 function openCropper(file){
@@ -689,18 +690,22 @@ function initCropper(){
     const dataUrl=canvas.toDataURL('image/jpeg',0.82);
     const base64=dataUrl.split(',')[1];
     const kb=Math.round(base64.length*0.75/1024);
-    pendingImage={ dataUrl, base64, isNew:true };
-    $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
-    $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
     overlay.classList.add('hidden');
     // cleanup listeners
     stage.onmousedown=null; window.onmousemove=null; window.onmouseup=null;
     stage.ontouchstart=null; stage.ontouchmove=null; stage.ontouchend=null;
     zoom.oninput=null; $('cropConfirm').onclick=null;
-    pendingImage={ dataUrl, base64, isNew:true };
-    $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
-    $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
-    syncPreview();
+
+    if(_cropTarget === 'lv-cover'){
+      LV.newCover = { base64, dataUrl, name: 'cover-'+Date.now()+'.jpg' };
+      LV.coverRemoved = false;
+      LV.renderAlbum();
+    } else {
+      pendingImage={ dataUrl, base64, isNew:true };
+      $('imgPreviewEl').src=dataUrl; $('imgPreview').style.display='block';
+      $('imgMeta').textContent=`Recadrée 16/9 · ${OUT}×${outH} px · ~${kb} Ko`;
+      syncPreview();
+    }
   };
 
   $('cropCancel').onclick=()=>{
@@ -923,7 +928,11 @@ const LV = {
     // ---- Photo principale ----
     const coverBox = document.getElementById('lv-cover-box');
     if(LV.newCover){
-      coverBox.innerHTML = `<img src="${LV.newCover.dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+      coverBox.innerHTML = `<img src="${LV.newCover.dataUrl}" style="width:100%;height:100%;object-fit:cover;">
+        <button id="lv-cover-recrop" style="position:absolute;top:8px;right:96px;background:rgba(0,87,255,.85);border:1px solid var(--mrt-blue);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">✂ Recadrer</button>
+        <button id="lv-cover-remove" style="position:absolute;top:8px;right:8px;background:rgba(5,7,13,.85);border:1px solid var(--line-strong);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Retirer</button>`;
+      document.getElementById('lv-cover-recrop').addEventListener('click', () => { _cropTarget = 'lv-cover'; initCropper(); });
+      document.getElementById('lv-cover-remove').addEventListener('click', () => { LV.newCover = null; LV.renderAlbum(); });
     } else if(car.cover && !LV.coverRemoved){
       coverBox.innerHTML = `<img src="${car.cover}" style="width:100%;height:100%;object-fit:cover;">
         <button id="lv-cover-remove" style="position:absolute;top:8px;right:8px;background:rgba(5,7,13,.85);border:1px solid var(--line-strong);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Retirer</button>`;
@@ -1042,9 +1051,23 @@ const LV = {
 };
 
 document.getElementById('lv-cover-input').addEventListener('change', e => {
-  if(e.target.files[0]) LV.handleCoverFile(e.target.files[0]);
+  const file = e.target.files[0];
+  if(file) openLivCoverCropper(file);
   e.target.value = '';
 });
+
+function openLivCoverCropper(file){
+  if(!file.type.startsWith('image/')){ toast('Ce fichier n\'est pas une image.','bad'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    _cropOrigDataUrl = e.target.result;
+    _cropTarget = 'lv-cover';
+    const tmp = new Image();
+    tmp.onload = () => { _cropNatW = tmp.naturalWidth; _cropNatH = tmp.naturalHeight; initCropper(); };
+    tmp.src = _cropOrigDataUrl;
+  };
+  reader.readAsDataURL(file);
+}
 document.getElementById('lv-carousel-input').addEventListener('change', e => {
   [...e.target.files].forEach(f => LV.handleCarouselFile(f));
   e.target.value = '';
