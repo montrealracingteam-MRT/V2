@@ -12,8 +12,22 @@
     "category": "hypercar",
     "model": "Genesis GMR-001 LMDh",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/genesis-gmr-001/cover-cover-1787591994412.jpg",
+    "photos": [
+      "images/liveries/genesis-gmr-001/cover-cover-1787591994412.jpg"
+    ],
+    "description": "<p>Pour ses grands débuts dans la catégorie reine Hypercar, la division Genesis Magma Racing s'est associée à ORECA et Hyundai Motorsport pour concevoir le prototype hybride GMR-001 LMDh. Revêtue d'une carrosserie au style « Athletic Elegance », cette machine embarque un groupe motopropulseur hybride délivrant environ 690 PS. Sa mécanique repose sur un V8 biturbo de 3,2 litres directement issu de l'expérience de Hyundai en WRC, couplé à un moteur électrique sur le train avant et une boîte séquentielle Xtrac à sept rapports.</p><p>Alignant deux voitures confiées à des équipages expérimentés, la formation coréenne a rapidement concrétisé ses efforts avec une 8ᵉ place à Spa-Francorchamps, inscrivant ses premiers points historiques en FIA WEC. Lors des 24 Heures du Mans, la n° 19 a fait preuve d'une remarquable fiabilité en couvrant 372 tours pour franchir la ligne d'arrivée au 13ᵉ rang, malgré l'abandon de la n° 17 sur souci mécanique. Cette première campagne d'apprentissage apporte des kilomètres précieux et pose des fondations très solides pour l'avenir de la marque en endurance.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "3.2-litre twin-turbo V8",
+      "puissance": "690 ps",
+      "poids": "1030 kg",
+      "transmission": "",
+      "longueur": "5000 mm",
+      "largeur": "2000 mm",
+      "hauteur": "",
+      "resultat": ""
+    }
   },
   {
     "id": "oreca-07-elms",
