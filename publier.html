@@ -309,6 +309,11 @@
         <textarea id="lv-description" rows="4" placeholder="Quelques lignes sur cette livrée, sa signification, son histoire, etc."></textarea>
       </label>
 
+      <label class="field"><span>Palmarès de cette voiture chez MRT (optionnel)</span>
+        <textarea id="lv-palmares" rows="4" placeholder="Un résultat par ligne. Ex :&#10;1er — 4h de Spa (2026)&#10;3e — 6h de COTA (2026)"></textarea>
+        <p class="help">Un résultat par ligne — chaque ligne devient un point dans la liste sur la fiche de la voiture.</p>
+      </label>
+
       <label class="field"><span>Caractéristiques techniques (optionnel — laisse vide ce que tu ne connais pas)</span></label>
       <div class="row2">
         <label class="field"><span>Moteur</span><input type="text" id="lv-spec-moteur" placeholder="Ex : V6 biturbo 3.0 litres"></label>
@@ -863,6 +868,7 @@ const LV = {
     document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
     document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
     document.getElementById('lv-description').value = LV.current.description || '';
+    document.getElementById('lv-palmares').value = LV.current.palmares || '';
     const specs = LV.current.specs || {};
     document.getElementById('lv-spec-moteur').value = specs.moteur || '';
     document.getElementById('lv-spec-puissance').value = specs.puissance || '';
@@ -996,7 +1002,7 @@ const LV = {
         hauteur: document.getElementById('lv-spec-hauteur').value.trim(),
         resultat: document.getElementById('lv-spec-resultat').value.trim()
       };
-      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), specs, cover: coverPath, photos: allPhotos };
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), palmares: document.getElementById('lv-palmares').value.trim(), specs, cover: coverPath, photos: allPhotos };
 
       const json = JSON.stringify(LV.cars, null, 2);
       const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
