@@ -80,6 +80,12 @@ fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
 }).catch(()=>{ document.getElementById('root').innerHTML='<div class="art-loading">Impossible de charger l\'article.</div>'; });
 
 addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('scrolled', scrollY>20); });
+
+// Sécurité supplémentaire pour le menu déroulant Liveries (en plus du CSS :hover)
+document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+  dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+  dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+});
 </script>
 </body>
 </html>

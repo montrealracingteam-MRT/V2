@@ -223,6 +223,12 @@
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.10 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Sécurité supplémentaire pour le menu déroulant Liveries (en plus du CSS :hover)
+document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+  dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+  dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+});
 </script>
 </body>
 </html>

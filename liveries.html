@@ -29,12 +29,12 @@
 
   /* Grille voitures */
   .cars-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  .car-card { background: var(--mrt-panel); display: block; text-decoration: none; transition: background .2s; position: relative; overflow: hidden; }
-  .car-card:hover { background: var(--mrt-ink); }
-  .car-card:hover .car-cta { color: var(--mrt-white); }
+  .lv-card { background: var(--mrt-panel); display: block; text-decoration: none; transition: background .2s; position: relative; overflow: hidden; }
+  .lv-card:hover { background: var(--mrt-ink); }
+  .lv-card:hover .car-cta { color: var(--mrt-white); }
   .car-visual { aspect-ratio: 16/9; overflow: hidden; background: var(--mrt-ink); display: flex; align-items: center; justify-content: center; }
   .car-visual img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
-  .car-card:hover .car-visual img { transform: scale(1.04); }
+  .lv-card:hover .car-visual img { transform: scale(1.04); }
   .car-no-photo { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--mrt-fog); }
   .car-body { padding: 20px 22px 22px; }
   .car-cat { font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-blue); margin-bottom: 6px; }
@@ -56,7 +56,15 @@
     <a href="a-propos.html">À propos</a>
     <a href="actualites.html">Actualités</a>
     <a href="palmares.html">Palmarès</a>
-    <a href="liveries.html" style="color:var(--mrt-white);">Liveries</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html" style="color:var(--mrt-white);">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
     <a href="boutique.html">Boutique</a>
     <a href="recrutement.html">Recrutement</a>
   </div>
@@ -131,6 +139,23 @@ function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').repla
 let allCars = [];
 let activeCat = 'all';
 
+// Lire la catégorie depuis l'ancre de l'URL (#hypercar, #lmp2, etc.)
+function applyHashCategory(){
+  const hashCat = location.hash.replace('#','').toLowerCase();
+  if(['hypercar','lmp2','lmp3','lmgt3'].includes(hashCat)){
+    activeCat = hashCat;
+  } else {
+    activeCat = 'all';
+  }
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === activeCat));
+  render();
+}
+applyHashCategory();
+
+// Si on est déjà sur liveries.html et qu'on clique un lien vers une autre catégorie
+// (ex: depuis le sous-menu Liveries du nav), l'URL change de hash sans recharger la page.
+window.addEventListener('hashchange', applyHashCategory);
+
 fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).then(list => {
   allCars = Array.isArray(list) ? list : [];
   render();
@@ -146,7 +171,7 @@ function render(){
     return;
   }
   grid.innerHTML = filtered.map(car => `
-    <a class="car-card" href="livery.html?id=${encodeURIComponent(car.id)}">
+    <a class="lv-card" href="livery.html?id=${encodeURIComponent(car.id)}">
       <div class="car-visual">
         ${car.cover ? `<img src="${car.cover}" alt="${esc(car.model)}" loading="lazy">` : SVG_PH}
       </div>
@@ -177,6 +202,12 @@ document.getElementById('navToggle').addEventListener('click', () => mobileNav.s
 document.getElementById('mobileNavClose').addEventListener('click', () => mobileNav.style.display = 'none');
 const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:.1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Sécurité supplémentaire pour le menu déroulant Liveries (en plus du CSS :hover)
+document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+  dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+  dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+});
 </script>
 </body>
 </html>
