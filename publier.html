@@ -309,6 +309,24 @@
         <textarea id="lv-description" rows="4" placeholder="Quelques lignes sur cette livrée, sa signification, son histoire, etc."></textarea>
       </label>
 
+      <label class="field"><span>Caractéristiques techniques (optionnel — laisse vide ce que tu ne connais pas)</span></label>
+      <div class="row2">
+        <label class="field"><span>Moteur</span><input type="text" id="lv-spec-moteur" placeholder="Ex : V6 biturbo 3.0 litres"></label>
+        <label class="field"><span>Puissance</span><input type="text" id="lv-spec-puissance" placeholder="Ex : 670 bhp / 500 kW"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Poids</span><input type="text" id="lv-spec-poids" placeholder="Ex : 1057 kg"></label>
+        <label class="field"><span>Transmission</span><input type="text" id="lv-spec-transmission" placeholder="Ex : séquentielle à 7 vitesses"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Longueur</span><input type="text" id="lv-spec-longueur" placeholder="Ex : 5100 mm"></label>
+        <label class="field"><span>Largeur</span><input type="text" id="lv-spec-largeur" placeholder="Ex : 2000 mm"></label>
+      </div>
+      <div class="row2">
+        <label class="field"><span>Hauteur</span><input type="text" id="lv-spec-hauteur" placeholder="Ex : 1055 mm"></label>
+        <label class="field"><span>Meilleur résultat</span><input type="text" id="lv-spec-resultat" placeholder="Ex : 1er — 24 Heures du Mans (2023)"></label>
+      </div>
+
       <!-- Photo principale -->
       <label class="field"><span>Photo principale — affichée sur le site (couverture)</span></label>
       <div id="lv-cover-box" style="aspect-ratio:16/9;max-width:480px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--mrt-ink);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;">
@@ -845,6 +863,15 @@ const LV = {
     document.getElementById('lv-album-sub').textContent = LV.CATS[LV.current.category] || LV.current.category;
     document.getElementById('lv-artist').value = LV.current.artist || 'SDL';
     document.getElementById('lv-description').value = LV.current.description || '';
+    const specs = LV.current.specs || {};
+    document.getElementById('lv-spec-moteur').value = specs.moteur || '';
+    document.getElementById('lv-spec-puissance').value = specs.puissance || '';
+    document.getElementById('lv-spec-poids').value = specs.poids || '';
+    document.getElementById('lv-spec-transmission').value = specs.transmission || '';
+    document.getElementById('lv-spec-longueur').value = specs.longueur || '';
+    document.getElementById('lv-spec-largeur').value = specs.largeur || '';
+    document.getElementById('lv-spec-hauteur').value = specs.hauteur || '';
+    document.getElementById('lv-spec-resultat').value = specs.resultat || '';
     document.getElementById('lv-cover-input').value = '';
     document.getElementById('lv-carousel-input').value = '';
     LV.renderAlbum();
@@ -959,7 +986,17 @@ const LV = {
       const allPhotos = [...new Set([...(coverPath ? [coverPath] : []), ...carouselFinal])];
 
       const idx = LV.cars.findIndex(c => c.id === LV.current.id);
-      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), cover: coverPath, photos: allPhotos };
+      const specs = {
+        moteur: document.getElementById('lv-spec-moteur').value.trim(),
+        puissance: document.getElementById('lv-spec-puissance').value.trim(),
+        poids: document.getElementById('lv-spec-poids').value.trim(),
+        transmission: document.getElementById('lv-spec-transmission').value.trim(),
+        longueur: document.getElementById('lv-spec-longueur').value.trim(),
+        largeur: document.getElementById('lv-spec-largeur').value.trim(),
+        hauteur: document.getElementById('lv-spec-hauteur').value.trim(),
+        resultat: document.getElementById('lv-spec-resultat').value.trim()
+      };
+      LV.cars[idx] = { ...LV.current, artist: document.getElementById('lv-artist').value.trim() || 'SDL', description: document.getElementById('lv-description').value.trim(), specs, cover: coverPath, photos: allPhotos };
 
       const json = JSON.stringify(LV.cars, null, 2);
       const ok = await putFile('liveries.json', utf8_to_b64(json), `Livrée mise à jour : ${LV.current.model}`, false, () => LV.sha, s => LV.sha = s);
