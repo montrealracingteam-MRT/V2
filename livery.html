@@ -23,7 +23,7 @@
   /* Fiche technique : description + caractéristiques */
   .specs-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: start; margin-bottom: 52px; }
   @media (max-width: 780px) { .specs-layout { grid-template-columns: 1fr; } }
-  .car-description { font-size: 15px; color: var(--mrt-fog); line-height: 1.75; white-space: pre-line; }
+  .car-description { max-width: none; }
 
   .specs-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .specs-head { background: var(--mrt-blue); padding: 14px 20px; font-family: var(--display); font-size: 18px; letter-spacing: .04em; color: #fff; text-align: center; }
@@ -41,8 +41,10 @@
   .gallery-side { width: 130px; height: 210px; opacity: .38; filter: brightness(.55); transform: scale(.92); transition: all .3s ease; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
   .gallery-side:hover { opacity: .6; }
   .gallery-side img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .gallery-main { width: 420px; max-width: 58vw; height: 320px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .gallery-main img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .gallery-main { width: 420px; max-width: 58vw; height: 320px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+  .gallery-main img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; transition: opacity .3s ease, transform .4s ease; cursor: zoom-in; }
+  .gallery-main:hover img { transform: scale(1.07); }
+  .gallery-side img { transition: opacity .3s ease; }
   @media (max-width: 700px) { .gallery-side { display: none; } .gallery-main { max-width: 90vw; } }
   .gallery-wrap .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.7); border: 1px solid var(--line-strong); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 3; }
   .gallery-wrap .carousel-btn:hover { background: rgba(0,87,255,.7); }
@@ -216,7 +218,7 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
     ${(car.description || specsHTML(car)) ? `
     <div class="specs-layout">
-      ${car.description ? `<p class="car-description">${esc(car.description)}</p>` : '<div></div>'}
+      ${car.description ? `<div class="article-content car-description">${car.description}</div>` : '<div></div>'}
       ${specsHTML(car)}
     </div>` : ''}
 
@@ -236,11 +238,15 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
   function render(){
     const leftIdx = (current - 1 + n) % n;
     const rightIdx = (current + 1) % n;
-    mainImg.src = galleryPhotos[current];
-    leftImg.src = galleryPhotos[leftIdx];
-    rightImg.src = galleryPhotos[rightIdx];
-    counter.textContent = `${current+1} / ${n}`;
-    dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
+    [mainImg, leftImg, rightImg].forEach(im => im.style.opacity = '0');
+    setTimeout(() => {
+      mainImg.src = galleryPhotos[current];
+      leftImg.src = galleryPhotos[leftIdx];
+      rightImg.src = galleryPhotos[rightIdx];
+      counter.textContent = `${current+1} / ${n}`;
+      dots.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===current));
+      [mainImg, leftImg, rightImg].forEach(im => im.style.opacity = '1');
+    }, 180);
   }
   function goTo(i){ current = (i + n) % n; render(); }
 
