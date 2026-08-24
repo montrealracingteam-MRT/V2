@@ -39,7 +39,7 @@
   .gallery-wrap.zoomed { overflow: visible; }
   .g-slide { position: absolute; left: 50%; top: 50%; width: 380px; height: 280px; display: flex; align-items: center; justify-content: center; transition: transform .85s cubic-bezier(.22,.68,0,1), opacity .85s ease; }
   .g-slide img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .g-slide.center img { transition: transform .6s ease; }
+  .g-slide.center img { transition: transform .6s ease; cursor: zoom-in; }
   .g-slide.center:hover img { transform: scale(1.38); }
   .g-slide.peek { cursor: pointer; }
   @media (max-width: 700px) { .gallery-wrap { height: 260px; } .g-slide { width: 280px; height: 220px; } .g-slide.center:hover img { transform: scale(1.15); } }
@@ -51,6 +51,13 @@
   .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
   .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
   .carousel-dot.active { background: var(--mrt-blue); }
+
+  /* Lightbox — vue détaillée au clic */
+  .lightbox { position: fixed; inset: 0; background: rgba(5,7,13,.95); z-index: 400; display: none; align-items: center; justify-content: center; padding: 30px; cursor: zoom-out; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 94vw; max-height: 92vh; object-fit: contain; border-radius: 4px; cursor: default; }
+  .lightbox-close { position: absolute; top: 22px; right: 26px; background: rgba(255,255,255,.08); border: 1px solid var(--line-strong); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .lightbox-close:hover { background: rgba(255,255,255,.18); }
 
   /* Palmarès */
   .palmares-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px 30px; margin-bottom: 52px; }
@@ -100,6 +107,11 @@
 <div class="wrap page-top">
   <a class="back-link" href="liveries.html">← Toutes les livrées</a>
   <div id="root"><div class="no-photos">Chargement…</div></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">×</button>
+  <img id="lightboxImg" src="" alt="">
 </div>
 
 <footer style="margin-top:90px;">
@@ -184,7 +196,7 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
     if(n === 1){
       return `
         <div class="gallery-head">Galerie photos</div>
-        <div class="gallery-wrap"><div class="g-slide center" style="transform:translate(-50%,-50%);"><img src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
+        <div class="gallery-wrap"><div class="g-slide center" id="onlySlide" style="transform:translate(-50%,-50%);"><img src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
     }
     return `
       <div class="gallery-head">Galerie photos</div>
@@ -223,12 +235,19 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
     ${galleryHTML()}`;
 
-  if(galleryPhotos.length < 2) return;
+  wireLightboxClose();
+
+  if(galleryPhotos.length < 2){
+    const only = document.getElementById('onlySlide');
+    if(only) only.addEventListener('click', () => openLightbox(only.querySelector('img').src));
+    return;
+  }
 
   const wrap = document.getElementById('galWrap');
   const dots = document.getElementById('dots');
   const slides = [...wrap.querySelectorAll('.g-slide')];
   const n = galleryPhotos.length;
+  let autoplayTimer = null;
 
   function layout(){
     slides.forEach((el, i) => {
@@ -253,29 +272,51 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
   function goTo(i){ current = (i + n) % n; layout(); }
 
-  // Les cartes latérales (peek) naviguent au clic — la carte centrale ne fait rien au clic, seulement au survol (zoom)
+  // Les cartes latérales naviguent au clic. La carte centrale s'agrandit en grand (lightbox).
   slides.forEach((el, i) => {
     el.addEventListener('click', () => {
       if(el.classList.contains('peek')) goTo(i);
+      else if(el.classList.contains('center')) openLightbox(galleryPhotos[i]);
     });
   });
 
-  // Permet au zoom de la photo centrale de déborder visuellement sans être coupé par le carrousel
+  // Zoom au survol de la photo centrale, sans être coupé par le carrousel
   wrap.addEventListener('mouseover', e => { if(e.target.closest('.g-slide.center')) wrap.classList.add('zoomed'); });
   wrap.addEventListener('mouseout', e => { if(e.target.closest('.g-slide.center')) wrap.classList.remove('zoomed'); });
 
-  document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
-  document.getElementById('next').addEventListener('click', () => goTo(current + 1));
-  dots.addEventListener('click', e => { const b=e.target.closest('.carousel-dot'); if(b) goTo(parseInt(b.dataset.i)); });
+  document.getElementById('prev').addEventListener('click', () => { goTo(current - 1); restartAutoplay(); });
+  document.getElementById('next').addEventListener('click', () => { goTo(current + 1); restartAutoplay(); });
+  dots.addEventListener('click', e => { const b=e.target.closest('.carousel-dot'); if(b){ goTo(parseInt(b.dataset.i)); restartAutoplay(); } });
 
   document.addEventListener('keydown', e => {
-    if(e.key==='ArrowLeft') goTo(current-1);
-    if(e.key==='ArrowRight') goTo(current+1);
+    if(e.key==='ArrowLeft'){ goTo(current-1); restartAutoplay(); }
+    if(e.key==='ArrowRight'){ goTo(current+1); restartAutoplay(); }
+    if(e.key==='Escape') closeLightbox();
   });
 
+  // Défilement automatique — pause au survol du carrousel ou quand la vue agrandie est ouverte
+  function startAutoplay(){ autoplayTimer = setInterval(() => goTo(current + 1), 4000); }
+  function stopAutoplay(){ if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; } }
+  function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
+
+  wrap.addEventListener('mouseenter', stopAutoplay);
+  wrap.addEventListener('mouseleave', () => { if(!document.getElementById('lightbox').classList.contains('open')) startAutoplay(); });
+
   layout();
+  startAutoplay();
 
 }).catch(() => { document.getElementById('root').innerHTML = '<div class="no-photos">Impossible de charger la livrée.</div>'; });
+
+function openLightbox(src){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+function wireLightboxClose(){
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id === 'lightbox') closeLightbox(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+}
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
