@@ -34,14 +34,15 @@
   .gallery-head { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 22px; display: flex; align-items: center; gap: 12px; }
   .gallery-head::after { content:''; flex:1; height:1px; background: var(--line); }
 
-  /* Carrousel en anneau — glissement physique réel */
+  /* Carrousel en anneau — glissement physique réel, rotation calme */
   .gallery-wrap { position: relative; height: 340px; max-width: 900px; margin: 0 auto 22px; overflow: hidden; }
-  .g-slide { position: absolute; left: 50%; top: 50%; width: 380px; height: 280px; display: flex; align-items: center; justify-content: center; transition: transform .5s cubic-bezier(.22,.68,0,1), opacity .5s ease; }
+  .gallery-wrap.zoomed { overflow: visible; }
+  .g-slide { position: absolute; left: 50%; top: 50%; width: 380px; height: 280px; display: flex; align-items: center; justify-content: center; transition: transform .85s cubic-bezier(.22,.68,0,1), opacity .85s ease; }
   .g-slide img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-  .g-slide.center img { cursor: zoom-in; transition: transform .3s ease; }
-  .g-slide.center:hover img { transform: scale(1.04); }
+  .g-slide.center img { transition: transform .6s ease; }
+  .g-slide.center:hover img { transform: scale(1.38); }
   .g-slide.peek { cursor: pointer; }
-  @media (max-width: 700px) { .gallery-wrap { height: 260px; } .g-slide { width: 280px; height: 220px; } }
+  @media (max-width: 700px) { .gallery-wrap { height: 260px; } .g-slide { width: 280px; height: 220px; } .g-slide.center:hover img { transform: scale(1.15); } }
 
   .gallery-wrap .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(5,7,13,.7); border: 1px solid var(--line-strong); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; z-index: 20; }
   .gallery-wrap .carousel-btn:hover { background: rgba(0,87,255,.7); }
@@ -50,13 +51,6 @@
   .carousel-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 26px; flex-wrap: wrap; }
   .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-strong); cursor: pointer; transition: background .2s; border: none; padding: 0; }
   .carousel-dot.active { background: var(--mrt-blue); }
-
-  /* Lightbox */
-  .lightbox { position: fixed; inset: 0; background: rgba(5,7,13,.94); z-index: 400; display: none; align-items: center; justify-content: center; padding: 30px; }
-  .lightbox.open { display: flex; }
-  .lightbox img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 6px; }
-  .lightbox-close { position: absolute; top: 22px; right: 26px; background: rgba(255,255,255,.08); border: 1px solid var(--line-strong); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .lightbox-close:hover { background: rgba(255,255,255,.18); }
 
   /* Palmarès */
   .palmares-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px 30px; margin-bottom: 52px; }
@@ -70,9 +64,11 @@
   @media (max-width: 600px) { .car-info { grid-template-columns: 1fr; } }
   .car-info .cat { font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--mrt-blue); margin-bottom: 10px; }
   .car-info h1 { font-size: clamp(36px, 5vw, 64px); color: var(--mrt-white); line-height: .95; margin-bottom: 10px; }
-  .car-info .artist-block { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; text-align: center; }
+  .car-info .artist-block { display: block; text-decoration: none; background: var(--mrt-panel); border: 1.5px solid var(--line-strong); border-radius: 8px; padding: 16px 22px; text-align: center; transition: background .2s, border-color .2s, transform .2s; }
+  .car-info a.artist-block:hover { background: rgba(0,87,255,.12); border-color: var(--mrt-blue); transform: translateY(-2px); }
   .car-info .artist-label { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-fog); margin-bottom: 6px; }
   .car-info .artist-name { font-family: var(--display); font-size: 28px; color: var(--mrt-white); letter-spacing: .04em; }
+  .car-info .artist-cta { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--mrt-ice); margin-top: 6px; }
 
   .no-photos { padding: 60px 0; text-align: center; color: var(--mrt-fog); font-size: 14px; line-height: 1.7; }
 </style>
@@ -104,11 +100,6 @@
 <div class="wrap page-top">
   <a class="back-link" href="liveries.html">← Toutes les livrées</a>
   <div id="root"><div class="no-photos">Chargement…</div></div>
-</div>
-
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">×</button>
-  <img id="lightboxImg" src="" alt="">
 </div>
 
 <footer style="margin-top:90px;">
@@ -193,7 +184,7 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
     if(n === 1){
       return `
         <div class="gallery-head">Galerie photos</div>
-        <div class="gallery-wrap"><div class="g-slide center" style="transform:translate(-50%,-50%);"><img id="lightboxTrigger0" src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
+        <div class="gallery-wrap"><div class="g-slide center" style="transform:translate(-50%,-50%);"><img src="${galleryPhotos[0]}" alt="${esc(car.model)}"></div></div>`;
     }
     return `
       <div class="gallery-head">Galerie photos</div>
@@ -215,10 +206,11 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
         <div class="cat">${CATS[car.category]||car.category}</div>
         <h1>${esc(car.model)}</h1>
       </div>
-      <div class="artist-block">
+      <a class="artist-block" href="https://www.patreon.com/cw/SDL_" target="_blank" rel="noopener">
         <div class="artist-label">Livrée par</div>
         <div class="artist-name">${esc(car.artist||'SDL')}</div>
-      </div>
+        <div class="artist-cta">Voir le travail de l'artiste →</div>
+      </a>
     </div>
 
     ${(car.description || specsHTML(car)) ? `
@@ -231,13 +223,7 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
     ${galleryHTML()}`;
 
-  if(galleryPhotos.length < 2){
-    // Une seule photo : juste la lightbox au clic
-    const only = document.getElementById('lightboxTrigger0');
-    if(only) only.addEventListener('click', () => openLightbox(only.src));
-    wireLightboxClose();
-    return;
-  }
+  if(galleryPhotos.length < 2) return;
 
   const wrap = document.getElementById('galWrap');
   const dots = document.getElementById('dots');
@@ -267,13 +253,16 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
 
   function goTo(i){ current = (i + n) % n; layout(); }
 
+  // Les cartes latérales (peek) naviguent au clic — la carte centrale ne fait rien au clic, seulement au survol (zoom)
   slides.forEach((el, i) => {
     el.addEventListener('click', () => {
-      const delta = ((i - current + n + Math.floor(n/2)) % n) - Math.floor(n/2);
-      if(delta === 0){ openLightbox(galleryPhotos[i]); }
-      else { goTo(i); }
+      if(el.classList.contains('peek')) goTo(i);
     });
   });
+
+  // Permet au zoom de la photo centrale de déborder visuellement sans être coupé par le carrousel
+  wrap.addEventListener('mouseover', e => { if(e.target.closest('.g-slide.center')) wrap.classList.add('zoomed'); });
+  wrap.addEventListener('mouseout', e => { if(e.target.closest('.g-slide.center')) wrap.classList.remove('zoomed'); });
 
   document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
   document.getElementById('next').addEventListener('click', () => goTo(current + 1));
@@ -282,23 +271,11 @@ fetch('liveries.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
   document.addEventListener('keydown', e => {
     if(e.key==='ArrowLeft') goTo(current-1);
     if(e.key==='ArrowRight') goTo(current+1);
-    if(e.key==='Escape') closeLightbox();
   });
 
-  wireLightboxClose();
   layout();
 
 }).catch(() => { document.getElementById('root').innerHTML = '<div class="no-photos">Impossible de charger la livrée.</div>'; });
-
-function openLightbox(src){
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
-function wireLightboxClose(){
-  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-  document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id === 'lightbox') closeLightbox(); });
-}
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
