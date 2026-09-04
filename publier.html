@@ -158,6 +158,21 @@
 
   .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px;}
   @keyframes sp{to{transform:rotate(360deg);}}
+
+  /* ===== Console Palmarès ===== */
+  #panel-palmares .palmares-stats{margin-bottom:0;}
+  .pl-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);}
+  .pl-row:last-child{border-bottom:none;}
+  .pl-row.dragging{opacity:.4;}
+  .pl-row.drag-over{box-shadow:inset 0 2px 0 var(--mrt-blue);}
+  .pl-handle{cursor:grab;color:var(--mrt-fog);font-size:15px;line-height:1;user-select:none;flex-shrink:0;padding:0 2px;}
+  .pl-handle:active{cursor:grabbing;}
+  .pl-medal{font-size:22px;flex-shrink:0;line-height:1;}
+  .pl-main{min-width:0;flex:1;}
+  .pl-main .pl-t{font-size:14.5px;color:var(--mrt-white);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pl-main .pl-s{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--mrt-ice);margin-top:3px;}
+  .pl-main .pl-d{font-size:12.5px;color:var(--mrt-fog);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pl-ops{display:flex;gap:8px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -170,6 +185,7 @@
 <div class="console-tabs">
   <button class="console-tab active" data-panel="articles">Actualités</button>
   <button class="console-tab" data-panel="liveries">Liveries</button>
+  <button class="console-tab" data-panel="palmares">Palmarès</button>
 </div>
 
 <div style="max-width:1240px;margin:0 auto;padding:28px 28px 0;">
@@ -392,6 +408,99 @@
 
 </div>
 </div><!-- /panel-liveries -->
+
+<!-- ===== PANEL PALMARÈS (module autonome) ===== -->
+<div class="console-panel" id="panel-palmares">
+
+  <!-- Compteurs (pleine largeur, tels qu'affichés sur le site) -->
+  <div style="max-width:1240px;margin:0 auto;padding:28px 28px 0;">
+    <div class="card">
+      <div class="card-head"><h2>Compteurs du site</h2><span class="hint">recalculés en direct</span></div>
+      <div class="card-body">
+        <p class="help" style="margin-bottom:16px;">Calculés automatiquement à partir des résultats ci-dessous — exactement comme sur la page Palmarès publique.</p>
+        <div class="palmares-stats">
+          <div class="pstat"><span class="pstat-num" id="pl-stat-victoires">0</span><span class="pstat-label">Victoires</span></div>
+          <div class="pstat"><span class="pstat-num" id="pl-stat-podiums">0</span><span class="pstat-label">Podiums</span></div>
+          <div class="pstat"><span class="pstat-num" id="pl-stat-titres">0</span><span class="pstat-label">Titres</span></div>
+          <div class="pstat"><span class="pstat-num" id="pl-stat-pilotes">0</span><span class="pstat-label">Pilotes</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+
+    <!-- GAUCHE : formulaire -->
+    <div>
+      <div class="card">
+        <div class="card-head"><h2 id="pl-form-title">Nouveau résultat</h2><span class="hint" id="pl-edit-hint"></span></div>
+        <div class="card-body">
+
+          <div class="row2">
+            <label class="field"><span>Catégorie</span>
+              <select id="pl-cat">
+                <option value="Hypercar">Hypercar</option>
+                <option value="LMP2">LMP2</option>
+                <option value="LMP3">LMP3</option>
+                <option value="LMGT3">LMGT3</option>
+                <option value="Championnats">Championnats</option>
+              </select>
+            </label>
+            <label class="field"><span>Médaille</span>
+              <select id="pl-cls">
+                <option value="gold">🥇 Or — victoire</option>
+                <option value="silver">🥈 Argent — 2ᵉ</option>
+                <option value="bronze">🥉 Bronze — 3ᵉ</option>
+                <option value="champ">🏆 Champion — titre</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row2">
+            <label class="field"><span>Position</span><input type="text" id="pl-pos" placeholder="Victoire · 2ᵉ place…"></label>
+            <label class="field"><span>N° voiture (optionnel)</span><input type="text" id="pl-num" placeholder="#514"></label>
+          </div>
+
+          <label class="field"><span>Épreuve</span><input type="text" id="pl-event" placeholder="4h de Spa"></label>
+
+          <label class="field"><span>Split / série (optionnel)</span><input type="text" id="pl-split" placeholder="split 1/1"></label>
+
+          <label class="field"><span>Pilotes</span><input type="text" id="pl-drivers" placeholder="🇨🇦 Nom · 🇫🇷 Nom">
+            <p class="help">Sépare les copilotes par « · ». Chaque nom unique compte dans le compteur « Pilotes ».</p>
+          </label>
+
+          <label class="field"><span>Voiture</span><input type="text" id="pl-car" placeholder="Oreca 07-Gibson"></label>
+
+          <div class="actions" style="margin-top:6px;">
+            <button class="btn btn-primary" id="pl-add" type="button">Ajouter au palmarès</button>
+            <button class="btn btn-ghost" id="pl-reset" type="button">Vider le formulaire</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- DROITE : aperçu + liste -->
+    <div>
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-head"><h2>Aperçu de la carte</h2><span class="hint">temps réel</span></div>
+        <div class="card-body">
+          <div id="pl-preview"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Résultats enregistrés</h2><span class="hint" id="pl-count">—</span></div>
+        <div class="card-body">
+          <p class="help" style="margin-bottom:14px;">Glisse une ligne par la poignée ⠿ pour changer l'ordre d'affichage sur le site (le plus récent en haut, par exemple).</p>
+          <div id="pl-list"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger le palmarès.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /panel-palmares -->
 
 <!-- RECADREUR -->
 <div class="crop-overlay hidden" id="cropOverlay">
@@ -871,6 +980,7 @@ document.querySelectorAll('.console-tab').forEach(tab => {
     tab.classList.add('active');
     document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
     if(tab.dataset.panel === 'liveries') LV.load();
+    if(tab.dataset.panel === 'palmares') PAL.load();
   });
 });
 
@@ -1161,6 +1271,212 @@ document.getElementById('lv-cancel').addEventListener('click', () => {
   document.getElementById('lv-album').style.display = 'none';
   LV.current = null; LV.newCover = null; LV.coverRemoved = false; LV.pendingCarousel = []; LV.removedCarousel = [];
 });
+
+/* ===== MODULE PALMARÈS (autonome, isolé) ===== */
+const PAL = {
+  results: [],
+  sha: null,
+  editIndex: null,
+  MEDAL: { gold:'🥇', silver:'🥈', bronze:'🥉', champ:'🏆' },
+  PODIUM: ['gold','silver','bronze'],
+  _dragFrom: null,
+
+  async load(){
+    const c = getCfg();
+    if(!c.owner || !c.repo || !c.token) return;
+    try{
+      const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/palmares.json?ref=${c.branch}&t=`+Date.now(), { headers: ghHeaders() });
+      if(r.status === 404){ PAL.results = []; PAL.sha = null; PAL.renderAll(); return; }
+      if(!r.ok){ toast('Impossible de lire palmares.json ('+r.status+').','bad'); return; }
+      const data = await r.json();
+      PAL.sha = data.sha;
+      const parsed = JSON.parse(b64_to_utf8(data.content));
+      PAL.results = (parsed && Array.isArray(parsed.results)) ? parsed.results : [];
+      PAL.renderAll();
+    }catch(e){ toast('Erreur palmarès : '+e.message, 'bad'); }
+  },
+
+  readForm(){
+    return {
+      cat: $('pl-cat').value,
+      cls: $('pl-cls').value,
+      pos: $('pl-pos').value.trim(),
+      event: $('pl-event').value.trim(),
+      split: $('pl-split').value.trim(),
+      num: $('pl-num').value.trim(),
+      drivers: $('pl-drivers').value.trim(),
+      car: $('pl-car').value.trim()
+    };
+  },
+
+  resetForm(){
+    PAL.editIndex = null;
+    $('pl-cat').value = 'Hypercar'; $('pl-cls').value = 'gold';
+    $('pl-pos').value=''; $('pl-event').value=''; $('pl-split').value='';
+    $('pl-num').value=''; $('pl-drivers').value=''; $('pl-car').value='';
+    $('pl-form-title').textContent = 'Nouveau résultat';
+    $('pl-edit-hint').textContent = '';
+    $('pl-add').textContent = 'Ajouter au palmarès';
+    PAL.renderPreview();
+  },
+
+  cardHtml(r){
+    const cls = PAL.MEDAL[r.cls] ? r.cls : 'bronze';
+    const medal = PAL.MEDAL[cls];
+    return `<article class="result-card medal-${cls}">
+      <div class="result-medal">${medal}</div>
+      <div class="result-body">
+        <div class="result-top">
+          ${r.pos?`<span class="result-pos">${escapeHtml(r.pos)}</span>`:''}
+          ${r.event?`<span class="result-event">${escapeHtml(r.event)}</span>`:''}
+          ${r.split?`<span class="result-split">${escapeHtml(r.split)}</span>`:''}
+          ${r.num?`<span class="result-num">${escapeHtml(r.num)}</span>`:''}
+        </div>
+        ${r.drivers?`<div class="result-drivers">${escapeHtml(r.drivers)}</div>`:''}
+        ${r.car?`<div class="result-car">${escapeHtml(r.car)}</div>`:''}
+      </div>
+    </article>`;
+  },
+
+  renderPreview(){
+    const r = PAL.readForm();
+    if(!r.pos && !r.event && !r.drivers && !r.car){
+      $('pl-preview').innerHTML = '<div class="empty" style="padding:14px 0;">Remplis le formulaire pour voir l\u2019aperçu de la carte.</div>';
+      return;
+    }
+    $('pl-preview').innerHTML = PAL.cardHtml(r);
+  },
+
+  computeStats(){
+    const rs = PAL.results;
+    const victoires = rs.filter(r=>r.cls==='gold').length;
+    const podiums   = rs.filter(r=>PAL.PODIUM.indexOf(r.cls)!==-1).length;
+    const titres    = rs.filter(r=>r.cls==='champ').length;
+    const set = {};
+    rs.forEach(r=>String(r.drivers||'').split(/[·•,\/]/).forEach(n=>{ const t=n.trim(); if(t) set[t]=true; }));
+    return { victoires, podiums, titres, pilotes:Object.keys(set).length };
+  },
+
+  renderCounters(){
+    const s = PAL.computeStats();
+    $('pl-stat-victoires').textContent = s.victoires;
+    $('pl-stat-podiums').textContent = s.podiums;
+    $('pl-stat-titres').textContent = s.titres;
+    $('pl-stat-pilotes').textContent = s.pilotes;
+  },
+
+  renderList(){
+    const el = $('pl-list');
+    $('pl-count').textContent = PAL.results.length + ' résultat' + (PAL.results.length>1?'s':'');
+    if(!PAL.results.length){ el.innerHTML = '<div class="empty">Aucun résultat pour l\u2019instant. Ajoute le premier à gauche.</div>'; return; }
+    el.innerHTML = PAL.results.map((r,i)=>{
+      const cls = PAL.MEDAL[r.cls]?r.cls:'bronze';
+      const line = [r.event, r.split].filter(Boolean).join(' · ');
+      const sub  = [r.cat, r.pos, r.num].filter(Boolean).join(' · ');
+      const det  = [r.drivers, r.car].filter(Boolean).join(' — ');
+      return `<div class="pl-row" draggable="true" data-i="${i}">
+        <span class="pl-handle" title="Glisser pour réordonner">\u283F</span>
+        <span class="pl-medal">${PAL.MEDAL[cls]}</span>
+        <div class="pl-main">
+          <div class="pl-t">${escapeHtml(line||'(épreuve à préciser)')}</div>
+          <div class="pl-s">${escapeHtml(sub)}</div>
+          <div class="pl-d">${escapeHtml(det)}</div>
+        </div>
+        <div class="pl-ops">
+          <button class="op" data-edit="${i}">Modifier</button>
+          <button class="op del" data-del="${i}">Supprimer</button>
+        </div>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>PAL.edit(+b.dataset.edit)));
+    el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>PAL.remove(+b.dataset.del)));
+    PAL.bindDrag(el);
+  },
+
+  renderAll(){ PAL.renderCounters(); PAL.renderList(); PAL.renderPreview(); },
+
+  edit(i){
+    const r = PAL.results[i]; if(!r) return;
+    PAL.editIndex = i;
+    $('pl-cat').value = r.cat || 'Hypercar';
+    $('pl-cls').value = r.cls || 'gold';
+    $('pl-pos').value = r.pos || '';
+    $('pl-event').value = r.event || '';
+    $('pl-split').value = r.split || '';
+    $('pl-num').value = r.num || '';
+    $('pl-drivers').value = r.drivers || '';
+    $('pl-car').value = r.car || '';
+    $('pl-form-title').textContent = 'Modifier le résultat';
+    $('pl-edit-hint').textContent = '#'+(i+1);
+    $('pl-add').textContent = 'Enregistrer les modifications';
+    PAL.renderPreview();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  },
+
+  async remove(i){
+    const r = PAL.results[i]; if(!r) return;
+    if(!confirm('Supprimer ce résultat ?\n\n'+[r.pos, r.event].filter(Boolean).join(' — '))) return;
+    PAL.results.splice(i,1);
+    if(PAL.editIndex===i) PAL.resetForm();
+    PAL.renderAll();
+    const ok = await PAL.commit('Palmarès : suppression d\u2019un résultat');
+    if(ok) toast('Résultat supprimé et retiré du site.','ok');
+  },
+
+  async addOrUpdate(){
+    const c = getCfg(); if(!c.token){ toast('Configure d\u2019abord la connexion GitHub.','bad'); $('configBox').open=true; return; }
+    const r = PAL.readForm();
+    if(!r.pos || !r.event || !r.drivers || !r.car){
+      toast('Position, épreuve, pilotes et voiture sont obligatoires.','bad'); return;
+    }
+    const btn=$('pl-add'); const label=btn.textContent; btn.disabled=true; btn.innerHTML='<span class="spin"></span>Enregistrement…';
+    try{
+      const editing = (PAL.editIndex!==null && PAL.results[PAL.editIndex]);
+      if(editing) PAL.results[PAL.editIndex] = r;
+      else PAL.results.push(r);
+      const ok = await PAL.commit(editing?'Palmarès : modification d\u2019un résultat':'Palmarès : nouveau résultat');
+      if(!ok) throw new Error('écriture de palmares.json impossible');
+      toast(editing?'Modifications enregistrées et en ligne.':'Résultat ajouté et en ligne.','ok');
+      PAL.resetForm(); PAL.renderAll();
+    }catch(e){ toast('Échec : '+e.message,'bad'); }
+    finally{ btn.disabled=false; btn.textContent=label; }
+  },
+
+  async commit(message){
+    const json = JSON.stringify({ results: PAL.results }, null, 2);
+    return await putFile('palmares.json', utf8_to_b64(json), message, false, ()=>PAL.sha, s=>PAL.sha=s);
+  },
+
+  bindDrag(el){
+    el.querySelectorAll('.pl-row').forEach(row=>{
+      row.addEventListener('dragstart', e=>{ PAL._dragFrom = +row.dataset.i; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+      row.addEventListener('dragend', ()=>{ row.classList.remove('dragging'); el.querySelectorAll('.pl-row').forEach(x=>x.classList.remove('drag-over')); });
+      row.addEventListener('dragover', e=>{ e.preventDefault(); row.classList.add('drag-over'); e.dataTransfer.dropEffect='move'; });
+      row.addEventListener('dragleave', ()=>row.classList.remove('drag-over'));
+      row.addEventListener('drop', async e=>{
+        e.preventDefault();
+        row.classList.remove('drag-over');
+        const to = +row.dataset.i, from = PAL._dragFrom;
+        PAL._dragFrom = null;
+        if(from===null || isNaN(from) || from===to) return;
+        const moved = PAL.results.splice(from,1)[0];
+        PAL.results.splice(to,0,moved);
+        PAL.renderAll();
+        const ok = await PAL.commit('Palmarès : réordonnancement');
+        if(ok) toast('Ordre mis à jour et en ligne.','ok');
+      });
+    });
+  }
+};
+
+['pl-cat','pl-cls','pl-pos','pl-event','pl-split','pl-num','pl-drivers','pl-car'].forEach(id=>{
+  const el=$(id);
+  if(el){ el.addEventListener('input', PAL.renderPreview); el.addEventListener('change', PAL.renderPreview); }
+});
+$('pl-add').addEventListener('click', ()=>PAL.addOrUpdate());
+$('pl-reset').addEventListener('click', ()=>PAL.resetForm());
+PAL.renderPreview();
+
 
 /* ---------- démarrage ---------- */
 (async function init(){
