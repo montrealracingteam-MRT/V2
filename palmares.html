@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palmarès — Montreal Racing Team | MRT #514</title>
+<meta name="description" content="Les résultats de l'écurie MRT #514 sur Le Mans Ultimate : victoires, podiums et titres en Hypercar, LMP2, LMP3 et LMGT3.">
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  .page-top { padding-top: 120px; padding-bottom: 90px; }
+
+  /* Hero palmarès */
+  .palmares-hero { margin-bottom: 56px; }
+  .palmares-hero .eyebrow { margin-bottom: 16px; }
+  .palmares-hero h1 { font-size: clamp(52px, 8vw, 100px); color: var(--mrt-white); line-height: .92; margin-bottom: 20px; }
+  .palmares-hero h1 span { color: var(--mrt-blue); }
+
+  /* État vide */
+  .palmares-empty {
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 0%, rgba(0,87,255,0.10), transparent 70%),
+      var(--mrt-panel);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    padding: 64px 28px;
+    text-align: center;
+  }
+  .palmares-empty .pe-icon { font-size: 40px; margin-bottom: 14px; }
+  .palmares-empty h2 { font-size: clamp(28px, 4vw, 44px); color: var(--mrt-white); margin-bottom: 12px; }
+  .palmares-empty p { color: var(--mrt-fog); font-size: 15px; max-width: 52ch; margin: 0 auto 24px; line-height: 1.6; }
+
+  /* Petites retouches locales */
+  .palmares-toggle-wrap { margin-top: 34px; margin-bottom: 6px; }
+  #palmToggle .arrow { transition: transform .25s ease; display: inline-block; }
+  #palmToggle.open .arrow { transform: rotate(180deg); }
+  .palmares-loading { text-align: center; color: var(--mrt-fog); font-family: var(--mono); font-size: 13px; letter-spacing: .06em; padding: 50px 0; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" aria-label="Accueil MRT">
+    <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+  </a>
+  <div class="nav-links">
+    <a href="a-propos.html">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html" style="color:var(--mrt-white);">Palmarès</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
+    <a href="boutique.html">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="boutique.html" class="nav-cta">Boutique →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap page-top">
+
+  <!-- HERO -->
+  <header class="palmares-hero reveal">
+    <div class="eyebrow">Le palmarès de l'écurie</div>
+    <h1>NOS<br>RÉSULTATS <span>#514</span></h1>
+    <p class="palmares-intro">Chaque course compte. Voici les résultats accumulés par les pilotes MRT en compétition d'endurance sur Le Mans Ultimate — victoires, podiums et titres, toutes catégories confondues.</p>
+  </header>
+
+  <!-- LOADING -->
+  <div class="palmares-loading" id="palmLoading">Chargement du palmarès…</div>
+
+  <!-- STATS -->
+  <div class="palmares-stats reveal" id="palmStats" hidden>
+    <div class="pstat">
+      <span class="pstat-num" id="statVictoires">0</span>
+      <span class="pstat-label">Victoires</span>
+    </div>
+    <div class="pstat">
+      <span class="pstat-num" id="statPodiums">0</span>
+      <span class="pstat-label">Podiums</span>
+    </div>
+    <div class="pstat">
+      <span class="pstat-num" id="statTitres">0</span>
+      <span class="pstat-label">Titres</span>
+    </div>
+    <div class="pstat">
+      <span class="pstat-num" id="statPilotes">0</span>
+      <span class="pstat-label">Pilotes</span>
+    </div>
+  </div>
+
+  <!-- TOGGLE DÉTAIL -->
+  <div class="palmares-toggle-wrap reveal" id="palmToggleWrap" hidden>
+    <button type="button" class="btn btn-ghost" id="palmToggle" aria-expanded="false" aria-controls="palmDetail">
+      <span class="label">Voir tous les résultats</span>
+      <span class="arrow">▾</span>
+    </button>
+  </div>
+
+  <!-- DÉTAIL : filtres + liste -->
+  <div class="palmares-detail" id="palmDetail" hidden>
+    <div class="palmares-filters" id="palmFilters"></div>
+    <div class="palmares-list" id="palmList"></div>
+  </div>
+
+  <!-- ÉTAT VIDE -->
+  <div class="palmares-empty reveal" id="palmEmpty" hidden>
+    <div class="pe-icon">🏁</div>
+    <h2>La saison se prépare</h2>
+    <p>Les premiers résultats de l'écurie apparaîtront ici dès les prochaines courses. En attendant, suis nos actualités ou rejoins-nous sur la piste.</p>
+    <a href="actualites.html" class="btn btn-primary">Voir les actualités</a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:14px;">
+          <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+        </div>
+        <p>Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Équipe</h4>
+          <a href="a-propos.html">À propos</a>
+          <a href="actualites.html">Actualités</a>
+          <a href="palmares.html">Palmarès</a>
+          <a href="liveries.html">Liveries</a>
+        </div>
+        <div class="footer-col">
+          <h4>Catalogue</h4>
+          <a href="boutique.html">Boutique</a>
+          <a href="recrutement.html">Recrutement</a>
+        </div>
+        <div class="footer-col">
+          <h4>Communauté</h4>
+          <a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://discord.gg/npSrdHH67" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC</span>
+      <span>LE MANS ULTIMATE</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE NAV -->
+<div id="mobileNav" style="display:none;position:fixed;inset:0;background:rgba(5,7,13,.97);z-index:200;flex-direction:column;padding:80px 32px 40px;gap:24px;">
+  <button id="mobileNavClose" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">×</button>
+  <a href="a-propos.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">À propos</a>
+  <a href="actualites.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Actualités</a>
+  <a href="palmares.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Palmarès</a>
+  <a href="liveries.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Liveries</a>
+  <a href="boutique.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Boutique</a>
+  <a href="recrutement.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Recrutement</a>
+</div>
+
+<script>
+  /* ---------- Base (identique aux autres pages) ---------- */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', scrollY > 40); });
+  const mobileNav = document.getElementById('mobileNav');
+  document.getElementById('navToggle').addEventListener('click', () => { mobileNav.style.display = 'flex'; });
+  document.getElementById('mobileNavClose').addEventListener('click', () => { mobileNav.style.display = 'none'; });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.10 });
+  function observeReveals(){ document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el)); }
+  observeReveals();
+
+  document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+    dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+    dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+  });
+
+  /* ---------- Palmarès ---------- */
+  (function(){
+    'use strict';
+
+    var MEDAL = { gold:'🥇', silver:'🥈', bronze:'🥉', champ:'🏆' };
+    var CAT_ORDER = ['Hypercar','LMP2','LMP3','LMGT3','Championnats'];
+    var PODIUM_CLS = ['gold','silver','bronze'];
+
+    function esc(s){
+      return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      });
+    }
+
+    function countUp(el, target){
+      if(target <= 0){ el.textContent = '0'; return; }
+      var dur = 900, start = null;
+      function step(ts){
+        if(start === null) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target);
+        if(p < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+    }
+
+    function uniquePilotes(results){
+      var set = {};
+      results.forEach(function(r){
+        String(r.drivers || '').split(/[·•,\/]/).forEach(function(name){
+          var n = name.trim();
+          if(n) set[n] = true;
+        });
+      });
+      return Object.keys(set).length;
+    }
+
+    function sortedCats(results){
+      var present = {};
+      results.forEach(function(r){ if(r.cat) present[r.cat] = true; });
+      return Object.keys(present).sort(function(a,b){
+        var ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b);
+        if(ia === -1) ia = 99; if(ib === -1) ib = 99;
+        return ia - ib || a.localeCompare(b);
+      });
+    }
+
+    function renderFilters(cats){
+      var wrap = document.getElementById('palmFilters');
+      wrap.innerHTML = '';
+      var all = [{v:'', label:'Tous'}].concat(cats.map(function(c){ return {v:c, label:c}; }));
+      all.forEach(function(f, i){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pfilter' + (i === 0 ? ' active' : '');
+        b.textContent = f.label;
+        b.dataset.cat = f.v;
+        b.addEventListener('click', function(){
+          wrap.querySelectorAll('.pfilter').forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active');
+          applyFilter(f.v);
+        });
+        wrap.appendChild(b);
+      });
+    }
+
+    function applyFilter(cat){
+      document.querySelectorAll('#palmList .result-card').forEach(function(card){
+        var show = !cat || card.dataset.cat === cat;
+        card.classList.toggle('hidden', !show);
+      });
+    }
+
+    function cardHtml(r){
+      var cls = MEDAL[r.cls] ? r.cls : 'bronze';
+      var medal = MEDAL[cls];
+      return '<article class="result-card medal-' + cls + '" data-cat="' + esc(r.cat || '') + '">' +
+        '<div class="result-medal">' + medal + '</div>' +
+        '<div class="result-body">' +
+          '<div class="result-top">' +
+            (r.pos ? '<span class="result-pos">' + esc(r.pos) + '</span>' : '') +
+            (r.event ? '<span class="result-event">' + esc(r.event) + '</span>' : '') +
+            (r.split ? '<span class="result-split">' + esc(r.split) + '</span>' : '') +
+            (r.num ? '<span class="result-num">' + esc(r.num) + '</span>' : '') +
+          '</div>' +
+          (r.drivers ? '<div class="result-drivers">' + esc(r.drivers) + '</div>' : '') +
+          (r.car ? '<div class="result-car">' + esc(r.car) + '</div>' : '') +
+        '</div>' +
+      '</article>';
+    }
+
+    function renderList(results){
+      document.getElementById('palmList').innerHTML = results.map(cardHtml).join('');
+    }
+
+    function showEmpty(){
+      document.getElementById('palmLoading').hidden = true;
+      document.getElementById('palmEmpty').hidden = false;
+      observeReveals();
+    }
+
+    function render(results){
+      document.getElementById('palmLoading').hidden = true;
+
+      if(!results.length){ showEmpty(); return; }
+
+      var victoires = results.filter(function(r){ return r.cls === 'gold'; }).length;
+      var podiums   = results.filter(function(r){ return PODIUM_CLS.indexOf(r.cls) !== -1; }).length;
+      var titres    = results.filter(function(r){ return r.cls === 'champ'; }).length;
+      var pilotes   = uniquePilotes(results);
+
+      var stats = document.getElementById('palmStats');
+      var toggleWrap = document.getElementById('palmToggleWrap');
+      stats.hidden = false;
+      toggleWrap.hidden = false;
+
+      countUp(document.getElementById('statVictoires'), victoires);
+      countUp(document.getElementById('statPodiums'), podiums);
+      countUp(document.getElementById('statTitres'), titres);
+      countUp(document.getElementById('statPilotes'), pilotes);
+
+      renderFilters(sortedCats(results));
+      renderList(results);
+      observeReveals();
+
+      var detail = document.getElementById('palmDetail');
+      var toggle = document.getElementById('palmToggle');
+      var labelEl = toggle.querySelector('.label');
+      toggle.addEventListener('click', function(){
+        var open = detail.hidden;
+        detail.hidden = !open;
+        toggle.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        labelEl.textContent = open ? 'Masquer les résultats' : 'Voir tous les résultats';
+      });
+    }
+
+    fetch('palmares.json', { cache: 'no-store' })
+      .then(function(res){ return res.ok ? res.json() : { results: [] }; })
+      .then(function(data){
+        var results = (data && Array.isArray(data.results)) ? data.results : [];
+        render(results);
+      })
+      .catch(function(){ render([]); });
+  })();
+</script>
+</body>
+</html>
