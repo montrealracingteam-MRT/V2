@@ -185,8 +185,25 @@
     "category": "lmgt3",
     "model": "Lexus RC F LMGT3",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/lexus-rc-f-lmgt3/cover-cover-1789399110495.jpg",
+    "photos": [
+      "images/liveries/lexus-rc-f-lmgt3/cover-cover-1789399110495.jpg",
+      "images/liveries/lexus-rc-f-lmgt3/photo-1789399507435-301.jpg",
+      "images/liveries/lexus-rc-f-lmgt3/photo-1789399507509-673.jpg",
+      "images/liveries/lexus-rc-f-lmgt3/photo-1789399507557-587.jpg"
+    ],
+    "description": "<p><p>Une GT3 de haut vol : la Lexus RC F LMGT3 apporte l’ingénierie japonaise et sa fiabilité au Championnat du monde d’endurance FIA.</p><p>Équipée d’un V8 atmosphérique de 5,4 litres, la RC F se distingue par une fiabilité à toute épreuve et une prestance imposante, tout en mettant l’accent sur la stabilité aérodynamique et la gestion des pneus lors des longs relais.</p><p>En 2024, la RC F LMGT3 a fait ses débuts au WEC de la FIA avec Akkodis ASP, marquant ainsi le retour de Lexus au plus haut niveau des courses d’endurance mondiales.</p><p>Bien qu’elle soit la voiture la plus ancienne du plateau, la Lexus allie toujours un design épuré à une durabilité éprouvée en course, et les performances méthodiques ainsi que le savoir-faire de l’équipe en font une menace sérieuse dans la catégorie LMGT3.</p></p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "5.4L N/A V8",
+      "puissance": "500 bhp",
+      "poids": "1355 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4846 mm",
+      "largeur": "2030 mm",
+      "hauteur": "1271 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "corvette-z06-lmgt3-r",
