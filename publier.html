@@ -577,17 +577,37 @@ async function testConnection(){
   }catch(e){ setConn(false,'Erreur réseau'); return false; }
 }
 
+/* ---------- lecture robuste d'un JSON du dépôt ----------
+   L'API "contents" de GitHub ne renvoie le contenu inline que pour les fichiers
+   de moins de 1 Mo ; au-delà, elle renvoie un contenu VIDE. On lit alors le blob Git
+   (limite 100 Mo). C'est la cause du « Unexpected end of JSON input » sur articles.json. */
+async function ghReadJson(path){
+  const c=getCfg();
+  const meta = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/${path}?ref=${c.branch}&t=`+Date.now(), { headers:ghHeaders() });
+  if(meta.status===404) return { data:null, sha:null, missing:true };
+  if(!meta.ok) throw new Error('HTTP '+meta.status);
+  const info = await meta.json();
+  let text = '';
+  if(info.content && info.content.trim()){
+    text = b64_to_utf8(info.content);
+  } else if(info.sha){
+    const blob = await fetch(`${API}/repos/${c.owner}/${c.repo}/git/blobs/${info.sha}`, { headers:ghHeaders() });
+    if(!blob.ok) throw new Error('blob HTTP '+blob.status);
+    const bi = await blob.json();
+    text = b64_to_utf8(bi.content||'');
+  }
+  const data = text.trim() ? JSON.parse(text) : null;
+  return { data, sha: info.sha||null };
+}
+
 /* ---------- chargement des articles ---------- */
 async function loadArticles(){
   const c=getCfg(); if(!c.owner||!c.repo||!c.token){ return; }
   try{
-    const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/articles.json?ref=${c.branch}&t=`+Date.now(), { headers:ghHeaders() });
-    if(r.status===404){ articles=[]; articlesSha=null; renderList(); return; }
-    if(!r.ok){ toast('Impossible de lire articles.json ('+r.status+').','bad'); return; }
-    const data = await r.json();
-    articlesSha = data.sha;
-    const parsed = JSON.parse(b64_to_utf8(data.content));
-    articles = Array.isArray(parsed) ? parsed : [];
+    const res = await ghReadJson('articles.json');
+    if(res.missing){ articles=[]; articlesSha=null; renderList(); return; }
+    articlesSha = res.sha;
+    articles = Array.isArray(res.data) ? res.data : [];
     renderList();
   }catch(e){ toast('Lecture impossible : '+e.message,'bad'); }
 }
@@ -970,17 +990,13 @@ async function commitArticles(message){
 }
 
 /* Relit la version à jour de articles.json sur GitHub, sans effet de bord.
-   Sert de filet anti-écrasement : on fusionne toujours dans la liste RÉELLE
-   du dépôt, jamais dans une liste en mémoire potentiellement vide/périmée. */
+   Filet anti-écrasement : on fusionne toujours dans la liste RÉELLE du dépôt.
+   Passe par ghReadJson -> gère aussi les fichiers > 1 Mo (blob Git). */
 async function fetchArticlesFresh(){
-  const c=getCfg();
   try{
-    const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/articles.json?ref=${c.branch}&t=`+Date.now(), { headers:ghHeaders() });
-    if(r.status===404) return { ok:true, arr:[], sha:null, missing:true };
-    if(!r.ok) return { ok:false };
-    const data = await r.json();
-    const parsed = JSON.parse(b64_to_utf8(data.content));
-    return { ok:true, arr:Array.isArray(parsed)?parsed:[], sha:data.sha };
+    const res = await ghReadJson('articles.json');
+    if(res.missing) return { ok:true, arr:[], sha:null, missing:true };
+    return { ok:true, arr:Array.isArray(res.data)?res.data:[], sha:res.sha };
   }catch(e){ return { ok:false }; }
 }
 
@@ -1038,11 +1054,9 @@ const LV = {
     const c = getCfg();
     if(!c.owner || !c.repo || !c.token) return;
     try{
-      const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/liveries.json?ref=${c.branch}&t=`+Date.now(), { headers: ghHeaders() });
-      if(!r.ok){ toast('Impossible de lire liveries.json ('+r.status+').','bad'); return; }
-      const data = await r.json();
-      LV.sha = data.sha;
-      LV.cars = JSON.parse(b64_to_utf8(data.content));
+      const res = await ghReadJson('liveries.json');
+      LV.sha = res.sha;
+      LV.cars = Array.isArray(res.data) ? res.data : [];
       LV.renderList();
     }catch(e){ toast('Erreur liveries : '+e.message, 'bad'); }
   },
@@ -1325,13 +1339,9 @@ const PAL = {
     const c = getCfg();
     if(!c.owner || !c.repo || !c.token) return;
     try{
-      const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/palmares.json?ref=${c.branch}&t=`+Date.now(), { headers: ghHeaders() });
-      if(r.status === 404){ PAL.results = []; PAL.sha = null; PAL.renderAll(); return; }
-      if(!r.ok){ toast('Impossible de lire palmares.json ('+r.status+').','bad'); return; }
-      const data = await r.json();
-      PAL.sha = data.sha;
-      const parsed = JSON.parse(b64_to_utf8(data.content));
-      PAL.results = (parsed && Array.isArray(parsed.results)) ? parsed.results : [];
+      const res = await ghReadJson('palmares.json');
+      PAL.sha = res.sha;
+      PAL.results = (res.data && Array.isArray(res.data.results)) ? res.data.results : [];
       PAL.renderAll();
     }catch(e){ toast('Erreur palmarès : '+e.message, 'bad'); }
   },
