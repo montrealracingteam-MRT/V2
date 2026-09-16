@@ -241,7 +241,9 @@
           <p class="help">Petite ligne sous le titre dans l'article. Facultatif.</p>
         </label>
 
-        <label class="field"><span>Résumé — texte de la carte</span><textarea id="fSummary" rows="3" placeholder="Une ou deux phrases qui donnent envie de cliquer."></textarea></label>
+        <label class="field"><span>Résumé — texte de la carte</span><textarea id="fSummary" rows="3" maxlength="180" placeholder="Une ou deux phrases qui donnent envie de cliquer."></textarea>
+          <p class="help" style="text-align:right;margin-top:6px;"><span id="fSummaryCount">0</span> / 180 caractères</p>
+        </label>
 
         <label class="field"><span>Photo</span></label>
         <div class="dropzone" id="dropzone">
@@ -857,6 +859,13 @@ function initCropper(){
 /* ---------- aperçu ---------- */
 $('fTitle').addEventListener('input',syncPreview);
 $('fSummary').addEventListener('input',syncPreview);
+function updateSummaryCount(){
+  const el=$('fSummaryCount'); if(!el) return;
+  const n=($('fSummary').value||'').length;
+  el.textContent=n;
+  el.parentElement.style.color = n>=170 ? 'var(--mrt-flag)' : '';
+}
+$('fSummary').addEventListener('input',updateSummaryCount);
 $('fCategory').addEventListener('change',syncPreview);
 $('fFlag').addEventListener('input',syncPreview);
 function syncPreview(){
@@ -877,6 +886,7 @@ function editArticle(id){
   $('fTitle').value=a.title||''; $('fCategory').value=a.category||'evenement';
   $('fDate').value=a.date||todayISO(); $('fFlag').value=a.flag||''; $('fDateLabel').value=a.dateLabel||'';
   $('fSummary').value=a.summary||''; editor.innerHTML=a.content||'';
+  updateSummaryCount();
   if(currentImagePath){ $('imgPreviewEl').src=imgURL(currentImagePath); $('imgPreview').style.display='block'; $('imgMeta').textContent='Photo actuelle conservée'; }
   else { $('imgPreview').style.display='none'; $('imgMeta').textContent=''; }
   $('formTitle').textContent='Modifier l\'article'; $('editHint').textContent='en édition';
@@ -887,7 +897,11 @@ function editArticle(id){
 async function deleteArticle(id){
   const a=articles.find(x=>x.id===id); if(!a) return;
   if(!confirm(`Supprimer définitivement « ${a.title} » ?`)) return;
-  articles = articles.filter(x=>x.id!==id);
+  // relire la liste à jour avant de supprimer (filet anti-écrasement)
+  const fresh = await fetchArticlesFresh();
+  if(!fresh.ok){ toast('Lecture impossible — suppression annulée. Réessaie.','bad'); return; }
+  articles = fresh.arr.filter(x=>x.id!==id);
+  articlesSha = fresh.sha;
   const ok = await commitArticles(`Suppression article : ${a.title}`);
   if(ok){ toast('Article supprimé.','ok'); if(editingId===id) resetForm(); renderList(); }
 }
@@ -926,10 +940,21 @@ async function publish(){
       summary:$('fSummary').value.trim(), image:imagePath||'', content
     };
 
-    if(editingId){ const i=articles.findIndex(x=>x.id===editingId); if(i>=0) articles[i]=obj; else articles.push(obj); }
-    else { if(articles.some(x=>x.id===id)) obj.id=id+'-'+Math.floor(Math.random()*1000); articles.push(obj); }
+    // 3) RELIRE la liste à jour sur GitHub et fusionner (filet anti-écrasement)
+    const fresh = await fetchArticlesFresh();
+    if(!fresh.ok){ throw new Error('lecture de articles.json impossible — rien n\'a été écrit. Réessaie dans un instant.'); }
+    articles = fresh.arr;      // le dépôt fait foi
+    articlesSha = fresh.sha;   // sha courant pour un commit propre
 
-    // 3) écrire articles.json
+    const i = articles.findIndex(x=>x.id===obj.id);
+    if(editingId){
+      if(i>=0) articles[i]=obj; else articles.push(obj);
+    } else {
+      if(i>=0) obj.id = obj.id+'-'+Math.floor(Math.random()*1000);
+      articles.push(obj);
+    }
+
+    // 4) écrire articles.json
     const ok = await commitArticles(editingId?`Modification article : ${title}`:`Nouvel article : ${title}`);
     if(!ok) throw new Error('écriture de articles.json impossible');
 
@@ -942,6 +967,21 @@ async function publish(){
 async function commitArticles(message){
   const json = JSON.stringify(articles, null, 2);
   return await putFile('articles.json', utf8_to_b64(json), message, false, ()=>articlesSha, s=>articlesSha=s);
+}
+
+/* Relit la version à jour de articles.json sur GitHub, sans effet de bord.
+   Sert de filet anti-écrasement : on fusionne toujours dans la liste RÉELLE
+   du dépôt, jamais dans une liste en mémoire potentiellement vide/périmée. */
+async function fetchArticlesFresh(){
+  const c=getCfg();
+  try{
+    const r = await fetch(`${API}/repos/${c.owner}/${c.repo}/contents/articles.json?ref=${c.branch}&t=`+Date.now(), { headers:ghHeaders() });
+    if(r.status===404) return { ok:true, arr:[], sha:null, missing:true };
+    if(!r.ok) return { ok:false };
+    const data = await r.json();
+    const parsed = JSON.parse(b64_to_utf8(data.content));
+    return { ok:true, arr:Array.isArray(parsed)?parsed:[], sha:data.sha };
+  }catch(e){ return { ok:false }; }
 }
 
 /* PUT générique vers l'API Contents. contentB64 = contenu déjà encodé en base64. */
@@ -968,7 +1008,7 @@ function resetForm(){
   $('fFlag').value=''; $('fDateLabel').value=''; $('fSummary').value=''; editor.innerHTML='';
   $('imgPreview').style.display='none'; $('imgMeta').textContent='';
   $('formTitle').textContent='Nouvel article'; $('editHint').textContent='';
-  $('publishBtn').textContent='Publier'; syncPreview();
+  $('publishBtn').textContent='Publier'; syncPreview(); updateSummaryCount();
 }
 
 
