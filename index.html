@@ -217,13 +217,11 @@
   <div class="wrap">
     <div class="section-head reveal">
       <h2>Dernières<br>actualités</h2>
-      <a href="actualites.html" class="view-all">Toutes les actualités →</a>
     </div>
     <div class="news-layout reveal" id="homeNewsLayout">
       <div style="color:var(--mrt-fog);font-size:14px;padding:40px 0;">Chargement…</div>
     </div>
     <div class="home-news-cta reveal">
-      <p>Résultats, événements, annonces — toute la vie de l'écurie #514.</p>
       <a href="actualites.html" class="btn btn-primary">Voir toutes les actualités →</a>
     </div>
   </div>
@@ -445,7 +443,7 @@ fetch('articles.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
     <div class="news-body">
       <div class="news-meta">${artMeta(f)}</div>
       <h3>${esc(f.title)}</h3>
-      <p>${esc((f.summary||'').slice(0,220))}</p>
+      <p>${esc(f.summary||'')}</p>
       <span class="news-cta-inline">Lire l'article →</span>
     </div>
   </a>`;
@@ -457,7 +455,7 @@ fetch('articles.json', { cache:'no-store' }).then(r => r.ok ? r.json() : []).the
         <div class="news-side-txt">
           <div class="n-meta">${artMeta(a)}</div>
           <h4>${esc(a.title)}</h4>
-          <p class="n-desc">${esc((a.summary||'').slice(0,100))}</p>
+          <p class="n-desc">${esc(a.summary||'')}</p>
         </div>
       </a>`).join('') + `</div>`;
   }
