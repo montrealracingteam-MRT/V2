@@ -88,6 +88,17 @@
       "num": "",
       "drivers": "Mathieu Murray",
       "car": "BMW M4 LMGT3 Evo"
+    },
+    {
+      "cat": "LMGT3",
+      "cls": "gold",
+      "pos": "Victoire",
+      "event": "2.4 hours of Le Mans by OOFS Racing",
+      "date": "",
+      "split": "",
+      "num": "",
+      "drivers": "Karl Contout",
+      "car": "Porsche 911 LMGT3 R"
     }
   ]
 }
