@@ -275,6 +275,17 @@
       "num": "#514",
       "drivers": "Joel Livernois & Karl Contout",
       "car": "Porsche 911 LMGT3 R"
+    },
+    {
+      "cat": "LMP2",
+      "cls": "gold",
+      "pos": "Victoire",
+      "event": "4h de Spa",
+      "date": "",
+      "split": "1/1",
+      "num": "#450",
+      "drivers": "Olivier Richard & Philippe Brazeau",
+      "car": "Oreca 07-Gibson"
     }
   ]
 }
