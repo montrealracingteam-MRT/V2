@@ -2,26 +2,6 @@
   "results": [
     {
       "cat": "Championnats",
-      "cls": "gold",
-      "pos": "Victoire",
-      "event": "1h de Monza",
-      "split": "The PRO/AM Le Mans Series by MRT",
-      "num": "",
-      "drivers": "🇲🇶 Karl Contout",
-      "car": "BMW M4 LMGT3 Evo"
-    },
-    {
-      "cat": "Championnats",
-      "cls": "gold",
-      "pos": "Victoire",
-      "event": "1h30 du Mans",
-      "split": "The PRO/AM Le Mans Series by MRT",
-      "num": "",
-      "drivers": "🇲🇶 Karl Contout",
-      "car": "BMW M4 LMGT3 Evo"
-    },
-    {
-      "cat": "Championnats",
       "cls": "champ",
       "pos": "Champion",
       "event": "The PRO/AM Le Mans Series by MRT",
