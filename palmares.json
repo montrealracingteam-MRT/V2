@@ -297,6 +297,17 @@
       "num": "#450",
       "drivers": "Tom Bigotte & Philippe Brazeau",
       "car": "Oreca 07-Gibson"
+    },
+    {
+      "cat": "Hypercar",
+      "cls": "silver",
+      "pos": "Deuxième place",
+      "event": "4h de Interlagos",
+      "date": "",
+      "split": "2/6",
+      "num": "#438",
+      "drivers": "Olivier Richard",
+      "car": "Aston Martin Valkyrie AMR LMH"
     }
   ]
 }
