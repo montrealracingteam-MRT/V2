@@ -1,0 +1,9 @@
+# robots.txt — Montreal Racing Team
+User-agent: *
+Allow: /
+
+# Consoles privées (ne pas indexer)
+Disallow: /publier.html
+Disallow: /admin.html
+
+Sitemap: https://montrealracingteam.ca/sitemap.xml
