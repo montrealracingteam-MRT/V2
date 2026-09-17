@@ -2,26 +2,6 @@
   "results": [
     {
       "cat": "LMGT3",
-      "cls": "silver",
-      "pos": "2ᵉ place",
-      "event": "4h de Sebring",
-      "split": "split 2/5",
-      "num": "#263",
-      "drivers": "🇲🇶 Karl Contout",
-      "car": "BMW M4 LMGT3 Evo"
-    },
-    {
-      "cat": "LMGT3",
-      "cls": "gold",
-      "pos": "Victoire",
-      "event": "4h de Barcelone",
-      "split": "split 1/1",
-      "num": "#514",
-      "drivers": "🇫🇷 Cyril Fortin · 🇨🇦 Mathieu Murray",
-      "car": "Lexus RC F LMGT3"
-    },
-    {
-      "cat": "LMGT3",
       "cls": "bronze",
       "pos": "3ᵉ place",
       "event": "6h d'Imola",
