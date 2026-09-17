@@ -242,6 +242,17 @@
       "num": "",
       "drivers": "Dan Poulin & Philippe Brazeau",
       "car": "Ford Mustang LMGT3"
+    },
+    {
+      "cat": "Hypercar",
+      "cls": "silver",
+      "pos": "Deuxieme place",
+      "event": "6h du Mans",
+      "date": "",
+      "split": "1/3",
+      "num": "#514",
+      "drivers": "Joel Livernois & Karl Contout",
+      "car": "Porsche 911 LMGT3 R"
     }
   ]
 }
