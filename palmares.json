@@ -231,6 +231,17 @@
       "num": "",
       "drivers": "Mathieu Murray",
       "car": "Lexus RC F LMGT3"
+    },
+    {
+      "cat": "Hypercar",
+      "cls": "bronze",
+      "pos": "Troisième place",
+      "event": "6h d'Imola",
+      "date": "",
+      "split": "1/1",
+      "num": "",
+      "drivers": "Dan Poulin & Philippe Brazeau",
+      "car": "Ford Mustang LMGT3"
     }
   ]
 }
