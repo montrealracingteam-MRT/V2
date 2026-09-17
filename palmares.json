@@ -1,24 +1,3 @@
 {
-  "results": [
-    {
-      "cat": "Championnats",
-      "cls": "silver",
-      "pos": "2ᵉ place",
-      "event": "2.4 Hours of Le Mans",
-      "split": "OOFS Racing",
-      "num": "",
-      "drivers": "🇨🇦 Louis Gendron",
-      "car": "Porsche 911 LMGT3 R"
-    },
-    {
-      "cat": "Championnats",
-      "cls": "gold",
-      "pos": "Victoire",
-      "event": "OOFS Racing — Season 5 · R1",
-      "split": "OOFS Racing",
-      "num": "",
-      "drivers": "🇲🇶 Karl Contout",
-      "car": "Porsche 911 LMGT3 R"
-    }
-  ]
+  "results": []
 }
