@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos — Montreal Racing Team | MRT #514</title>
+<meta name="description" content="Montreal Racing Team, écurie de sim racing francophone basée à Montréal, en compétition d'endurance sur Le Mans Ultimate. Découvre l'équipe et ses fondateurs.">
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  .page-top { padding-top: 120px; padding-bottom: 90px; }
+
+  /* Hero à propos */
+  .about-hero { margin-bottom: 64px; max-width: 760px; }
+  .about-hero .eyebrow { margin-bottom: 16px; }
+  .about-hero h1 { font-size: clamp(52px, 8vw, 100px); color: var(--mrt-white); line-height: .92; margin-bottom: 24px; }
+  .about-hero h1 span { color: var(--mrt-blue); }
+  .about-lead { font-size: clamp(17px, 2vw, 20px); line-height: 1.6; color: var(--mrt-white); font-weight: 600; margin-bottom: 20px; }
+  .about-body { font-size: 15px; line-height: 1.75; color: var(--mrt-fog); margin-bottom: 16px; max-width: 68ch; }
+
+  /* Bandeau de faits */
+  .about-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 80px; }
+  @media (max-width: 780px) { .about-facts { grid-template-columns: repeat(2, 1fr); } }
+  .fact { background: var(--mrt-panel); padding: 24px; background-image: repeating-linear-gradient(115deg, transparent 0 46px, rgba(0,87,255,0.05) 46px 48px, transparent 48px 96px); }
+  .fact-label { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 6px; }
+  .fact-value { font-family: var(--body); font-weight: 700; font-size: 16px; color: var(--mrt-white); line-height: 1.35; }
+
+  /* Séparateur de section */
+  .section-sep { display: flex; align-items: center; gap: 16px; margin-bottom: 36px; }
+  .section-sep h2 { font-size: clamp(32px, 5vw, 58px); color: var(--mrt-white); white-space: nowrap; line-height: 1; }
+  .section-sep::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  /* Fondateurs */
+  .founders-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  @media (max-width: 640px) { .founders-grid { grid-template-columns: 1fr; } }
+  .founder-card { background: var(--mrt-panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: border-color .2s, transform .2s; }
+  .founder-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+  .founder-photo { aspect-ratio: 1/1; overflow: hidden; position: relative; background:
+      radial-gradient(ellipse 70% 70% at 50% 30%, rgba(0,87,255,.22), transparent 70%), var(--mrt-ink); border-bottom: 1px solid var(--line); }
+  .founder-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+  .founder-card:hover .founder-photo img { transform: scale(1.04); }
+  .fph-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 64px; letter-spacing: .04em; color: rgba(143,166,255,.55); }
+  .founder-info { padding: 22px 24px 26px; }
+  .founder-role { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mrt-ice); margin-bottom: 8px; }
+  .founder-name { font-family: var(--display); font-size: 30px; color: var(--mrt-white); letter-spacing: .02em; line-height: 1; margin-bottom: 12px; }
+  .founder-bio { font-size: 14px; color: var(--mrt-fog); line-height: 1.65; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" aria-label="Accueil MRT">
+    <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+  </a>
+  <div class="nav-links">
+    <a href="a-propos.html" style="color:var(--mrt-white);">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html">Palmarès</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
+    <a href="boutique.html">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="boutique.html" class="nav-cta">Boutique →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap page-top">
+
+  <!-- HERO -->
+  <header class="about-hero reveal">
+    <div class="eyebrow">L'écurie</div>
+    <h1>MONTREAL<br>RACING <span>TEAM</span></h1>
+    <p class="about-lead">Fondé à Montréal par deux amis, MRT vise à faire rayonner la communauté québécoise et francophone sur la scène internationale du sim racing.</p>
+    <p class="about-body">Notre objectif : conquérir toutes les catégories du jeu Le Mans Ultimate tout en partageant notre passion avec le monde entier. Nous engageons nos voitures en Hypercar, LMP2, LMP3 et LMGT3, sur les grands circuits d'endurance du calendrier — avec les mêmes valeurs chevillées au corps : course propre, esprit d'équipe et envie de progresser.</p>
+  </header>
+
+  <!-- FAITS -->
+  <div class="about-facts reveal">
+    <div class="fact">
+      <div class="fact-label">Basée à</div>
+      <div class="fact-value">Montréal, QC</div>
+    </div>
+    <div class="fact">
+      <div class="fact-label">Discipline</div>
+      <div class="fact-value">Le Mans Ultimate</div>
+    </div>
+    <div class="fact">
+      <div class="fact-label">Catégories</div>
+      <div class="fact-value">Hypercar · LMP2 · LMP3 · LMGT3</div>
+    </div>
+    <div class="fact">
+      <div class="fact-label">Langue</div>
+      <div class="fact-value">Francophone</div>
+    </div>
+  </div>
+
+  <!-- FONDATEURS -->
+  <div class="section-sep reveal">
+    <h2>Les fondateurs</h2>
+  </div>
+
+  <div class="founders-grid reveal">
+
+    <div class="founder-card">
+      <div class="founder-photo">
+        <img src="/images/team/karl-contout.jpg" alt="Karl Contout — co-fondateur de MRT"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="fph-fallback" style="display:none;">KC</div>
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-fondateur</div>
+        <div class="founder-name">Karl Contout</div>
+        <p class="founder-bio">De la Martinique à Montréal, où il s'est installé pour ses études, Karl nourrit sa passion du sport automobile depuis l'enfance, transmise par les Grands Prix de F1 qu'il regardait aux côtés de son père.</p>
+      </div>
+    </div>
+
+    <div class="founder-card">
+      <div class="founder-photo">
+        <img src="/images/team/mahikan-scalabrino.jpg" alt="Mahikan Scalabrino — co-fondateur de MRT"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="fph-fallback" style="display:none;">MS</div>
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-fondateur</div>
+        <div class="founder-name">Mahikan Scalabrino</div>
+        <p class="founder-bio">Montréalais attaché à ses racines des Îles-de-la-Madeleine et grand adepte de sports de glisse comme le kitesurf et le snowboard, c'est à travers la F1 qu'il s'est découvert une passion pour le sport automobile.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:14px;">
+          <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+        </div>
+        <p>Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Équipe</h4>
+          <a href="a-propos.html">À propos</a>
+          <a href="actualites.html">Actualités</a>
+          <a href="palmares.html">Palmarès</a>
+          <a href="liveries.html">Liveries</a>
+        </div>
+        <div class="footer-col">
+          <h4>Catalogue</h4>
+          <a href="boutique.html">Boutique</a>
+          <a href="recrutement.html">Recrutement</a>
+        </div>
+        <div class="footer-col">
+          <h4>Communauté</h4>
+          <a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://discord.gg/npSrdHH67" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC</span>
+      <span>LE MANS ULTIMATE</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE NAV -->
+<div id="mobileNav" style="display:none;position:fixed;inset:0;background:rgba(5,7,13,.97);z-index:200;flex-direction:column;padding:80px 32px 40px;gap:24px;">
+  <button id="mobileNavClose" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">×</button>
+  <a href="a-propos.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">À propos</a>
+  <a href="actualites.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Actualités</a>
+  <a href="palmares.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Palmarès</a>
+  <a href="liveries.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Liveries</a>
+  <a href="boutique.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Boutique</a>
+  <a href="recrutement.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Recrutement</a>
+</div>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', scrollY > 40); });
+  const mobileNav = document.getElementById('mobileNav');
+  document.getElementById('navToggle').addEventListener('click', () => { mobileNav.style.display = 'flex'; });
+  document.getElementById('mobileNavClose').addEventListener('click', () => { mobileNav.style.display = 'none'; });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+    dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+    dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+  });
+</script>
+</body>
+</html>
