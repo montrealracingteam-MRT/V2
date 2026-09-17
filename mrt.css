@@ -88,7 +88,8 @@
     display:flex;align-items:center;gap:10px;
     text-decoration:none;
   }
-  .nav-logo-img{height:40px;width:auto;display:block;}
+  .nav-logo-img{height:54px;width:auto;display:block;transition:height .3s ease;}
+  .nav.scrolled .nav-logo-img{height:46px;}
   .footer-brand .nav-logo-img{height:34px;}
   .nav-logo .num{
     font-family:var(--mono);
@@ -99,7 +100,7 @@
     border-radius:2px;
     letter-spacing:0;
   }
-  .nav-links{display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;}
+  .nav-links{display:flex;gap:36px;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max-content;white-space:nowrap;}
   .nav-links a{position:relative;color:var(--mrt-fog);transition:color .25s;padding:4px 0;}
   .nav-links a:hover{color:var(--mrt-white);}
   .lang-toggle{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:0.08em;color:var(--mrt-white);background:rgba(0,87,255,0.14);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px;cursor:pointer;transition:all .2s;margin-left:18px;}
@@ -110,6 +111,7 @@
   }
   .nav-links a:hover::after{width:100%;}
   .nav-cta{
+    display:none;
     font-family:var(--mono);font-size:12px;letter-spacing:0.06em;
     border:1px solid var(--line-strong);padding:9px 18px;border-radius:2px;
     transition:all .25s;text-transform:uppercase;
@@ -414,13 +416,13 @@
     color:var(--mrt-ice);padding:20px 26px 12px;border-bottom:1px solid var(--line);
   }
   .news-side-item{
-    display:flex;gap:18px;align-items:flex-start;padding:22px 26px;
+    display:flex;gap:18px;align-items:stretch;padding:22px 26px;
     border-bottom:1px solid var(--line);cursor:pointer;transition:background .25s;
   }
   .news-side-item:last-child{border-bottom:none;}
   .news-side-item:hover{background:#0A0D1A;}
   .news-side-thumb{
-    width:200px;aspect-ratio:16/9;flex-shrink:0;border-radius:6px;overflow:hidden;
+    width:200px;flex-shrink:0;align-self:stretch;min-height:116px;border-radius:6px;overflow:hidden;
     background:var(--mrt-panel);border:1px solid var(--line);
   }
   @media (max-width:1200px){.news-side-thumb{width:150px;}}
