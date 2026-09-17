@@ -187,6 +187,17 @@
       "num": "",
       "drivers": "Louis Gendron",
       "car": "Lexus RC F LMGT3"
+    },
+    {
+      "cat": "LMGT3",
+      "cls": "bronze",
+      "pos": "Troisième place",
+      "event": "4h de COTA",
+      "date": "",
+      "split": "2/2",
+      "num": "",
+      "drivers": "Mathieu Murray",
+      "car": "Lexus RC F LMGT3"
     }
   ]
 }
