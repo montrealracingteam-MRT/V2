@@ -308,6 +308,17 @@
       "num": "#438",
       "drivers": "Olivier Richard",
       "car": "Aston Martin Valkyrie AMR LMH"
+    },
+    {
+      "cat": "Hypercar",
+      "cls": "silver",
+      "pos": "Deuxième place",
+      "event": "12h du Mans",
+      "date": "",
+      "split": "7/15",
+      "num": "#438",
+      "drivers": "Olivier Richard & Cyril Fortin",
+      "car": "Aston Martin Valkyrie AMR LMH"
     }
   ]
 }
