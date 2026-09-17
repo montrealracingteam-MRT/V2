@@ -173,6 +173,15 @@
   .pl-main .pl-s{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--mrt-ice);margin-top:3px;}
   .pl-main .pl-d{font-size:12.5px;color:var(--mrt-fog);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .pl-ops{display:flex;gap:8px;flex-shrink:0;}
+
+  /* ===== Console Sessions ===== */
+  #panel-sessions .ses-next{background:linear-gradient(135deg, rgba(0,87,255,.14), var(--mrt-panel)); border:1px solid var(--line-strong); border-left:3px solid var(--mrt-blue); border-radius:8px; padding:22px 24px;}
+  #panel-sessions .ses-next .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mrt-ice);margin-bottom:8px;}
+  #panel-sessions .ses-next .nm{font-size:20px;color:var(--mrt-white);font-weight:700;line-height:1.25;}
+  #panel-sessions .ses-next .mt{font-family:var(--mono);font-size:12px;color:var(--mrt-fog);margin-top:8px;}
+  .ses-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+  .ses-badge.up{color:#7CE7B0;background:rgba(46,204,113,.14);}
+  .ses-badge.past{color:var(--mrt-fog);background:rgba(255,255,255,.06);}
 </style>
 </head>
 <body>
@@ -186,6 +195,7 @@
   <button class="console-tab active" data-panel="articles">Actualités</button>
   <button class="console-tab" data-panel="liveries">Liveries</button>
   <button class="console-tab" data-panel="palmares">Palmarès</button>
+  <button class="console-tab" data-panel="sessions">Sessions</button>
 </div>
 
 <div style="max-width:1240px;margin:0 auto;padding:28px 28px 0;">
@@ -503,6 +513,66 @@
   </div>
 
 </div><!-- /panel-palmares -->
+
+<!-- ===== PANEL SESSIONS (module autonome) ===== -->
+<div class="console-panel" id="panel-sessions">
+
+  <div style="max-width:1240px;margin:0 auto;padding:28px 28px 0;">
+    <div class="card">
+      <div class="card-head"><h2>Prochaine session</h2><span class="hint">affichée sur le site</span></div>
+      <div class="card-body">
+        <p class="help" style="margin-bottom:16px;">Le hero de la page d'accueil affiche automatiquement la <strong>prochaine session à venir</strong> de la liste, avec compte à rebours. Ajoute ou modifie tes sessions ci-dessous.</p>
+        <div class="ses-next" id="se-next"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+
+    <!-- GAUCHE : formulaire -->
+    <div>
+      <div class="card">
+        <div class="card-head"><h2 id="se-form-title">Nouvelle session</h2><span class="hint" id="se-edit-hint"></span></div>
+        <div class="card-body">
+          <div class="row2">
+            <label class="field"><span>Date</span><input type="date" id="se-date"></label>
+            <label class="field"><span>Heure (locale)</span><input type="time" id="se-time"></label>
+          </div>
+          <label class="field"><span>Nom de la session</span><input type="text" id="se-name" placeholder="6 Heures de Fuji"></label>
+          <label class="field"><span>Catégorie(s)</span><input type="text" id="se-cat" list="se-cat-list" placeholder="HYPERCAR · LMGT3">
+            <datalist id="se-cat-list">
+              <option value="HYPERCAR · LMGT3"></option>
+              <option value="HYPERCAR · LMP2 · LMGT3"></option>
+              <option value="HYPERCAR · LMP2 · LMP3 · LMGT3"></option>
+              <option value="ELMS"></option>
+              <option value="LMP2"></option>
+              <option value="LMP3"></option>
+              <option value="LMGT3"></option>
+            </datalist>
+            <p class="help">L'heure est en heure locale — elle est convertie automatiquement pour chaque visiteur.</p>
+          </label>
+          <div class="actions" style="margin-top:6px;">
+            <button class="btn btn-primary" id="se-add" type="button">Ajouter la session</button>
+            <button class="btn btn-ghost" id="se-reset" type="button">Vider le formulaire</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROITE : liste -->
+    <div>
+      <div class="card">
+        <div class="card-head"><h2>Toutes les sessions</h2><span class="hint" id="se-count">—</span></div>
+        <div class="card-body">
+          <p class="help" style="margin-bottom:14px;">Triées par date. Les sessions passées restent listées mais ne s'affichent plus sur le site.</p>
+          <div id="se-list"><div class="empty">Connecte-toi via les réglages GitHub (onglet Actualités) pour charger les sessions.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /panel-sessions -->
 
 <!-- RECADREUR -->
 <div class="crop-overlay hidden" id="cropOverlay">
@@ -1037,6 +1107,7 @@ document.querySelectorAll('.console-tab').forEach(tab => {
     document.getElementById('panel-'+tab.dataset.panel).classList.add('active');
     if(tab.dataset.panel === 'liveries') LV.load();
     if(tab.dataset.panel === 'palmares') PAL.load();
+    if(tab.dataset.panel === 'sessions') SES.load();
   });
 });
 
@@ -1526,6 +1597,145 @@ const PAL = {
 $('pl-add').addEventListener('click', ()=>PAL.addOrUpdate());
 $('pl-reset').addEventListener('click', ()=>PAL.resetForm());
 PAL.renderPreview();
+
+
+/* ===== MODULE SESSIONS (calendrier / prochaine session — autonome) ===== */
+const SES = {
+  races: [], cfg: {}, sha: null, editIndex: null, loaded: false,
+
+  async load(){
+    const c = getCfg(); if(!c.owner || !c.repo || !c.token) return;
+    try{
+      const res = await ghReadJson('config.json');
+      SES.cfg = (res.data && typeof res.data === 'object') ? res.data : {};
+      SES.races = Array.isArray(SES.cfg.races) ? SES.cfg.races.slice() : [];
+      SES.sha = res.sha;
+      SES.loaded = true;
+      SES.renderAll();
+    }catch(e){ SES.loaded = false; toast('Erreur sessions : '+e.message, 'bad'); }
+  },
+
+  sorted(){ return SES.races.slice().sort((a,b)=> (Date.parse(a.datetime)||0) - (Date.parse(b.datetime)||0)); },
+  nextRace(){ const now=Date.now(); return SES.sorted().find(r=> (Date.parse(r.datetime)||0) > now) || null; },
+
+  fmt(dtISO){
+    const d=new Date(dtISO); if(isNaN(d)) return '—';
+    try{ return new Intl.DateTimeFormat('fr-CA',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(d); }
+    catch(e){ return d.toISOString(); }
+  },
+
+  readForm(){
+    const date=$('se-date').value, time=$('se-time').value;
+    let datetime='';
+    if(date && time){ const d=new Date(date+'T'+time); if(!isNaN(d)) datetime=d.toISOString(); }
+    return { datetime, name:$('se-name').value.trim(), cat:$('se-cat').value.trim() };
+  },
+
+  resetForm(){
+    SES.editIndex=null;
+    $('se-date').value=''; $('se-time').value=''; $('se-name').value=''; $('se-cat').value='';
+    $('se-form-title').textContent='Nouvelle session';
+    $('se-edit-hint').textContent='';
+    $('se-add').textContent='Ajouter la session';
+  },
+
+  renderNext(){
+    const n=SES.nextRace(); const box=$('se-next'); if(!box) return;
+    if(!n){
+      box.innerHTML='<div class="lab">Prochaine session affichée sur le site</div>'+
+        '<div class="nm" style="color:var(--mrt-fog);">Aucune session à venir</div>'+
+        '<div class="mt">Le site affiche « Saison terminée — à l’an prochain ». Ajoute une session future ci-dessous.</div>';
+      return;
+    }
+    const days=Math.max(0, Math.ceil((Date.parse(n.datetime)-Date.now())/86400000));
+    box.innerHTML='<div class="lab">Prochaine session affichée sur le site</div>'+
+      '<div class="nm">'+escapeHtml(n.name||'(sans nom)')+(n.cat?' <span style="color:var(--mrt-ice);font-weight:400;">— '+escapeHtml(n.cat)+'</span>':'')+'</div>'+
+      '<div class="mt">'+SES.fmt(n.datetime)+' · dans '+days+' jour'+(days>1?'s':'')+' (heure locale)</div>';
+  },
+
+  renderList(){
+    const el=$('se-list'); const list=SES.sorted(); const now=Date.now();
+    $('se-count').textContent = SES.races.length + ' session'+(SES.races.length>1?'s':'');
+    if(!list.length){ el.innerHTML='<div class="empty">Aucune session. Ajoute la première à gauche.</div>'; return; }
+    el.innerHTML=list.map(r=>{
+      const i=SES.races.indexOf(r);
+      const up=(Date.parse(r.datetime)||0)>now;
+      return '<div class="pl-row">'+
+        '<div class="pl-main">'+
+          '<div class="pl-t">'+escapeHtml(r.name||'(sans nom)')+' <span class="ses-badge '+(up?'up':'past')+'">'+(up?'à venir':'passée')+'</span></div>'+
+          (r.cat?'<div class="pl-s">'+escapeHtml(r.cat)+'</div>':'')+
+          '<div class="pl-d">'+SES.fmt(r.datetime)+'</div>'+
+        '</div>'+
+        '<div class="pl-ops"><button class="op" data-edit="'+i+'">Modifier</button><button class="op del" data-del="'+i+'">Supprimer</button></div>'+
+      '</div>';
+    }).join('');
+    el.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>SES.edit(+b.dataset.edit)));
+    el.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>SES.remove(+b.dataset.del)));
+  },
+
+  renderAll(){ SES.renderNext(); SES.renderList(); },
+
+  edit(i){
+    const r=SES.races[i]; if(!r) return;
+    SES.editIndex=i;
+    const d=new Date(r.datetime), pad=n=>String(n).padStart(2,'0');
+    if(!isNaN(d)){
+      $('se-date').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+      $('se-time').value=pad(d.getHours())+':'+pad(d.getMinutes());
+    }
+    $('se-name').value=r.name||''; $('se-cat').value=r.cat||'';
+    $('se-form-title').textContent='Modifier la session';
+    $('se-edit-hint').textContent='#'+(i+1);
+    $('se-add').textContent='Enregistrer les modifications';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  },
+
+  async remove(i){
+    const r=SES.races[i]; if(!r) return;
+    if(!SES.loaded){ toast('Sessions pas encore chargées — rouvre l’onglet.','bad'); return; }
+    if(!confirm('Supprimer cette session ?\n\n'+[r.name, SES.fmt(r.datetime)].filter(Boolean).join(' — '))) return;
+    SES.races.splice(i,1);
+    if(SES.editIndex===i) SES.resetForm();
+    SES.renderAll();
+    const ok=await SES.commit('Sessions : suppression');
+    if(ok) toast('Session supprimée et site mis à jour.','ok');
+  },
+
+  async addOrUpdate(){
+    const c=getCfg(); if(!c.token){ toast('Configure d’abord la connexion GitHub.','bad'); $('configBox').open=true; return; }
+    if(!SES.loaded){ toast('Sessions pas encore chargées — rouvre l’onglet avant d’ajouter.','bad'); return; }
+    const r=SES.readForm();
+    if(!r.datetime){ toast('Indique une date ET une heure valides.','bad'); return; }
+    if(!r.name){ toast('Le nom de la session est obligatoire.','bad'); return; }
+    const btn=$('se-add'); const label=btn.textContent; btn.disabled=true; btn.innerHTML='<span class="spin"></span>Enregistrement…';
+    try{
+      const editing=(SES.editIndex!==null && SES.races[SES.editIndex]);
+      if(editing) SES.races[SES.editIndex]=r; else SES.races.push(r);
+      const ok=await SES.commit(editing?'Sessions : modification':'Sessions : nouvelle session');
+      if(!ok) throw new Error('écriture de config.json impossible');
+      toast(editing?'Session modifiée et en ligne.':'Session ajoutée et en ligne.','ok');
+      SES.resetForm(); SES.renderAll();
+    }catch(e){ toast('Échec : '+e.message,'bad'); }
+    finally{ btn.disabled=false; btn.textContent=label; }
+  },
+
+  async commit(message){
+    // relire config.json : préserve les autres clés et récupère le sha à jour (anti-écrasement)
+    let base = SES.cfg;
+    try{
+      const res = await ghReadJson('config.json');
+      if(res.missing){ base = {}; SES.sha = null; }
+      else if(res.data && typeof res.data === 'object'){ base = res.data; SES.sha = res.sha; }
+    }catch(e){ toast('Lecture de config.json impossible — écriture annulée. Réessaie.','bad'); return false; }
+    const payload = Object.assign({}, base, { races: SES.races });
+    const ok = await putFile('config.json', utf8_to_b64(JSON.stringify(payload,null,2)), message, false, ()=>SES.sha, s=>SES.sha=s);
+    if(ok) SES.cfg = payload;
+    return ok;
+  }
+};
+
+$('se-add').addEventListener('click', ()=>SES.addOrUpdate());
+$('se-reset').addEventListener('click', ()=>SES.resetForm());
 
 
 /* ---------- démarrage ---------- */
