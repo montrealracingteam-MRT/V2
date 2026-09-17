@@ -236,19 +236,19 @@
     </div>
     <div class="home-stats reveal">
       <div class="home-stat">
-        <span class="home-stat-num" data-count="23">0</span>
+        <span class="home-stat-num" id="hpPodiums" data-count="0">0</span>
         <span class="home-stat-label">Podiums</span>
       </div>
       <div class="home-stat">
-        <span class="home-stat-num" data-count="6">0</span>
+        <span class="home-stat-num" id="hpVictoires" data-count="0">0</span>
         <span class="home-stat-label">Victoires</span>
       </div>
       <div class="home-stat">
-        <span class="home-stat-num" data-count="1">0</span>
-        <span class="home-stat-label">Titre</span>
+        <span class="home-stat-num" id="hpTitres" data-count="0">0</span>
+        <span class="home-stat-label">Titres</span>
       </div>
       <div class="home-stat">
-        <span class="home-stat-num" data-count="9">0</span>
+        <span class="home-stat-num" id="hpPilotes" data-count="0">0</span>
         <span class="home-stat-label">Pilotes</span>
       </div>
     </div>
@@ -478,13 +478,34 @@ function animateCount(el, target, duration){
 const statsIo = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if(e.isIntersecting){
-      const target = parseInt(e.target.dataset.count, 10);
+      const target = parseInt(e.target.dataset.count, 10) || 0;
       animateCount(e.target, target, 1200);
       statsIo.unobserve(e.target);
     }
   });
 }, { threshold: 0.3 });
-document.querySelectorAll('.home-stat-num[data-count]').forEach(el => statsIo.observe(el));
+
+// Chiffres alimentés par palmares.json : podiums/victoires/titres calculés,
+// pilotes = valeur manuelle. On met à jour data-count PUIS on lance l'animation.
+(function(){
+  const PODIUM = ['gold','silver','bronze'];
+  function apply(podiums, victoires, titres, pilotes){
+    const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.dataset.count=v; };
+    set('hpPodiums',podiums); set('hpVictoires',victoires); set('hpTitres',titres); set('hpPilotes',pilotes);
+    document.querySelectorAll('.home-stat-num[data-count]').forEach(el => statsIo.observe(el));
+  }
+  fetch('palmares.json',{cache:'no-store'})
+    .then(r=>r.ok?r.json():null)
+    .then(data=>{
+      const rs = (data && Array.isArray(data.results)) ? data.results : [];
+      const podiums   = rs.filter(r=>PODIUM.indexOf(r.cls)!==-1).length;
+      const victoires = rs.filter(r=>r.cls==='gold').length;
+      const titres    = rs.filter(r=>r.cls==='champ').length;
+      const pilotes   = (data && isFinite(+data.pilotes)) ? +data.pilotes : 0;
+      apply(podiums, victoires, titres, pilotes);
+    })
+    .catch(()=>apply(0,0,0,0));
+})();
 
 /* --- Compte à rebours prochaine session --- */
 (function(){
