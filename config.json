@@ -34,6 +34,11 @@
       "datetime": "2026-08-16T23:00:00.000Z",
       "name": "4h de Spa-Francorchamps",
       "cat": "LMGT3"
+    },
+    {
+      "datetime": "2026-09-20T13:00:00.000Z",
+      "name": "ELMS 4H de Silverstone",
+      "cat": "LMGT3"
     }
   ]
 }
