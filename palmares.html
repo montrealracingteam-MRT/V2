@@ -218,15 +218,14 @@
       requestAnimationFrame(step);
     }
 
-    function uniquePilotes(results){
-      var set = {};
-      results.forEach(function(r){
-        String(r.drivers || '').split(/[·•,\/]/).forEach(function(name){
-          var n = name.trim();
-          if(n) set[n] = true;
-        });
-      });
-      return Object.keys(set).length;
+    // "2026-09-08" -> "8 sept. 2026" (sans décalage de fuseau)
+    function fmtDate(iso){
+      if(!iso) return '';
+      var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+      if(!m) return iso;
+      var d = new Date(+m[1], +m[2]-1, +m[3]);
+      try{ return new Intl.DateTimeFormat('fr-CA',{day:'numeric',month:'short',year:'numeric'}).format(d); }
+      catch(e){ return iso; }
     }
 
     function sortedCats(results){
@@ -277,6 +276,7 @@
             (r.split ? '<span class="result-split">' + esc(r.split) + '</span>' : '') +
             (r.num ? '<span class="result-num">' + esc(r.num) + '</span>' : '') +
           '</div>' +
+          (fmtDate(r.date) ? '<div class="result-date">' + esc(fmtDate(r.date)) + '</div>' : '') +
           (r.drivers ? '<div class="result-drivers">' + esc(r.drivers) + '</div>' : '') +
           (r.car ? '<div class="result-car">' + esc(r.car) + '</div>' : '') +
         '</div>' +
@@ -293,15 +293,14 @@
       observeReveals();
     }
 
-    function render(results){
+    function render(results, pilotes){
       document.getElementById('palmLoading').hidden = true;
 
-      if(!results.length){ showEmpty(); return; }
+      if(!results.length && !pilotes){ showEmpty(); return; }
 
       var victoires = results.filter(function(r){ return r.cls === 'gold'; }).length;
       var podiums   = results.filter(function(r){ return PODIUM_CLS.indexOf(r.cls) !== -1; }).length;
       var titres    = results.filter(function(r){ return r.cls === 'champ'; }).length;
-      var pilotes   = uniquePilotes(results);
 
       var stats = document.getElementById('palmStats');
       var toggleWrap = document.getElementById('palmToggleWrap');
@@ -333,9 +332,10 @@
       .then(function(res){ return res.ok ? res.json() : { results: [] }; })
       .then(function(data){
         var results = (data && Array.isArray(data.results)) ? data.results : [];
-        render(results);
+        var pilotes = (data && isFinite(+data.pilotes)) ? +data.pilotes : 0;
+        render(results, pilotes);
       })
-      .catch(function(){ render([]); });
+      .catch(function(){ render([], 0); });
   })();
 </script>
 </body>
