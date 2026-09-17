@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique — Montreal Racing Team | MRT #514</title>
+<meta name="description" content="La boutique officielle de Montreal Racing Team arrive bientôt. Vêtements et accessoires aux couleurs de l'écurie #514.">
+<meta name="theme-color" content="#0057FF">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mrt.css">
+<style>
+  .page-top { padding-top: 120px; padding-bottom: 90px; }
+
+  .soon {
+    position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 0%, rgba(0,87,255,.14), transparent 65%),
+      var(--mrt-panel);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: clamp(52px, 9vw, 110px) 28px; text-align: center;
+  }
+  .soon::before {
+    content: 'MRT'; position: absolute; left: 50%; top: 52%;
+    transform: translate(-50%, -50%); font-family: var(--display);
+    font-size: clamp(200px, 42vw, 460px); color: rgba(0,87,255,.05);
+    line-height: 1; pointer-events: none; white-space: nowrap;
+  }
+  .soon-inner { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; }
+  .soon .eyebrow { justify-content: center; margin-bottom: 20px; }
+  .soon h1 { font-size: clamp(52px, 9vw, 108px); color: var(--mrt-white); line-height: .9; margin-bottom: 22px; }
+  .soon h1 span { color: var(--mrt-blue); }
+  .soon p { font-size: clamp(15px, 2vw, 17px); color: var(--mrt-fog); line-height: 1.7; margin-bottom: 34px; }
+  .soon-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .soon-note { margin-top: 26px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mrt-fog); }
+
+  /* Aperçu des catégories à venir */
+  .teaser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 40px; }
+  @media (max-width: 680px) { .teaser-grid { grid-template-columns: 1fr; } }
+  .teaser { background: var(--mrt-panel); padding: 30px 26px; text-align: center; background-image: repeating-linear-gradient(115deg, transparent 0 48px, rgba(0,87,255,.045) 48px 50px, transparent 50px 100px); }
+  .teaser .t-ico { font-size: 26px; margin-bottom: 12px; }
+  .teaser h3 { font-size: 20px; color: var(--mrt-white); letter-spacing: .02em; margin-bottom: 6px; }
+  .teaser p { font-size: 13px; color: var(--mrt-fog); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" aria-label="Accueil MRT">
+    <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+  </a>
+  <div class="nav-links">
+    <a href="a-propos.html">À propos</a>
+    <a href="actualites.html">Actualités</a>
+    <a href="palmares.html">Palmarès</a>
+    <div class="nav-item-dropdown">
+      <a href="liveries.html">Liveries</a>
+      <div class="nav-dropdown-menu">
+        <a href="liveries.html#hypercar">Hypercar</a>
+        <a href="liveries.html#lmp2">LMP2</a>
+        <a href="liveries.html#lmp3">LMP3</a>
+        <a href="liveries.html#lmgt3">LMGT3</a>
+      </div>
+    </div>
+    <a href="boutique.html" style="color:var(--mrt-white);">Boutique</a>
+    <a href="recrutement.html">Recrutement</a>
+  </div>
+  <a href="recrutement.html" class="nav-cta">Recrutement →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+
+<div class="wrap page-top">
+
+  <div class="soon reveal">
+    <div class="soon-inner">
+      <div class="eyebrow">Boutique officielle #514</div>
+      <h1>BIENTÔT<br><span>DISPONIBLE</span></h1>
+      <p>La boutique MRT arrive prochainement. Vêtements et accessoires aux couleurs de l'écurie, pour porter fièrement le #514 sur la piste comme en dehors. Reste à l'affût — on annonce l'ouverture sur nos réseaux.</p>
+      <div class="soon-actions">
+        <a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener" class="btn btn-primary">Nous suivre sur Instagram</a>
+        <a href="https://discord.gg/npSrdHH67" target="_blank" rel="noopener" class="btn btn-ghost">Rejoindre le Discord</a>
+      </div>
+      <div class="soon-note">Ouverture annoncée très bientôt</div>
+    </div>
+  </div>
+
+  <div class="teaser-grid reveal">
+    <div class="teaser">
+      <div class="t-ico">👕</div>
+      <h3>Vêtements</h3>
+      <p>T-shirts, hoodies et casquettes aux couleurs de l'écurie.</p>
+    </div>
+    <div class="teaser">
+      <div class="t-ico">🏁</div>
+      <h3>Accessoires</h3>
+      <p>Autocollants, drapeaux et objets à l'effigie du #514.</p>
+    </div>
+    <div class="teaser">
+      <div class="t-ico">⭐</div>
+      <h3>Éditions limitées</h3>
+      <p>Des pièces collector liées à nos saisons et nos livrées.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer style="margin-top:90px;">
+  <div class="wrap" style="padding-top:50px;padding-bottom:40px;border-top:1px solid var(--line);">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:14px;">
+          <img class="nav-logo-img" src="/mrt-logo.png" alt="Montreal Racing Team — MRT">
+        </div>
+        <p>Équipe de sim racing basée à Montréal, en compétition d'endurance sur Le Mans Ultimate.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Équipe</h4>
+          <a href="a-propos.html">À propos</a>
+          <a href="actualites.html">Actualités</a>
+          <a href="palmares.html">Palmarès</a>
+          <a href="liveries.html">Liveries</a>
+        </div>
+        <div class="footer-col">
+          <h4>Catalogue</h4>
+          <a href="boutique.html">Boutique</a>
+          <a href="recrutement.html">Recrutement</a>
+        </div>
+        <div class="footer-col">
+          <h4>Communauté</h4>
+          <a href="https://www.instagram.com/montrealracingteam/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/profile.php?id=61562927485622" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://discord.gg/npSrdHH67" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MONTREAL RACING TEAM — MRT #514 · MONTRÉAL, QC</span>
+      <span>LE MANS ULTIMATE</span>
+    </div>
+  </div>
+</footer>
+
+<!-- MOBILE NAV -->
+<div id="mobileNav" style="display:none;position:fixed;inset:0;background:rgba(5,7,13,.97);z-index:200;flex-direction:column;padding:80px 32px 40px;gap:24px;">
+  <button id="mobileNavClose" style="position:absolute;top:20px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">×</button>
+  <a href="a-propos.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">À propos</a>
+  <a href="actualites.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Actualités</a>
+  <a href="palmares.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Palmarès</a>
+  <a href="liveries.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Liveries</a>
+  <a href="boutique.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Boutique</a>
+  <a href="recrutement.html" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:.04em;">Recrutement</a>
+</div>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', scrollY > 40); });
+  const mobileNav = document.getElementById('mobileNav');
+  document.getElementById('navToggle').addEventListener('click', () => { mobileNav.style.display = 'flex'; });
+  document.getElementById('mobileNavClose').addEventListener('click', () => { mobileNav.style.display = 'none'; });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  document.querySelectorAll('.nav-item-dropdown').forEach(dd => {
+    dd.addEventListener('mouseenter', () => dd.classList.add('show'));
+    dd.addEventListener('mouseleave', () => dd.classList.remove('show'));
+  });
+</script>
+</body>
+</html>
