@@ -220,6 +220,17 @@
       "num": "",
       "drivers": "Karl Contout",
       "car": "BMW M4 LMGT3 Evo"
+    },
+    {
+      "cat": "LMGT3",
+      "cls": "gold",
+      "pos": "Victoire",
+      "event": "4h de Barcelone",
+      "date": "",
+      "split": "1/1",
+      "num": "",
+      "drivers": "Mathieu Murray",
+      "car": "Lexus RC F LMGT3"
     }
   ]
 }
