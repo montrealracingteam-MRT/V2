@@ -1,26 +1,6 @@
 {
   "results": [
     {
-      "cat": "LMGT3",
-      "cls": "bronze",
-      "pos": "3ᵉ place",
-      "event": "6h d'Imola",
-      "split": "split 1/1",
-      "num": "#263",
-      "drivers": "🇨🇦 Dan Poulin · 🇨🇦 Philippe Brazeau",
-      "car": "Ford Mustang LMGT3"
-    },
-    {
-      "cat": "LMGT3",
-      "cls": "silver",
-      "pos": "2ᵉ place",
-      "event": "6h du Mans",
-      "split": "split 1/3",
-      "num": "#514",
-      "drivers": "🇲🇶 Karl Contout · 🇨🇦 Joel Livernois",
-      "car": "Porsche 911 LMGT3 R"
-    },
-    {
       "cat": "Championnats",
       "cls": "gold",
       "pos": "Victoire",
