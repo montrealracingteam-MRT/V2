@@ -1,26 +1,6 @@
 {
   "results": [
     {
-      "cat": "Hypercar",
-      "cls": "silver",
-      "pos": "2ᵉ place",
-      "event": "12h du Mans",
-      "split": "split 7/15",
-      "num": "#418",
-      "drivers": "🇨🇦 Olivier Richard · 🇫🇷 Cyril Fortin",
-      "car": "Aston Martin Valkyrie AMR LMH"
-    },
-    {
-      "cat": "LMP2",
-      "cls": "gold",
-      "pos": "Victoire",
-      "event": "4h de Spa",
-      "split": "split 1/1",
-      "num": "#450",
-      "drivers": "🇨🇦 Olivier Richard · 🇨🇦 Philippe Brazeau",
-      "car": "Oreca 07-Gibson"
-    },
-    {
       "cat": "LMP2",
       "cls": "silver",
       "pos": "2ᵉ place",
