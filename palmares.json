@@ -176,6 +176,17 @@
       "num": "",
       "drivers": "Karl Contout",
       "car": "Porsche 911 LMGT3 R"
+    },
+    {
+      "cat": "LMGT3",
+      "cls": "bronze",
+      "pos": "Troisième place",
+      "event": "4h de COTA",
+      "date": "",
+      "split": "3/4",
+      "num": "",
+      "drivers": "Louis Gendron",
+      "car": "Lexus RC F LMGT3"
     }
   ]
 }
