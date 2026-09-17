@@ -246,5 +246,13 @@
       "hauteur": "1148 mm",
       "resultat": ""
     }
+  },
+  {
+    "id": "ferrari-296-lmgt3",
+    "category": "lmgt3",
+    "model": "Ferrari 296 LMGT3",
+    "artist": "SDL",
+    "cover": "",
+    "photos": []
   }
 ]
