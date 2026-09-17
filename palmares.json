@@ -286,6 +286,17 @@
       "num": "#450",
       "drivers": "Olivier Richard & Philippe Brazeau",
       "car": "Oreca 07-Gibson"
+    },
+    {
+      "cat": "LMP2",
+      "cls": "silver",
+      "pos": "Deuxieme place",
+      "event": "6h du Mans",
+      "date": "",
+      "split": "1/2",
+      "num": "#450",
+      "drivers": "Tom Bigotte & Philippe Brazeau",
+      "car": "Oreca 07-Gibson"
     }
   ]
 }
