@@ -108,7 +108,7 @@ fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
       <div class="news-body">
         <div class="news-meta">${meta(f)}</div>
         <h3>${esc(f.title)}</h3>
-        <p>${esc((f.summary||'').slice(0,240))}</p>
+        <p>${esc(f.summary||'')}</p>
         <span class="news-cta-inline">Lire l'article →</span>
       </div>
     </a>`;
@@ -116,7 +116,7 @@ fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
     html += `<div class="news-side"><div class="news-side-head">À la une</div>` + side.map(a=>`
       <a class="news-side-item" href="${link(a)}">
         <div class="news-side-thumb">${visual(a)}</div>
-        <div class="news-side-txt"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc((a.summary||'').slice(0,110))}</p></div>
+        <div class="news-side-txt"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc(a.summary||'')}</p></div>
       </a>`).join('') + `</div>`;
   }
   html += `</div>`;
@@ -125,7 +125,7 @@ fetch('articles.json',{cache:'no-store'}).then(r=>r.ok?r.json():[]).then(list=>{
     html += `<div class="grid-head">Plus d'actualités</div><div class="allnews-grid">` + rest.map(a=>`
       <a class="news-card2" href="${link(a)}">
         <div class="news-card2-visual">${visual(a)}</div>
-        <div class="news-card2-body"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc((a.summary||'').slice(0,130))}</p><span class="news-cta-inline">Lire l'article →</span></div>
+        <div class="news-card2-body"><div class="n-meta">${meta(a)}</div><h4>${esc(a.title)}</h4><p class="n-desc">${esc(a.summary||'')}</p><span class="news-cta-inline">Lire l'article →</span></div>
       </a>`).join('') + `</div>`;
   }
   root.innerHTML=html;
