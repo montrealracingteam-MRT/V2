@@ -1,26 +1,6 @@
 {
   "results": [
     {
-      "cat": "LMP2",
-      "cls": "silver",
-      "pos": "2ᵉ place",
-      "event": "6h du Mans",
-      "split": "split 1/2",
-      "num": "#450",
-      "drivers": "🇫🇷 Tom Bigotte · 🇨🇦 Philippe Brazeau",
-      "car": "Oreca 07-Gibson"
-    },
-    {
-      "cat": "LMGT3",
-      "cls": "bronze",
-      "pos": "3ᵉ place",
-      "event": "4h de COTA",
-      "split": "split 3/4",
-      "num": "#263",
-      "drivers": "🇨🇦 Louis Gendron",
-      "car": "Lexus RC F LMGT3"
-    },
-    {
       "cat": "LMGT3",
       "cls": "bronze",
       "pos": "3ᵉ place",
