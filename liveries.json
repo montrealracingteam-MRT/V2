@@ -162,8 +162,29 @@
     "category": "lmgt3",
     "model": "Mercedes AMG LMGT3 Evo",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/mercedes-amg-lmgt3-evo/cover-cover-1789762471834.jpg",
+    "photos": [
+      "images/liveries/mercedes-amg-lmgt3-evo/cover-cover-1789762471834.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482597-140.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482638-181.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482707-469.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482757-173.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482812-966.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482862-666.jpg",
+      "images/liveries/mercedes-amg-lmgt3-evo/photo-1789762482925-598.jpg"
+    ],
+    "description": "<p>Un quart de siècle après ses dernières joutes mémorables en endurance mondiale, la marque à l'étoile signe un retour historique sur la scène du FIA WEC. Basée sur le modèle GT de série, la Mercedes-AMG GT3 — introduite en 2015 et sublimée par sa mise à jour « Evo » en 2020 — s'impose déjà comme l'une des plateformes compétition-client les plus titrées et prolifiques de la planète.</p><p><strong>La puissance du V8 atmosphérique au service de la régularité</strong></p><p>Sous un capot allongé aux lignes agressives, la Mercedes-AMG LMGT3 conserve ce qui fait son identité unique : un monumental moteur V8 atmosphérique de 6,3 litres. Transmettant sa puissance aux roues arrière, la belle d'Affalterbach associe un équilibre châssis remarquable à une aérodynamique de pointe. Conçue à l'origine pour exceller aussi bien en sprint qu'en endurance pure, la voiture offre une exploitabilité idéale lors des longs relais, facilitant le travail des pilotes dans le trafic et la préservation des pneumatiques.</p><p><strong>Un partenariat d'usine ambitieux avec Iron Lynx</strong></p><p>Pour orchestrer ce retour très attendu après 26 ans d'absence, la structure Iron Lynx a changé de constructeur pour aligner deux voitures bénéficiant d'un soutien officiel de l'usine Mercedes-AMG. Dès sa première campagne dans la catégorie ultra-relevée du LMGT3, l'équipe a démontré une pointe de vitesse solide, une fiabilité exemplaire et une progression constante au fil des épreuves, posant les jalons d'une montée en puissance redoutable.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "6.3-litre V8 naturally aspirated",
+      "puissance": "560 bhp",
+      "poids": "1360 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4746 mm",
+      "largeur": "2049 mm",
+      "hauteur": "1238 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "ford-mustang-lmgt3",
