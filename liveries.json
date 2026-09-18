@@ -112,8 +112,26 @@
     "category": "lmgt3",
     "model": "Aston Martin Vantage AMR LMGT3",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/aston-martin-vantage-lmgt3/cover-cover-1789760097436.jpg",
+    "photos": [
+      "images/liveries/aston-martin-vantage-lmgt3/cover-cover-1789760097436.jpg",
+      "images/liveries/aston-martin-vantage-lmgt3/photo-1789760104960-224.jpg",
+      "images/liveries/aston-martin-vantage-lmgt3/photo-1789760104989-547.jpg",
+      "images/liveries/aston-martin-vantage-lmgt3/photo-1789760105037-106.jpg",
+      "images/liveries/aston-martin-vantage-lmgt3/photo-1789760105118-542.jpg"
+    ],
+    "description": "<p>L'histoire entre Aston Martin et les grilles du grand tourisme international est jalonnée de succès mythiques.<source-footnote ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c3130299172=\"\" style=\"line-height: 1.15 !important;\"><sup _ngcontent-ng-c3130299172=\"\" class=\"superscript\" data-turn-source-index=\"4\" style=\"line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"><!----></sup></source-footnote> Pour succéder à la redoutable Vantage GTE, le constructeur britannique a lancé sa deuxième génération de Vantage AMR GT3, conçue pour perpétuer une tradition de victoires au plus haut niveau de l'endurance.<source-footnote ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c3130299172=\"\" style=\"line-height: 1.15 !important;\"><sup _ngcontent-ng-c3130299172=\"\" class=\"superscript\" data-turn-source-index=\"5\" style=\"line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"><!----></sup></source-footnote>   <!----><source-inline-chip _ngcontent-ng-c59605210=\"\" _nghost-ng-c3583370569=\"\" class=\"ng-star-inserted\" style=\"line-height: 1.15 !important;\"><!----><!----><!----><!----><!----></source-inline-chip><!----><!----><!----></p><p><strong>Une plateforme équilibrée au rugissement unique</strong></p><p>Reconnue pour la stabilité et la prédictibilité de son châssis, la Vantage AMR LMGT3 offre un comportement particulièrement sain lors des relais prolongés, indispensable pour surmonter l'intensité des courses d'endurance.<source-footnote ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c3130299172=\"\" style=\"line-height: 1.15 !important;\"><sup _ngcontent-ng-c3130299172=\"\" class=\"superscript\" data-turn-source-index=\"6\" style=\"line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"><!----></sup></source-footnote> Sous son capot, le tonitruant moteur V8 biturbo continue de faire vibrer les tribunes du monde entier tout en apportant une réponse linéaire et un couple généreux à la réaccélération.<source-footnote ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c3130299172=\"\" style=\"line-height: 1.15 !important;\"><sup _ngcontent-ng-c3130299172=\"\" class=\"superscript\" data-turn-source-index=\"7\" style=\"line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"><!----></sup></source-footnote>   <!----><source-inline-chip _ngcontent-ng-c59605210=\"\" _nghost-ng-c3583370569=\"\" class=\"ng-star-inserted\" style=\"line-height: 1.15 !important;\"><!----><!----><!----><!----><!----></source-inline-chip><!----><!----><!----></p><p><strong>Débuts victorieux avec Heart of Racing et D'Station</strong></p><p>Engagée en FIA WEC par des structures d'expérience comme D'Station Racing et The Heart of Racing, la GT britannique n'a pas tardé à concrétiser son potentiel. Dès la campagne 2024, la voiture s'est imposée sur le tracé exigeant du Circuit of the Americas (COTA) lors du Lone Star Le Mans, affirmant d'emblée son statut de prétendante aux victoires de catégorie et séduisant tout autant les passionnés sur piste que les simracers du jeu <em>Le Mans Ultimate</em>.<source-footnote ng-version=\"0.0.0-PLACEHOLDER\" _nghost-ng-c3130299172=\"\" style=\"line-height: 1.15 !important;\"><sup _ngcontent-ng-c3130299172=\"\" class=\"superscript\" data-turn-source-index=\"8\" style=\"line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"><!----></sup></source-footnote></p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "4.0-liter twin-turbocharge V8",
+      "puissance": "535 bhp",
+      "poids": "1306 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4616 mm",
+      "largeur": "2049 mm",
+      "hauteur": "1144 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "lamborghini-huracan-lmgt3-evo2",
