@@ -4,8 +4,27 @@
     "category": "hypercar",
     "model": "Peugeot 9X8",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/peugeot-9x8/cover-cover-1789742274693.jpg",
+    "photos": [
+      "images/liveries/peugeot-9x8/cover-cover-1789742274693.jpg",
+      "images/liveries/peugeot-9x8/photo-1789742283123-391.jpg",
+      "images/liveries/peugeot-9x8/photo-1789742283170-800.jpg",
+      "images/liveries/peugeot-9x8/photo-1789742283243-173.jpg",
+      "images/liveries/peugeot-9x8/photo-1789742283288-731.jpg",
+      "images/liveries/peugeot-9x8/photo-1789742283327-795.jpg"
+    ],
+    "description": "<p>En faisant ses débuts officiels en 2022 sur le temple de la vitesse de Monza, la Peugeot 9X8 LMH a immédiatement bousculé les codes de la catégorie reine du FIA WEC. Forte d'une riche tradition de victoires dans la Sarthe avec ses précédentes générations de prototypes, la firme au lion est revenue au sommet du sport automobile avec une approche technique audacieuse et une présence visuelle saisissante.</p><p><strong>Un concept audacieux face à la réalité de la piste</strong></p><p>Reconnaissable entre toutes par l'absence d'un aileron arrière traditionnel et des lignes épurées, la 9X8 s'est imposée comme une icône dès sa première saison complète en 2023. Cependant, ce choix aérodynamique axé sur l'efficience à haute vitesse a rencontré des difficultés sur les circuits nécessitant un fort effet de sol et une motricité maximale sur chaussée dégradée, à l'instar de Sebring ou des ondulations de Portimão.</p><p>La montée en puissance s'est affirmée lors des 24 Heures du Mans. Conçue sur mesure pour les longues lignes droites du tracé sarthois, la 9X8 a tiré profit de conditions météorologiques changeantes pour se mêler directement à la lutte pour la victoire finale, franchissant la ligne d'arrivée aux solides 6ᵉ et 9ᵉ rangs. La consécration est advenue 12 mois après le lancement du programme, sur le tracé même de ses débuts à Monza, où la voiture n° 93 a livré une prestation sans faute pour décrocher le tout premier podium de Peugeot dans l'ère des Hypercars.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "V6 biturbo 2.6 litres",
+      "puissance": "670 bhp / 520 kW",
+      "poids": "1030 kg",
+      "transmission": "séquentielle à 7 vitesses",
+      "longueur": "4995 mm",
+      "largeur": "2000 mm",
+      "hauteur": "1145 mm",
+      "resultat": ""
+    }
   },
   {
     "id": "genesis-gmr-001",
