@@ -87,8 +87,25 @@
     "category": "lmp3",
     "model": "Ginetta G61-LT-P3 Evo",
     "artist": "SDL",
-    "cover": "",
-    "photos": []
+    "cover": "images/liveries/ginetta-g61-ltp3-evo/cover-cover-1789758275389.jpg",
+    "photos": [
+      "images/liveries/ginetta-g61-ltp3-evo/cover-cover-1789758275389.jpg",
+      "images/liveries/ginetta-g61-ltp3-evo/photo-1789758257148-289.jpg",
+      "images/liveries/ginetta-g61-ltp3-evo/photo-1789758257224-417.jpg",
+      "images/liveries/ginetta-g61-ltp3-evo/photo-1789758257274-200.jpg"
+    ],
+    "description": "<p>Le renouveau de la catégorie LMP3 s'accompagne du retour remarqué d'un nom historique du sport automobile britannique. Avec la G61-LT-P325-Evo, Ginetta opère un engagement ambitieux en European Le Mans Series (ELMS), confiant l'exploitation de sa nouvelle arme à une structure référence du plateau : DKR Engineering.</p><p><strong>Une architecture Gen 3 sublimée par le V6 biturbo Toyota</strong></p><p>L'introduction de la réglementation LMP3 de troisième génération (Gen 3) marque un tournant technique majeur pour la catégorie. Au cœur de cette évolution, la Ginetta adopte le bloc V6 biturbo Toyota V35A de 3,5 litres, développant environ 470 chevaux et couplé à une boîte de vitesses séquentielle à six rapports. Outre cette nouvelle motorisation plus efficiente, les ingénieurs de Wokingham ont retravaillé la géométrie du train arrière, optimisé le système de refroidissement et réduit le poids global du châssis. Cet affûtage aérodynamique garantit une meilleure stabilité dans les enchaînements rapides et une régularité précieuse lors des relais prolongés.</p><p><strong>L'alliance DKR Engineering et l'équipage de la #4</strong></p><p>Pour maximiser ses chances de succès sur la scène européenne, Ginetta s'est alliée à DKR Engineering, écurie multiprimée et habituée aux couronnes de la catégorie. Alignée sous le numéro 4, la G61-LT-P3 Evo est confiée à un trio de pilotes prometteur : Wyatt Brichacek, Mikkel Gaarde Pedersen et Antti Rammo. Ensemble, ils associent pointe de vitesse et gestion du trafic pour exploiter le plein potentiel de ce prototype de nouvelle génération face à une concurrence féroce.</p>",
+    "palmares": "",
+    "specs": {
+      "moteur": "3.5L Twin-turbo V6",
+      "puissance": "470 bhp",
+      "poids": "950 kg",
+      "transmission": "séquentielle à 6 vitesses",
+      "longueur": "4605 mm",
+      "largeur": "",
+      "hauteur": "",
+      "resultat": ""
+    }
   },
   {
     "id": "aston-martin-vantage-lmgt3",
