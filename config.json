@@ -44,6 +44,11 @@
       "datetime": "2026-09-20T20:00:00.000Z",
       "name": "ELMS 4H de Silverstone",
       "cat": "LMGT3"
+    },
+    {
+      "datetime": "2026-09-25T08:00:00.000Z",
+      "name": "12h Le Mans",
+      "cat": "LMGT3"
     }
   ]
 }
