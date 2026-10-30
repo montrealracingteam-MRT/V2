@@ -59,6 +59,11 @@
       "datetime": "2026-10-24T13:30:00.000Z",
       "name": "24H OF LE MANS",
       "cat": ""
+    },
+    {
+      "datetime": "2026-10-31T11:00:00.000Z",
+      "name": "6 Heures de Barcelone",
+      "cat": "Hypercar"
     }
   ]
 }
