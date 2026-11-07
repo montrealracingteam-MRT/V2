@@ -64,6 +64,11 @@
       "datetime": "2026-10-31T11:00:00.000Z",
       "name": "6 Heures de Barcelone",
       "cat": "Hypercar"
+    },
+    {
+      "datetime": "2026-11-12T01:00:00.000Z",
+      "name": "OOFs Racing - Final Round : Monza",
+      "cat": "LMP3 · LMGT3"
     }
   ]
 }
