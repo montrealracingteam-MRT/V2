@@ -44,11 +44,45 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="images/hero/hero-1.jpg">
 <link rel="stylesheet" href="mrt.css">
 <style>
 /* ============================================================
    Styles spécifiques à l'accueil — tout le reste est dans mrt.css
    ============================================================ */
+
+/* ===== Hero : diaporama de livrées en fond ===== */
+.hero-slideshow{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--mrt-ink);}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease-in-out;will-change:opacity;}
+.hero-slide.is-active{opacity:1;}
+.hero-slide img{
+  width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block;
+  transform:scale(1.08);animation:heroKenburns 16s ease-out infinite alternate;will-change:transform;
+}
+.hero-slide:nth-child(2) img{object-position:center 55%;animation-duration:18s;}
+.hero-slide:nth-child(3) img{object-position:center 52%;animation-duration:17s;}
+@keyframes heroKenburns{from{transform:scale(1.04);}to{transform:scale(1.14);}}
+
+/* Voile sombre pour la lisibilité du texte + ancrage haut (nav) et bas (compte à rebours) */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(5,7,13,.92) 0%, rgba(5,7,13,.62) 42%, rgba(5,7,13,.22) 100%),
+    linear-gradient(180deg, rgba(5,7,13,.80) 0%, rgba(5,7,13,.30) 24%, rgba(5,7,13,.38) 64%, rgba(5,7,13,.94) 100%),
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,87,255,.12), transparent 62%);
+}
+
+/* On garde les accents animés PAR-DESSUS les photos */
+.hero .hero-grid{z-index:2;opacity:.28;}
+.hero .hero-streaks{z-index:2;opacity:.6;}
+.hero .raceline-svg{z-index:3;}
+.hero .hero-content{position:relative;z-index:4;}
+.hero .hero-timing{z-index:4;}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-slide{transition:none;}
+  .hero-slide img{animation:none;transform:scale(1.02);}
+}
 
 /* Bloc stats compact "4 chiffres" */
 .home-stats{
@@ -146,6 +180,14 @@
 
 <!-- ===== HERO ===== -->
 <section class="hero">
+  <!-- Diaporama de livrées en fond -->
+  <div class="hero-slideshow" id="heroSlideshow" aria-hidden="true">
+    <div class="hero-slide is-active"><img src="images/hero/hero-1.jpg" alt=""></div>
+    <div class="hero-slide"><img src="images/hero/hero-2.jpg" alt="" loading="lazy"></div>
+    <div class="hero-slide"><img src="images/hero/hero-3.jpg" alt="" loading="lazy"></div>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
   <div class="hero-grid"></div>
   <div class="hero-streaks"></div>
 
@@ -440,6 +482,20 @@ window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', scrol
 const mobileNav = document.getElementById('mobileNav');
 document.getElementById('navToggle').addEventListener('click', () => { mobileNav.style.display = 'flex'; });
 document.getElementById('mobileNavClose').addEventListener('click', () => { mobileNav.style.display = 'none'; });
+
+/* --- Diaporama du hero (fondu croisé) --- */
+(function(){
+  const slides = Array.from(document.querySelectorAll('#heroSlideshow .hero-slide'));
+  if(slides.length < 2) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return; // on garde la 1re image fixe
+  let i = 0;
+  setInterval(() => {
+    slides[i].classList.remove('is-active');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('is-active');
+  }, 6000);
+})();
 
 /* --- Reveal on scroll --- */
 const revealEls = document.querySelectorAll('.reveal');
