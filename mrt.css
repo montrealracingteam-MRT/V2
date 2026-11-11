@@ -988,3 +988,25 @@
   border-radius:5px;white-space:nowrap;transition:all .15s;
 }
 .nav-dropdown-menu a:hover{background:rgba(0,87,255,.14);color:var(--mrt-white);}
+
+/* ===========================================================================
+   TRANSITIONS DE PAGE FLUIDES (View Transitions API)
+   Fondu doux entre les pages du site ; la nav reste stable. Amélioration
+   progressive : les navigateurs non compatibles font un chargement normal.
+   =========================================================================== */
+@view-transition { navigation: auto; }
+
+/* La barre de navigation garde sa place pendant la transition (effet "app") */
+.nav { view-transition-name: mrt-nav; }
+
+/* Durée et courbe du fondu du contenu */
+::view-transition-old(root),
+::view-transition-new(root){
+  animation-duration: .40s;
+  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Respect de la préférence "animations réduites" */
+@media (prefers-reduced-motion: reduce){
+  @view-transition { navigation: none; }
+}
